@@ -1,0 +1,73 @@
+package patches
+
+import "time"
+
+// PatchSummary is a compact representation used on the list page.
+type PatchSummary struct {
+	ID           string `json:"id"`
+	Slug         string `json:"slug"`
+	Title        string `json:"title"`
+	PublishedAt  string `json:"publishedAt"`
+	Category     string `json:"category"`
+	Excerpt      string `json:"excerpt"`
+	CoverImageURL string `json:"coverImageUrl"`
+	SourceURL    string `json:"sourceUrl"`
+}
+
+// PatchChange is a single bullet/line under an entry.
+type PatchChange struct {
+	ID   string `json:"id"`
+	Text string `json:"text"`
+}
+
+// PatchEntry groups related changes.
+type PatchEntry struct {
+	ID            string        `json:"id"`
+	EntityName    string        `json:"entityName"`
+	EntityIconURL string        `json:"entityIconUrl,omitempty"`
+	Summary       string        `json:"summary,omitempty"`
+	Changes       []PatchChange `json:"changes"`
+}
+
+// PatchSection is a top-level section in a patch article.
+type PatchSection struct {
+	ID      string       `json:"id"`
+	Title   string       `json:"title"`
+	Kind    string       `json:"kind"`
+	Entries []PatchEntry `json:"entries"`
+}
+
+// PatchSource tracks where the content came from.
+type PatchSource struct {
+	Type string `json:"type"`
+	URL  string `json:"url"`
+}
+
+// PatchDetail powers the patch detail page.
+type PatchDetail struct {
+	ID           string         `json:"id"`
+	Slug         string         `json:"slug"`
+	Title        string         `json:"title"`
+	PublishedAt  string         `json:"publishedAt"`
+	Category     string         `json:"category"`
+	Source       PatchSource    `json:"source"`
+	HeroImageURL string         `json:"heroImageUrl"`
+	Intro        string         `json:"intro"`
+	Sections     []PatchSection `json:"sections"`
+}
+
+// listItem stores both summary and detail while preserving a sortable timestamp.
+type listItem struct {
+	summary   PatchSummary
+	detail    PatchDetail
+	published time.Time
+}
+
+// ListResponse is the list endpoint payload.
+type ListResponse struct {
+	Items      []PatchSummary `json:"items"`
+	Page       int            `json:"page"`
+	Limit      int            `json:"limit"`
+	Total      int            `json:"total"`
+	TotalPages int            `json:"totalPages"`
+}

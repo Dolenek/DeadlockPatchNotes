@@ -1,0 +1,25 @@
+import Link from "next/link";
+
+export function TopNav() {
+  return (
+    <header className="top-nav">
+      <div className="top-nav-inner shell">
+        <Link href="/patches" className="brand-wordmark">
+          Deadlock
+        </Link>
+        <nav className="main-links" aria-label="Main navigation">
+          <Link href="/patches">Patch Notes</Link>
+          <a href="https://forums.playdeadlock.com/forums/changelog.10/" target="_blank" rel="noreferrer">
+            Changelog Forum
+          </a>
+          <a href="https://assets.deadlock-api.com/scalar" target="_blank" rel="noreferrer">
+            Assets API
+          </a>
+        </nav>
+        <a className="play-button" href="https://store.steampowered.com/app/1422450/Deadlock/" target="_blank" rel="noreferrer">
+          Open on Steam
+        </a>
+      </div>
+    </header>
+  );
+}
