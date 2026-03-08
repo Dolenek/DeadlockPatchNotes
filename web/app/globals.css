@@ -401,27 +401,30 @@ a {
 }
 
 .patch-entry-list {
-  padding: 0.85rem;
+  padding: 0.9rem;
   display: grid;
-  gap: 0.8rem;
+  gap: 0.9rem;
 }
 
 .patch-entry {
-  border: 1px solid #ffffff1a;
-  background:
-    linear-gradient(145deg, #0b1a30d9, #091427d9),
-    repeating-linear-gradient(125deg, #ffffff08 0, #ffffff08 1px, transparent 1px, transparent 72px);
-  padding: 0.8rem;
+  border: 1px solid #3f577f;
+  box-shadow: inset 0 0 0 1px #ffffff14;
+  background: linear-gradient(180deg, #061534f0, #071733f0 60%, #06122af0);
+  padding: 1.45rem 1.35rem;
 }
 
 .patch-entry--hero {
-  padding: 0.95rem;
+  padding: 1.6rem 1.35rem 1.25rem;
+}
+
+.patch-entry--item {
+  padding-top: 1.5rem;
 }
 
 .patch-entry-header {
   display: flex;
-  align-items: flex-start;
-  gap: 0.7rem;
+  align-items: center;
+  gap: 1.15rem;
 }
 
 .entry-heading-copy {
@@ -429,108 +432,125 @@ a {
 }
 
 .entry-icon {
-  width: 2.5rem;
-  height: 2.5rem;
-  border: 1px solid #ffffff26;
-  background: #14223c;
+  width: 3rem;
+  height: 3rem;
+  border: 0;
+  box-shadow: none;
+  background: #0c1d39;
   object-fit: cover;
   flex-shrink: 0;
 }
 
 .entry-portrait {
-  width: 7rem;
-  height: 4.2rem;
+  width: 7.5rem;
+  height: 7.5rem;
   border: 0;
-  background: transparent;
-  object-fit: contain;
+  box-shadow: none;
+  background: #0c1d39;
+  object-fit: cover;
   flex-shrink: 0;
 }
 
 .patch-entry h3 {
   margin: 0;
-  font-family: "Cinzel", serif;
-  text-transform: uppercase;
-  font-size: 1.5rem;
-  letter-spacing: 0.06em;
+  font-family: "Barlow", sans-serif;
+  text-transform: none;
+  font-weight: 700;
+  font-size: 2rem;
+  letter-spacing: 0.01em;
+  color: #f7fbff;
 }
 
 .entry-summary {
-  margin: 0.4rem 0 0;
-  color: #b7c9e8;
+  margin: 0.7rem 0 0;
+  color: #dbe8ff;
   line-height: 1.45;
 }
 
-.entry-inline-change-list {
-  margin: 0.4rem 0 0;
-  padding-left: 1rem;
+.entry-quote {
+  margin: 1rem 0 0;
+  padding: 0 0.2rem 0 1.4rem;
+  color: #d4e3ff;
+  font-size: 1.13rem;
+  line-height: 1.56;
+  position: relative;
 }
 
-.entry-inline-change-list li {
-  margin-top: 0.28rem;
-  line-height: 1.42;
-  color: #d5e1f5;
+.entry-quote::before,
+.entry-quote::after {
+  position: absolute;
+  color: #bed3f8;
+  opacity: 0.8;
+  font-size: 1.8rem;
+  line-height: 1;
 }
 
-.entry-inline-change-list li::marker {
-  color: #8db6eb;
+.entry-quote::before {
+  content: "\201C";
+  left: 0;
+  top: -0.14rem;
+}
+
+.entry-quote::after {
+  content: "\201D";
+  right: 0.1rem;
+  bottom: -0.2rem;
 }
 
 .entry-general-block {
-  margin-top: 0.65rem;
-}
-
-.entry-general-block .entry-change-list {
-  margin-top: 0.35rem;
+  margin-top: 1rem;
 }
 
 .entry-groups {
-  margin-top: 0.75rem;
+  margin-top: 1rem;
   display: grid;
-  gap: 0.6rem;
+  gap: 1rem;
 }
 
 .entry-group {
-  border-top: 1px solid #ffffff1d;
-  padding-top: 0.65rem;
+  border-top: 1px solid #53709a;
+  padding-top: 1rem;
 }
 
 .entry-group-header {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
-  margin-bottom: 0.3rem;
+  gap: 0.9rem;
+  margin-bottom: 0.55rem;
 }
 
 .group-icon {
-  width: 2rem;
-  height: 2rem;
-  border: 1px solid #ffffff24;
-  background: #111f38;
+  width: 3.3rem;
+  height: 3.3rem;
+  border: 2px solid #030918;
+  box-shadow: 0 0 0 1px #4a648f;
+  background: #0c1d39;
   object-fit: cover;
   flex-shrink: 0;
 }
 
 .entry-group h4 {
   margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.17em;
-  font-size: 0.92rem;
-  color: #ecf2ff;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 2rem;
+  color: #f7fbff;
 }
 
 .entry-change-list {
-  margin: 0.45rem 0 0;
-  padding-left: 1.15rem;
+  margin: 0.5rem 0 0;
+  padding-left: 1.45rem;
 }
 
 .entry-change-list li {
-  margin-top: 0.4rem;
-  line-height: 1.48;
-  color: #d5e1f5;
+  margin-top: 0.55rem;
+  line-height: 1.52;
+  color: #f0f6ff;
+  font-size: 1.08rem;
 }
 
 .entry-change-list li::marker {
-  color: #8db6eb;
+  color: #d8e8ff;
 }
 
 .not-found-page {
@@ -611,17 +631,29 @@ a {
   }
 
   .patch-entry h3 {
-    font-size: 1.18rem;
+    font-size: 1.45rem;
   }
 
   .entry-portrait {
-    width: 5.3rem;
-    height: 3rem;
+    width: 5.4rem;
+    height: 5.4rem;
   }
 
   .entry-group h4 {
-    letter-spacing: 0.12em;
-    font-size: 0.84rem;
+    font-size: 1.4rem;
+  }
+
+  .group-icon {
+    width: 2.8rem;
+    height: 2.8rem;
+  }
+
+  .entry-quote {
+    font-size: 1rem;
+  }
+
+  .entry-change-list li {
+    font-size: 1rem;
   }
 }
 

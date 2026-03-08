@@ -9,6 +9,7 @@ type PatchSectionRendererProps = {
 export function PatchSectionRenderer({ section }: PatchSectionRendererProps) {
   const sectionClass = `patch-section patch-section--${section.kind}`;
   const isHeroSection = section.kind === "heroes";
+  const isItemSection = section.kind === "items";
 
   return (
     <section id={sectionAnchor(section.id)} className={sectionClass}>
@@ -18,30 +19,39 @@ export function PatchSectionRenderer({ section }: PatchSectionRendererProps) {
 
       <div className="patch-entry-list">
         {section.entries.map((entry) => {
-          const heroEntryClass = isHeroSection ? "patch-entry patch-entry--hero" : "patch-entry";
+          const entryClasses = [
+            "patch-entry",
+            isHeroSection ? "patch-entry--hero" : "",
+            isItemSection ? "patch-entry--item" : "",
+          ]
+            .filter(Boolean)
+            .join(" ");
 
           return (
-            <article key={entry.id} className={heroEntryClass}>
+            <article key={entry.id} className={entryClasses}>
               <header className="patch-entry-header">
                 <FallbackImage
                   src={entry.entityIconUrl}
                   fallbackSrc={entry.entityIconFallbackUrl}
                   alt={entry.entityName}
-                  className={isHeroSection ? "entry-portrait" : "entry-icon"}
+                  className={isHeroSection || isItemSection ? "entry-portrait" : "entry-icon"}
                 />
                 <div className="entry-heading-copy">
                   <h3>{entry.entityName}</h3>
-                  {entry.summary ? <p className="entry-summary">{entry.summary}</p> : null}
-
-                  {isHeroSection && entry.changes.length ? (
-                    <ul className="entry-inline-change-list">
-                      {entry.changes.map((change) => (
-                        <li key={change.id}>{change.text}</li>
-                      ))}
-                    </ul>
-                  ) : null}
                 </div>
               </header>
+
+              {entry.summary ? <blockquote className="entry-quote">{entry.summary}</blockquote> : null}
+
+              {isHeroSection && entry.changes.length ? (
+                <section className="entry-general-block">
+                  <ul className="entry-change-list">
+                    {entry.changes.map((change) => (
+                      <li key={change.id}>{change.text}</li>
+                    ))}
+                  </ul>
+                </section>
+              ) : null}
 
               {!isHeroSection && entry.changes.length ? (
                 <section className="entry-general-block">
