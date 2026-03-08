@@ -1,0 +1,66 @@
+:root {
+  --bg-0: #090d15;
+  --bg-1: #11182a;
+  --bg-2: #17243d;
+  --paper: #eceff4;
+  --ink: #13203a;
+  --text-main: #dbe5f7;
+  --text-soft: #9eb3d6;
+  --line: #243756;
+  --line-strong: #385c90;
+  --accent: #d0a44b;
+  --accent-soft: #d0a44b26;
+  --accent-cold: #4eb0d6;
+  --radius: 10px;
+  --shadow: 0 10px 45px #02050d80;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Barlow", sans-serif;
+  background:
+    radial-gradient(1800px 900px at -10% -20%, #304b7e66, transparent 60%),
+    radial-gradient(1400px 900px at 120% 0%, #25739d4d, transparent 62%),
+    linear-gradient(180deg, var(--bg-1), var(--bg-0));
+  color: var(--text-main);
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+}
+
+.shell {
+  width: min(1200px, 92vw);
+  margin: 0 auto;
+}
+
+.eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

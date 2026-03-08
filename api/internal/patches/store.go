@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/fs"
 	"math"
 	"path"
 	"sort"
@@ -87,33 +88,55 @@ func (s *Store) GetBySlug(slug string) (PatchDetail, error) {
 }
 
 func seedPatchData() []listItem {
+	details := loadFixtureDetails()
+	seeded := make([]listItem, 0, len(details))
+
+	for _, detail := range details {
+		seeded = append(seeded, buildListItem(detail))
+	}
+
+	return seeded
+}
+
+func loadFixtureDetails() []PatchDetail {
 	entries, err := fixtureFS.ReadDir("data")
 	if err != nil {
 		panic(fmt.Errorf("read fixtures: %w", err))
 	}
 
-	seeded := make([]listItem, 0, len(entries))
+	details := make([]PatchDetail, 0, len(entries))
 	for _, entry := range entries {
 		if entry.IsDir() || !strings.HasSuffix(entry.Name(), ".json") {
 			continue
 		}
+		details = append(details, mustReadFixtureDetail(entry))
+	}
 
-		raw, err := fixtureFS.ReadFile(path.Join("data", entry.Name()))
-		if err != nil {
-			panic(fmt.Errorf("read fixture %s: %w", entry.Name(), err))
-		}
+	return details
+}
 
-		var detail PatchDetail
-		if err := json.Unmarshal(raw, &detail); err != nil {
-			panic(fmt.Errorf("decode fixture %s: %w", entry.Name(), err))
-		}
+func mustReadFixtureDetail(entry fs.DirEntry) PatchDetail {
+	raw, err := fixtureFS.ReadFile(path.Join("data", entry.Name()))
+	if err != nil {
+		panic(fmt.Errorf("read fixture %s: %w", entry.Name(), err))
+	}
 
-		published, err := time.Parse(time.RFC3339, detail.PublishedAt)
-		if err != nil {
-			panic(fmt.Errorf("parse fixture time %s: %w", entry.Name(), err))
-		}
+	var detail PatchDetail
+	if err := json.Unmarshal(raw, &detail); err != nil {
+		panic(fmt.Errorf("decode fixture %s: %w", entry.Name(), err))
+	}
 
-		summary := PatchSummary{
+	return detail
+}
+
+func buildListItem(detail PatchDetail) listItem {
+	published, err := time.Parse(time.RFC3339, detail.PublishedAt)
+	if err != nil {
+		panic(fmt.Errorf("parse fixture time for %s: %w", detail.Slug, err))
+	}
+
+	return listItem{
+		summary: PatchSummary{
 			ID:            detail.ID,
 			Slug:          detail.Slug,
 			Title:         detail.Title,
@@ -122,16 +145,10 @@ func seedPatchData() []listItem {
 			Excerpt:       buildExcerpt(detail.Intro),
 			CoverImageURL: detail.HeroImageURL,
 			SourceURL:     detail.Source.URL,
-		}
-
-		seeded = append(seeded, listItem{
-			summary:   summary,
-			detail:    detail,
-			published: published,
-		})
+		},
+		detail:    detail,
+		published: published,
 	}
-
-	return seeded
 }
 
 func buildExcerpt(intro string) string {

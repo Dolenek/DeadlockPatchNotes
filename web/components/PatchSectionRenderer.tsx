@@ -1,93 +1,105 @@
 import { FallbackImage } from "@/components/FallbackImage";
-import { PatchSection } from "@/lib/types";
+import { PatchEntry, PatchEntryGroup, PatchSection } from "@/lib/types";
 import { sectionAnchor } from "@/lib/utils";
 
 type PatchSectionRendererProps = {
   section: PatchSection;
 };
 
-export function PatchSectionRenderer({ section }: PatchSectionRendererProps) {
-  const sectionClass = `patch-section patch-section--${section.kind}`;
-  const isHeroSection = section.kind === "heroes";
-  const isItemSection = section.kind === "items";
+type EntryHeaderProps = {
+  entry: PatchEntry;
+  portraitLayout: boolean;
+};
+
+function getEntryClassName(kind: PatchSection["kind"]) {
+  const classes = ["patch-entry"];
+  if (kind === "heroes") {
+    classes.push("patch-entry--hero");
+  }
+  if (kind === "items") {
+    classes.push("patch-entry--item");
+  }
+  return classes.join(" ");
+}
+
+function EntryHeader({ entry, portraitLayout }: EntryHeaderProps) {
+  return (
+    <header className="patch-entry-header">
+      <FallbackImage
+        src={entry.entityIconUrl}
+        fallbackSrc={entry.entityIconFallbackUrl}
+        alt={entry.entityName}
+        className={portraitLayout ? "entry-portrait" : "entry-icon"}
+      />
+      <div className="entry-heading-copy">
+        <h3>{entry.entityName}</h3>
+      </div>
+    </header>
+  );
+}
+
+function ChangeList({ changes }: { changes: PatchEntry["changes"] }) {
+  return (
+    <ul className="entry-change-list">
+      {changes.map((change) => (
+        <li key={change.id}>{change.text}</li>
+      ))}
+    </ul>
+  );
+}
+
+function EntryGroups({ groups }: { groups: PatchEntryGroup[] }) {
+  return (
+    <div className="entry-groups">
+      {groups.map((group) => (
+        <section key={group.id} className="entry-group">
+          <header className="entry-group-header">
+            <FallbackImage
+              src={group.iconUrl}
+              fallbackSrc={group.iconFallbackUrl}
+              alt={group.title}
+              className="group-icon"
+            />
+            <h4>{group.title}</h4>
+          </header>
+          <ChangeList changes={group.changes} />
+        </section>
+      ))}
+    </div>
+  );
+}
+
+function PatchEntryArticle({ entry, kind }: { entry: PatchEntry; kind: PatchSection["kind"] }) {
+  const portraitLayout = kind === "heroes" || kind === "items";
 
   return (
-    <section id={sectionAnchor(section.id)} className={sectionClass}>
+    <article className={getEntryClassName(kind)}>
+      <EntryHeader entry={entry} portraitLayout={portraitLayout} />
+
+      {entry.summary ? <blockquote className="entry-quote">{entry.summary}</blockquote> : null}
+
+      {entry.changes.length ? (
+        <section className="entry-general-block">
+          <ChangeList changes={entry.changes} />
+        </section>
+      ) : null}
+
+      {entry.groups?.length ? <EntryGroups groups={entry.groups} /> : null}
+    </article>
+  );
+}
+
+export function PatchSectionRenderer({ section }: PatchSectionRendererProps) {
+  return (
+    <section id={sectionAnchor(section.id)} className={`patch-section patch-section--${section.kind}`}>
       <header className="patch-section-header">
         <h2>{section.title}</h2>
       </header>
 
       <div className="patch-entry-list">
-        {section.entries.map((entry) => {
-          const entryClasses = [
-            "patch-entry",
-            isHeroSection ? "patch-entry--hero" : "",
-            isItemSection ? "patch-entry--item" : "",
-          ]
-            .filter(Boolean)
-            .join(" ");
-
-          return (
-            <article key={entry.id} className={entryClasses}>
-              <header className="patch-entry-header">
-                <FallbackImage
-                  src={entry.entityIconUrl}
-                  fallbackSrc={entry.entityIconFallbackUrl}
-                  alt={entry.entityName}
-                  className={isHeroSection || isItemSection ? "entry-portrait" : "entry-icon"}
-                />
-                <div className="entry-heading-copy">
-                  <h3>{entry.entityName}</h3>
-                </div>
-              </header>
-
-              {entry.summary ? <blockquote className="entry-quote">{entry.summary}</blockquote> : null}
-
-              {isHeroSection && entry.changes.length ? (
-                <section className="entry-general-block">
-                  <ul className="entry-change-list">
-                    {entry.changes.map((change) => (
-                      <li key={change.id}>{change.text}</li>
-                    ))}
-                  </ul>
-                </section>
-              ) : null}
-
-              {!isHeroSection && entry.changes.length ? (
-                <section className="entry-general-block">
-                  <ul className="entry-change-list">
-                    {entry.changes.map((change) => (
-                      <li key={change.id}>{change.text}</li>
-                    ))}
-                  </ul>
-                </section>
-              ) : null}
-
-              {entry.groups?.length ? (
-                <div className="entry-groups">
-                  {entry.groups.map((group) => (
-                    <section key={group.id} className="entry-group">
-                      <header className="entry-group-header">
-                        <FallbackImage
-                          src={group.iconUrl}
-                          fallbackSrc={group.iconFallbackUrl}
-                          alt={group.title}
-                          className="group-icon"
-                        />
-                        <h4>{group.title}</h4>
-                      </header>
-                      <ul className="entry-change-list">
-                        {group.changes.map((change) => (
-                          <li key={change.id}>{change.text}</li>
-                        ))}
-                      </ul>
-                    </section>
-                  ))}
-                </div>
-              ) : null}
-            </article>
-          );
-        })}
+        {section.entries.map((entry) => (
+          <PatchEntryArticle key={entry.id} entry={entry} kind={section.kind} />
+        ))}
       </div>
     </section>
   );

@@ -1,0 +1,53 @@
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  border-bottom: 1px solid #ffffff1f;
+  backdrop-filter: blur(10px);
+  background: #090d15d1;
+}
+
+.top-nav-inner {
+  min-height: 64px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.brand-wordmark {
+  font-family: "Cinzel", serif;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  font-size: 1.12rem;
+}
+
+.main-links {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.main-links a {
+  text-decoration: none;
+  color: var(--text-soft);
+  font-size: 0.9rem;
+  transition: color 180ms ease;
+}
+
+.main-links a:hover {
+  color: var(--text-main);
+}
+
+.play-button {
+  text-decoration: none;
+  background: linear-gradient(135deg, #2b9dc6, #2f6bb0);
+  color: #f6fcff;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}

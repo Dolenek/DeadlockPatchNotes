@@ -2,6 +2,12 @@
 
 UI-first implementation of a Deadlock patch notes site inspired by League of Legends and Dota patch pages.
 
+## Documentation
+
+- Main docs index: `docs/index.md`
+- Architecture overview: `docs/architecture.md`
+- Development workflow: `docs/development.md`
+
 ## Monorepo Layout
 
 - `web/`: Next.js App Router frontend (SSR React)

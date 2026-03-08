@@ -10,7 +10,7 @@ type PatchesPageProps = {
 export default async function PatchesPage({ searchParams }: PatchesPageProps) {
   const resolvedParams = await searchParams;
   const page = clampPage(resolvedParams.page);
-  const data = await getPatches(page, 12);
+  const patchList = await getPatches(page, 12);
 
   return (
     <main>
@@ -26,12 +26,12 @@ export default async function PatchesPage({ searchParams }: PatchesPageProps) {
 
       <section className="shell patch-list-section">
         <div className="patch-grid">
-          {data.items.map((patch) => (
+          {patchList.items.map((patch) => (
             <PatchCard key={patch.id} patch={patch} />
           ))}
         </div>
 
-        <Pagination page={data.page} totalPages={data.totalPages} />
+        <Pagination page={patchList.page} totalPages={patchList.totalPages} />
       </section>
     </main>
   );

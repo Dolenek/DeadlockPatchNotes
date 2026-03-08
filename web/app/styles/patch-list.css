@@ -1,0 +1,154 @@
+.patch-list-masthead {
+  padding: clamp(4.5rem, 9vw, 7.5rem) 0 clamp(3rem, 8vw, 5rem);
+  position: relative;
+  overflow: hidden;
+}
+
+.patch-list-masthead::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(95deg, #1b2f52cc, #08192d99),
+    url("https://clan.akamai.steamstatic.com/images/45164767/1a200778c94a048c5b2580a1e1a36071679ff19e.png") center / cover no-repeat;
+  transform: scale(1.08);
+  filter: blur(3px);
+}
+
+.patch-list-masthead .shell {
+  position: relative;
+  z-index: 1;
+  max-width: 740px;
+  animation: rise-in 600ms ease both;
+}
+
+.patch-list-masthead h1 {
+  margin: 0.45rem 0 0.75rem;
+  font-family: "Cinzel", serif;
+  font-size: clamp(2.2rem, 5.4vw, 4.1rem);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.patch-list-masthead p {
+  margin: 0;
+  line-height: 1.55;
+  color: #dce7fa;
+}
+
+.patch-list-section {
+  padding: 2.5rem 0 4rem;
+}
+
+.patch-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+.patch-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: linear-gradient(165deg, #12203bcf, #0e182ac4);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transform: translateY(12px);
+  opacity: 0;
+  animation: rise-in 450ms ease forwards;
+}
+
+.patch-card:nth-child(2) {
+  animation-delay: 70ms;
+}
+
+.patch-card:nth-child(3) {
+  animation-delay: 130ms;
+}
+
+.patch-card-link {
+  display: block;
+  text-decoration: none;
+}
+
+.patch-card-image-wrap {
+  margin: 0;
+  position: relative;
+  border-bottom: 1px solid #ffffff1a;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+}
+
+.patch-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 260ms ease;
+}
+
+.patch-card:hover .patch-card-image {
+  transform: scale(1.08);
+}
+
+.card-corner-mark {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  font-family: "JetBrains Mono", monospace;
+  background: #0b111ed1;
+  border-top: 1px solid #ffffff38;
+  border-left: 1px solid #ffffff38;
+  color: var(--accent);
+  padding: 0.35rem 0.6rem;
+  font-size: 0.8rem;
+}
+
+.patch-card-body {
+  padding: 0.95rem 1rem 1.1rem;
+}
+
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  color: var(--text-soft);
+  font-size: 0.8rem;
+  margin-bottom: 0.6rem;
+}
+
+.patch-card h2 {
+  margin: 0;
+  font-family: "Cinzel", serif;
+  font-size: 1.04rem;
+  text-transform: uppercase;
+  line-height: 1.35;
+}
+
+.patch-card p {
+  margin: 0.55rem 0 0;
+  color: #b8c8e4;
+  line-height: 1.45;
+}
+
+.pagination {
+  margin-top: 1.8rem;
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.pagination a {
+  text-decoration: none;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.86rem;
+}
+
+.pagination .is-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
