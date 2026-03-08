@@ -14,12 +14,22 @@ export type PatchChange = {
   text: string;
 };
 
+export type PatchEntryGroup = {
+  id: string;
+  title: string;
+  iconUrl?: string;
+  iconFallbackUrl?: string;
+  changes: PatchChange[];
+};
+
 export type PatchEntry = {
   id: string;
   entityName: string;
   entityIconUrl?: string;
+  entityIconFallbackUrl?: string;
   summary?: string;
   changes: PatchChange[];
+  groups?: PatchEntryGroup[];
 };
 
 export type PatchSection = {

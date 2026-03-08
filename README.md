@@ -6,6 +6,7 @@ UI-first implementation of a Deadlock patch notes site inspired by League of Leg
 
 - `web/`: Next.js App Router frontend (SSR React)
 - `api/`: Go API (`net/http` + `chi`) with typed patch contracts
+- `scripts/`: data generation scripts (Steam patch parsing + asset mirroring)
 
 ## Local Run
 
@@ -35,8 +36,20 @@ Frontend runs on `http://localhost:3000` and calls `API_BASE_URL` (default `http
 - `GET /api/v1/patches?page=<int>&limit=<int>`
 - `GET /api/v1/patches/{slug}`
 
-## V1 Notes
+## Fixture + Assets
 
-- Uses one hardcoded patch dataset (`Gameplay Update - 03-06-2026`) from:
-  `https://store.steampowered.com/news/app/1422450/view/519740319207522795`
-- Ingestion/sync pipeline from forum + Steam is intentionally deferred.
+- Patch data is loaded from JSON fixtures in `api/internal/patches/data`.
+- The current fixture includes the full Steam patch `Gameplay Update - 03-06-2026`.
+- Patch images/icons are mirrored under `web/public/assets/patches/2026-03-06-update`.
+- Runtime rendering is local-first with remote URL fallback for missing assets.
+
+Regenerate fixture and mirrored assets:
+
+```bash
+node scripts/generate_patch_fixture.mjs
+```
+
+## SQL Drafts
+
+- PostgreSQL draft schema for DB-backed ingestion is in:
+  `api/sql/drafts/001_patchnotes_schema_postgres.sql`

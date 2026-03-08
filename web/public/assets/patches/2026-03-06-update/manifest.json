@@ -1,0 +1,811 @@
+{
+  "generatedAt": "2026-03-08T10:47:13.855Z",
+  "patchSlug": "2026-03-06-update",
+  "assetCount": 201,
+  "assets": [
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/goose_egg.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/golden-goose-egg-0b7680fc.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/basic_magazine.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/extended-magazine-3b016f54.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/high_velocity_rounds.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/high-velocity-rounds-28f05e9b.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/long_range.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/long-range-2d461371.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/active_reload.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/active-reload-55ad9b39.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/opening_rounds.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/opening-rounds-11918949.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/swift_striker.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/swift-striker-0e5f3314.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/mystic_shot.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/mystic-shot-59c6f5b8.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/split_shot.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/split-shot-907ae699.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/backstabber.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/backstabber-d82b3938.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/melee_charge.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/melee-charge-96e2ba54.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/spirit_shredder_bullets.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/spirit-shredder-bullets-2c3cb597.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/weakening_headshot.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/weakening-headshot-67e5bfa5.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/alchemical_seal.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/ballistic-enchantment-9cced339.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/hunters_aura.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/hunter-s-aura-d1b2e5c9.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/weighted_shots.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/weighted-shots-ca4b13d0.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/express_shot.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/express-shot-45484c93.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/blood_tribute.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/blood-tribute-9caa4653.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/spellslinger_headshots.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/spirit-rend-503491de.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/crushing_fists.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/crushing-fists-8b61381e.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/frenzy.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/frenzy-9c6ecce7.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/spiritual_overflow.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/spiritual-overflow-72424c08.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/extra_health.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/extra-health-f0dda889.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/enduring_speed.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/enduring-speed-11e16c42.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/restorative_locket.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/restorative-locket-6f5c1aed.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/return_fire.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/return-fire-f5a8801c.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/weapon_shielding.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/weapon-shielding-108155e3.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/bullet_resilience.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/bullet-resilience-81bad28c.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/spirit_resilience.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/spirit-resilience-7684cc70.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/lifestrike.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/lifestrike-1e442b17.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/majestic_leap.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/majestic-leap-b48c6e33.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/trophy_collector.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/trophy-collector-9754c999.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/debuff_remover.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/dispel-magic-e170b821.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/fortitude.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/fortitude-77aa9e04.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/spellbreaker.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/spellbreaker-6a19213e.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/diviners_kevlar.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/diviner-s-kevlar-ac76e2e8.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/inhibitor.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/inhibitor-11200902.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/cheat_death.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/cheat-death-383beeb5.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/colossus.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/colossus-5f81d388.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/siphon_bullets.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/siphon-bullets-96791c4c.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/mystic_regen.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/mystic-regeneration-e1eb3c9b.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/rusted_barrel.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/rusted-barrel-c7a881a9.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/arcane_surge.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/arcane-surge-f973b19c.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/slowing_hex.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/slowing-hex-f2957d68.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/suppressor.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/suppressor-824dd743.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/spirit_sap.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/spirit-sap-fcbeaa69.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/decay.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/decay-dc321a98.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/silence_glyph.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/silence-wave-869e2ee9.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/knockdown.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/knockdown-2e22dbdc.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/radiant_regeneration.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/radiant-regeneration-5ce94974.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/tankbuster.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/tankbuster-c64cfad0.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/torment_pulse.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/torment-pulse-05ee9298.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/disarming_hex.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/disarming-hex-fb1a2106.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/magic_carpet.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/magic-carpet-569fbae3.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/ethereal_shift.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/ethereal-shift-736e895b.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/curse.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/cursed-relic-20586c2c.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/vortex_web.png",
+      "localPath": "/assets/patches/2026-03-06-update/items/vortex-web-dcca6282.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/bull_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/abrams.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bull_drain.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/abrams-siphon-life.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bull_charge.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/abrams-shoulder-charge.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bull_beef.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/abrams-infernal-resilience.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bull_jump.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/abrams-seismic-impact.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/fencer_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/apollo.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/fencer/fencer_riposte.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/apollo-riposte.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/fencer/fencer_lungingstab.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/apollo-flawless-advance.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/fencer/fencer_ult.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/apollo-itani-lo-sahn.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/bebop_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/bebop.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/punkgoat_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/billy.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/punkgoat/goat_sigilslam.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/billy-bashdown.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/punkgoat/goat_risingram.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/billy-rising-ram.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/punkgoat/goat_blasted.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/billy-blasted.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/punkgoat/goat_chaingang.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/billy-chain-gang.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/nano_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/calico.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/nano/nano_clustergrenade.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/calico-gloom-bombs.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/nano/nano_dash.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/calico-leaping-slash.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/nano/nano_catform.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/calico-ava.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/nano/nano_shadow_pulse.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/calico-return-to-shadows.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/unicorn_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/celeste.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/unicorn/unicorn_orb.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/celeste-shining-wonder.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/doorman_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/doorman.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/doorman/doorman_bell.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/doorman-call-bell.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/doorman/doorman_doorway.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/doorman-doorway.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/doorman/doorman_luggagetrolley.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/doorman-luggage-cart.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/doorman/doorman_elevator.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/doorman-hotel-guest.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/drifter_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/drifter.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/drifter/drifter_claw.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/drifter-rend.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/drifter/drifter_stalkersmark.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/drifter-stalker-s-mark.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/drifter/drifter_thehunger.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/drifter-bloodscent.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/drifter/darkness.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/drifter-eternal-night.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/sumo_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/dynamo.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/sumo/sumo_stomp.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/dynamo-kinetic-pulse.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/sumo/sumo_quantum.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/dynamo-quantum-entanglement.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/sumo/sumo_pork_bun.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/dynamo-rejuvenating-aurora.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/sumo/sumo_vacuum.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/dynamo-singularity.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/necro_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/graves.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/necro/necro_hands.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/graves-grasping-hands.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/haze_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/haze.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/haze/haze_sleep_dagger.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/haze-sleep-dagger.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/haze/haze_smoke_bomb.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/haze-smoke-bomb.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/haze/haze_fixation.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/haze-fixation.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/haze/haze_bullet_flurry.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/haze-bullet-dance.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/inferno_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/infernus.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/inferno_molotov.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/infernus-napalm.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/inferno_dash.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/infernus-flame-dash.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/inferno_deflect.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/infernus-afterburn.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/inferno_bomb.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/infernus-concussive-combustion.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/tengu_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/ivy.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/tengu/tengu_storm_flask.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/ivy-entangling-thorns.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/tengu/tengu_tether.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/ivy-kudzu-connection.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/tengu/tengu_stone_form.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/ivy-stone-form.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/tengu/tengu_lightning_crash.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/ivy-air-drop.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/kelvin_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/kelvin.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/kelvin/freezing_grenade.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/kelvin-frost-grenade.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/kelvin/ice_path.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/kelvin-ice-path.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/kelvin/ice_beam.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/kelvin-arctic-beam.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/kelvin/frozen_shelter.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/kelvin-frozen-shelter.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/spectre_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/lady-geist.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/spectre/blood_bomb.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/lady-geist-essence-bomb.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/spectre/life_drain.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/lady-geist-life-drain.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/spectre/blood_exchange.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/lady-geist-soul-exchange.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/lash_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/lash.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/lash/lash_lash.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/lash-grapple.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/lash/lash_flog.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/lash-flog.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/lash/lash_counter_lash.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/lash-death-slam.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/engineer_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/mcginnis.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/engineer_turret.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/mcginnis-mini-turret.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/engineer_resupply.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/mcginnis-medicinal-specter.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/engineer_fissure_2.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/mcginnis-spectral-wall.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/engineer_rockets.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/mcginnis-heavy-barrage.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/vampirebat_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/mina.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/vampirebat/vampirebat_rake.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/mina-rake.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/vampirebat/vampirebat_sanguine_retreat.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/mina-sanguine-retreat.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/vampirebat/vampirebat_love_bites.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/mina-love-bites.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/vampirebat/vampirebat_nox_nostra.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/mina-nox-nostra.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/mirage_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/mirage.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/mirage/mirage_fire_beetles.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/mirage-fire-scarabs.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/mirage/mirage_tornado.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/mirage-dust-devil.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/mirage/mirage_sand_phantom.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/mirage-djinn-s-mark.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/mirage/mirage_teleport.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/mirage-traveler.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/digger_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/mo-krill.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/grappler/grappler_regen.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/mo-krill-scorn.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/grappler/grappler_spin.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/mo-krill-burrow.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/grappler/grappler_throw_sand.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/mo-krill-sand-blast.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/grappler/grappler_combo.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/mo-krill-combo.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/bookworm_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/paige.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bookworm/bookworm_dragon.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/paige-bookwyrm.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bookworm/bookworm_defendandfight.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/paige-plot-armor.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bookworm/bookworm_blindinglight.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/paige-captivating-read.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bookworm/bookworm_charge.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/paige-rallying-charge.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/chrono_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/paradox.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/chrono/chrono_time_bomb.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/paradox-pulse-grenade.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/chrono/chrono_time_wall.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/paradox-time-wall.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/duo/duo_attack.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/paradox-kinetic-carbine.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/chrono/chrono_swap.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/paradox-paradoxical-swap.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/synth_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/pocket.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/synth/synth_barrage.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/pocket-barrage.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/synth/synth_plasma_flux.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/pocket-flying-cloak.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/synth/synth_pulse.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/pocket-enchanter-s-satchel.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/synth/synth_affliction.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/pocket-affliction.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/familiar_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/rem.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/familiar/familiar_helpers.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/rem-lil-helpers.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/familiar/familiar_sleep.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/rem-naptime.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/gigawatt_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/seven.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/giga_ball.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/seven-lightning-ball.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/giga_static.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/seven-static-charge.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/giga_chain.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/seven-power-surge.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/giga_storm.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/seven-storm-cloud.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/shiv_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/shiv.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/shiv/shiv_toss.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/shiv-serrated-knives.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/shiv/shiv_flash.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/shiv-slice-and-dice.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/shiv/shiv_killing_blow.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/shiv-killing-blow.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/werewolf_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/silver.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/werewolf/werewolf_lycancurse.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/silver-lycan-curse.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/frank_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/victor.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/frank/frank_pain_battery.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/victor-pain-battery.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/frank/frank_jump_start.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/victor-jumpstart.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/frank/frank_aura_of_suffering.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/victor-aura-of-suffering.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/frank/frank_shocking_reanimation.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/victor-shocking-reanimation.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/hornet_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/vindicta.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/hornet/vindicta_stake.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/vindicta-stake.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/hornet/vindicta_flight.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/vindicta-flight.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/hornet/hornet_crow.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/vindicta-crow-familiar.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/hornet/hornet_assassinate.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/vindicta-assassinate.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/viscous_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/viscous.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/viscous/viscous_goo_ball.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/viscous-splatter.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/viscous/viscous_restorative_goo.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/viscous-the-cube.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/viscous/viscous_goo_punch.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/viscous-puddle-punch.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/viscous/viscous_goo_sphere.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/viscous-goo-ball.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/warden_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/warden.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/warden/warden_crowd_control.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/warden-alchemical-flask.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/warden/warden_high_alert.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/warden-willpower.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/warden/warden_lock_down.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/warden-binding-word.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/warden/warden_riot_protocol.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/warden-last-stand.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/wraith_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/wraith.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/wraith_card_trick.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/wraith-card-trick.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/wraith_aura.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/wraith-full-auto.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/wraith_lift.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/wraith-telekinesis.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/yamato_sm.png",
+      "localPath": "/assets/patches/2026-03-06-update/heroes/yamato.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/yamato/yamato_power_slash.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/yamato-power-slash.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/yamato/yamato_flying_strike.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/yamato-flying-slash.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/yamato/yamato_crimson_slash.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/yamato-crimson-slash.png"
+    }
+  ]
+}

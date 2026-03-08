@@ -4,14 +4,14 @@ import "time"
 
 // PatchSummary is a compact representation used on the list page.
 type PatchSummary struct {
-	ID           string `json:"id"`
-	Slug         string `json:"slug"`
-	Title        string `json:"title"`
-	PublishedAt  string `json:"publishedAt"`
-	Category     string `json:"category"`
-	Excerpt      string `json:"excerpt"`
+	ID            string `json:"id"`
+	Slug          string `json:"slug"`
+	Title         string `json:"title"`
+	PublishedAt   string `json:"publishedAt"`
+	Category      string `json:"category"`
+	Excerpt       string `json:"excerpt"`
 	CoverImageURL string `json:"coverImageUrl"`
-	SourceURL    string `json:"sourceUrl"`
+	SourceURL     string `json:"sourceUrl"`
 }
 
 // PatchChange is a single bullet/line under an entry.
@@ -20,13 +20,24 @@ type PatchChange struct {
 	Text string `json:"text"`
 }
 
+// PatchEntryGroup is a nested grouping for hero ability/talent blocks.
+type PatchEntryGroup struct {
+	ID                  string        `json:"id"`
+	Title               string        `json:"title"`
+	IconURL             string        `json:"iconUrl,omitempty"`
+	IconFallbackURL     string        `json:"iconFallbackUrl,omitempty"`
+	Changes             []PatchChange `json:"changes"`
+}
+
 // PatchEntry groups related changes.
 type PatchEntry struct {
-	ID            string        `json:"id"`
-	EntityName    string        `json:"entityName"`
-	EntityIconURL string        `json:"entityIconUrl,omitempty"`
-	Summary       string        `json:"summary,omitempty"`
-	Changes       []PatchChange `json:"changes"`
+	ID                    string            `json:"id"`
+	EntityName            string            `json:"entityName"`
+	EntityIconURL         string            `json:"entityIconUrl,omitempty"`
+	EntityIconFallbackURL string            `json:"entityIconFallbackUrl,omitempty"`
+	Summary               string            `json:"summary,omitempty"`
+	Changes               []PatchChange     `json:"changes"`
+	Groups                []PatchEntryGroup `json:"groups,omitempty"`
 }
 
 // PatchSection is a top-level section in a patch article.
