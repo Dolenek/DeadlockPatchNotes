@@ -1,6 +1,9 @@
 # Deadlock Patch Notes
 
-UI-first implementation of a Deadlock patch notes site inspired by League of Legends and Dota patch pages.
+Deadlock patch notes monorepo with:
+- DB-backed Go API
+- Next.js frontend
+- Automated forum/Steam ingestion pipeline
 
 ## Documentation
 
@@ -11,8 +14,8 @@ UI-first implementation of a Deadlock patch notes site inspired by League of Leg
 ## Monorepo Layout
 
 - `web/`: Next.js App Router frontend (SSR React)
-- `api/`: Go API (`net/http` + `chi`) with typed patch contracts
-- `scripts/`: data generation scripts (Steam patch parsing + asset mirroring)
+- `api/`: Go API (`net/http` + `chi`) with PostgreSQL storage
+- `scripts/`: helper scripts for checks and server automation
 
 ## Local Run
 
@@ -21,7 +24,7 @@ UI-first implementation of a Deadlock patch notes site inspired by League of Leg
 ```bash
 cd api
 go mod tidy
-go run ./cmd/server
+DATABASE_URL='postgres://deadlock:deadlock@localhost:5432/deadlock_patchnotes?sslmode=disable' go run ./cmd/server
 ```
 
 Server listens on `http://localhost:8080` by default.
@@ -31,10 +34,19 @@ Server listens on `http://localhost:8080` by default.
 ```bash
 cd web
 npm install
-npm run dev
+API_BASE_URL=http://localhost:8080 npm run dev
 ```
 
-Frontend runs on `http://localhost:3000` and calls `API_BASE_URL` (default `http://localhost:8080`).
+Frontend runs on `http://localhost:3000`.
+
+### Sync patch notes into DB
+
+```bash
+cd api
+DATABASE_URL='postgres://deadlock:deadlock@localhost:5432/deadlock_patchnotes?sslmode=disable' go run ./cmd/sync
+```
+
+Default source is `https://forums.playdeadlock.com/forums/changelog.10/`.
 
 ## API Endpoints
 
@@ -42,20 +54,27 @@ Frontend runs on `http://localhost:3000` and calls `API_BASE_URL` (default `http
 - `GET /api/v1/patches?page=<int>&limit=<int>`
 - `GET /api/v1/patches/{slug}`
 
-## Fixture + Assets
-
-- Patch data is loaded from JSON fixtures in `api/internal/patches/data`.
-- The current fixture includes the full Steam patch `Gameplay Update - 03-06-2026`.
-- Patch images/icons are mirrored under `web/public/assets/patches/2026-03-06-update`.
-- Runtime rendering is local-first with remote URL fallback for missing assets.
-
-Regenerate fixture and mirrored assets:
+## Docker Deployment
 
 ```bash
-node scripts/generate_patch_fixture.mjs
+cp .env.example .env
+# edit .env (especially POSTGRES_PASSWORD)
+docker-compose up -d --build db api web
+```
+
+Run one ingestion pass:
+
+```bash
+docker-compose run --rm sync
+```
+
+Install sync + backup cron jobs:
+
+```bash
+./scripts/server/install_cron.sh
 ```
 
 ## SQL Drafts
 
-- PostgreSQL draft schema for DB-backed ingestion is in:
-  `api/sql/drafts/001_patchnotes_schema_postgres.sql`
+- Legacy draft schema is in `api/sql/drafts/001_patchnotes_schema_postgres.sql`
+- Active runtime migration is in `api/internal/db/migrations/001_patchnotes.sql`

@@ -39,6 +39,18 @@ export type PatchSection = {
   entries: PatchEntry[];
 };
 
+export type PatchTimelineBlock = {
+  id: string;
+  kind: string;
+  title: string;
+  releasedAt: string;
+  source: {
+    type: string;
+    url: string;
+  };
+  changes: PatchChange[];
+};
+
 export type PatchDetail = {
   id: string;
   slug: string;
@@ -52,6 +64,7 @@ export type PatchDetail = {
   heroImageUrl: string;
   intro: string;
   sections: PatchSection[];
+  timeline?: PatchTimelineBlock[];
 };
 
 export type PatchListResponse = {

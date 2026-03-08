@@ -1,18 +1,19 @@
 # Architecture
 
 ## Overview
-The repository is a small monorepo for a Deadlock patch notes product:
+The repository is a monorepo for a Deadlock patch notes product:
 - `api/`: serves patch list/detail payloads for the frontend.
 - `web/`: Next.js App Router UI rendering patch list and patch detail views.
-- `scripts/`: fetches and converts source patch content into local fixtures/assets.
+- `scripts/`: helper scripts for source checks and server automation.
 
 ## API Layer (`api/`)
 - Server entrypoint: `api/cmd/server/main.go`.
 - Router: `api/internal/httpapi/router.go` using `chi`.
-- Data store: `api/internal/patches/store.go` reads embedded JSON fixtures.
-- Data contracts: `api/internal/patches/models.go`.
+- Storage: `api/internal/patches/postgres_store.go` reads `patches.detail_payload` JSON from PostgreSQL.
+- Migrations: `api/internal/db/migrations/*.sql` applied on startup.
+- Sync command: `api/cmd/sync/main.go` crawls forum/Steam sources and upserts DB rows.
 
-Current runtime is fixture-backed in-memory storage for UI iteration.
+Primary runtime source is PostgreSQL (`DATABASE_URL` required).
 
 ## Web Layer (`web/`)
 - App routes:
@@ -24,12 +25,19 @@ Current runtime is fixture-backed in-memory storage for UI iteration.
 
 The frontend defaults to `API_BASE_URL=http://localhost:8080`.
 
-## Fixture and Asset Pipeline (`scripts/`)
-- Entry command: `node scripts/generate_patch_fixture.mjs`.
-- Pulls source patch text and asset metadata from Steam and deadlock-api.
-- Produces:
-  - JSON fixture: `api/internal/patches/data/<slug>.json`
-  - Mirrored images: `web/public/assets/patches/<slug>/...`
-  - Asset manifest: `web/public/assets/patches/<slug>/manifest.json`
+## Ingestion Pipeline
+- Source list crawl: `https://forums.playdeadlock.com/forums/changelog.10/`.
+- Thread parser: extracts official posts from `Yoshi` and their timestamps/content.
+- Steam click-through parser: resolves linked `store.steampowered.com/news/.../view/<id>` pages and parses embedded partner event payloads.
+- Output persistence:
+  - `patches` table (summary + detail JSON)
+  - `patch_release_blocks` table (initial/hotfix timeline blocks)
+  - `sync_runs` table (sync observability)
 
-At runtime, UI prefers local mirrored assets and can fall back to remote URLs.
+At runtime, API list/detail reads from DB only.
+
+## Deployment Model
+- `docker-compose.yml` runs `db`, `api`, `web`, and one-shot `sync` service.
+- PostgreSQL persistence uses named volume `pgdata`.
+- Web binds to loopback-only host port (`127.0.0.1:${WEB_PORT}`).
+- Recommended external exposure is via Cloudflare Tunnel to the web port.

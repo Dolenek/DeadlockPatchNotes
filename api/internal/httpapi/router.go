@@ -12,10 +12,10 @@ import (
 )
 
 type API struct {
-	store *patches.Store
+	store patches.Repository
 }
 
-func NewRouter(store *patches.Store) http.Handler {
+func NewRouter(store patches.Repository) http.Handler {
 	api := &API{store: store}
 
 	r := chi.NewRouter()

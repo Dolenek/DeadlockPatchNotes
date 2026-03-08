@@ -1,0 +1,114 @@
+package patches
+
+import (
+	"context"
+	"database/sql"
+	"encoding/json"
+	"fmt"
+	"math"
+	"time"
+)
+
+// PostgresStore reads patch data from PostgreSQL.
+type PostgresStore struct {
+	db *sql.DB
+}
+
+func NewPostgresStore(db *sql.DB) *PostgresStore {
+	return &PostgresStore{db: db}
+}
+
+func (s *PostgresStore) List(page, limit int) ListResponse {
+	if limit <= 0 {
+		limit = 12
+	}
+	if page <= 0 {
+		page = 1
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	var total int
+	if err := s.db.QueryRowContext(ctx, `SELECT COUNT(*) FROM patches`).Scan(&total); err != nil {
+		return ListResponse{Items: []PatchSummary{}, Page: 1, Limit: limit, Total: 0, TotalPages: 1}
+	}
+
+	totalPages := int(math.Ceil(float64(total) / float64(limit)))
+	if totalPages == 0 {
+		totalPages = 1
+	}
+	if page > totalPages {
+		page = totalPages
+	}
+	offset := (page - 1) * limit
+
+	rows, err := s.db.QueryContext(ctx, `
+		SELECT
+			thread_id,
+			slug,
+			title,
+			published_at,
+			category,
+			excerpt,
+			hero_image_url,
+			source_url
+		FROM patches
+		ORDER BY updated_at DESC
+		LIMIT $1 OFFSET $2
+	`, limit, offset)
+	if err != nil {
+		return ListResponse{Items: []PatchSummary{}, Page: page, Limit: limit, Total: total, TotalPages: totalPages}
+	}
+	defer rows.Close()
+
+	items := make([]PatchSummary, 0, limit)
+	for rows.Next() {
+		var threadID int64
+		var summary PatchSummary
+		var publishedAt time.Time
+		if err := rows.Scan(
+			&threadID,
+			&summary.Slug,
+			&summary.Title,
+			&publishedAt,
+			&summary.Category,
+			&summary.Excerpt,
+			&summary.CoverImageURL,
+			&summary.SourceURL,
+		); err != nil {
+			continue
+		}
+		summary.ID = fmt.Sprintf("%d", threadID)
+		summary.PublishedAt = publishedAt.UTC().Format(time.RFC3339)
+		items = append(items, summary)
+	}
+
+	return ListResponse{
+		Items:      items,
+		Page:       page,
+		Limit:      limit,
+		Total:      total,
+		TotalPages: totalPages,
+	}
+}
+
+func (s *PostgresStore) GetBySlug(slug string) (PatchDetail, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	var raw []byte
+	if err := s.db.QueryRowContext(ctx, `SELECT detail_payload FROM patches WHERE slug = $1`, slug).Scan(&raw); err != nil {
+		if err == sql.ErrNoRows {
+			return PatchDetail{}, ErrPatchNotFound
+		}
+		return PatchDetail{}, fmt.Errorf("load patch detail: %w", err)
+	}
+
+	var detail PatchDetail
+	if err := json.Unmarshal(raw, &detail); err != nil {
+		return PatchDetail{}, fmt.Errorf("decode patch detail: %w", err)
+	}
+
+	return detail, nil
+}

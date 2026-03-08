@@ -22,11 +22,11 @@ type PatchChange struct {
 
 // PatchEntryGroup is a nested grouping for hero ability/talent blocks.
 type PatchEntryGroup struct {
-	ID                  string        `json:"id"`
-	Title               string        `json:"title"`
-	IconURL             string        `json:"iconUrl,omitempty"`
-	IconFallbackURL     string        `json:"iconFallbackUrl,omitempty"`
-	Changes             []PatchChange `json:"changes"`
+	ID              string       `json:"id"`
+	Title           string       `json:"title"`
+	IconURL         string       `json:"iconUrl,omitempty"`
+	IconFallbackURL string       `json:"iconFallbackUrl,omitempty"`
+	Changes         []PatchChange `json:"changes"`
 }
 
 // PatchEntry groups related changes.
@@ -54,17 +54,28 @@ type PatchSource struct {
 	URL  string `json:"url"`
 }
 
+// PatchTimelineBlock captures initial release and follow-up hotfixes.
+type PatchTimelineBlock struct {
+	ID         string        `json:"id"`
+	Kind       string        `json:"kind"`
+	Title      string        `json:"title"`
+	ReleasedAt string        `json:"releasedAt"`
+	Source     PatchSource   `json:"source"`
+	Changes    []PatchChange `json:"changes"`
+}
+
 // PatchDetail powers the patch detail page.
 type PatchDetail struct {
-	ID           string         `json:"id"`
-	Slug         string         `json:"slug"`
-	Title        string         `json:"title"`
-	PublishedAt  string         `json:"publishedAt"`
-	Category     string         `json:"category"`
-	Source       PatchSource    `json:"source"`
-	HeroImageURL string         `json:"heroImageUrl"`
-	Intro        string         `json:"intro"`
-	Sections     []PatchSection `json:"sections"`
+	ID           string              `json:"id"`
+	Slug         string              `json:"slug"`
+	Title        string              `json:"title"`
+	PublishedAt  string              `json:"publishedAt"`
+	Category     string              `json:"category"`
+	Source       PatchSource         `json:"source"`
+	HeroImageURL string              `json:"heroImageUrl"`
+	Intro        string              `json:"intro"`
+	Sections     []PatchSection      `json:"sections"`
+	Timeline     []PatchTimelineBlock `json:"timeline,omitempty"`
 }
 
 // listItem stores both summary and detail while preserving a sortable timestamp.

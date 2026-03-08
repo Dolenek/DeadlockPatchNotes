@@ -26,6 +26,8 @@ api/coverage.out
 .env.*
 !.env.example
 !.env*.example
+backups/
+*.log
 
 # Editor / IDE
 .idea/
