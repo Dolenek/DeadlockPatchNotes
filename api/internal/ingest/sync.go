@@ -54,13 +54,18 @@ func RunPatchSync(ctx context.Context, db *sql.DB, client *http.Client, cfg Sync
 	}
 	stats.DiscoveredThreads = len(refs)
 
+	catalog, err := LoadAssetCatalog(ctx, client)
+	if err != nil {
+		catalog = nil
+	}
+
 	for _, ref := range refs {
 		thread, err := FetchThread(ctx, client, ref.URL)
 		if err != nil || len(thread.Posts) == 0 {
 			continue
 		}
 
-		detail, blocks, publishedAt, updatedAt := buildPatchFromThread(ctx, client, thread)
+		detail, blocks, publishedAt, updatedAt := buildPatchFromThread(ctx, client, thread, catalog)
 		if len(blocks) == 0 {
 			continue
 		}

@@ -34,10 +34,12 @@ Server listens on `http://localhost:8080` by default.
 ```bash
 cd web
 npm install
-API_BASE_URL=http://localhost:8080 npm run dev
+npm run dev
 ```
 
 Frontend runs on `http://localhost:3000`.
+Default API base is `https://api.deadlock.jakubdolenek.xyz`.
+To override, set `API_BASE_URL` (for example `API_BASE_URL=http://localhost:8080 npm run dev`).
 
 ### Sync patch notes into DB
 
@@ -62,6 +64,10 @@ cp .env.example .env
 docker-compose up -d --build db api web
 ```
 
+Useful `.env` knobs:
+- `WEB_HOST_BIND=127.0.0.1` keeps web private to the server; set `WEB_HOST_BIND=0.0.0.0` for LAN access.
+- `API_PORT=18081` publishes API only on server loopback (`127.0.0.1:${API_PORT}`) for safe SSH tunneling.
+
 Run one ingestion pass:
 
 ```bash
@@ -72,6 +78,28 @@ Install sync + backup cron jobs:
 
 ```bash
 ./scripts/server/install_cron.sh
+```
+
+### Local Dev Against Server Data
+
+Your local Next.js dev server uses the public API hostname by default:
+
+```bash
+cd web
+npm run dev
+```
+
+If you want a private tunnel instead, forward server API to localhost:
+
+```bash
+ssh -L 8080:127.0.0.1:18081 root@10.0.0.169
+API_BASE_URL=http://127.0.0.1:8080 npm run dev
+```
+
+Optional DB tunnel (for direct SQL access from your local tools):
+
+```bash
+ssh -L 5433:127.0.0.1:5432 root@10.0.0.169
 ```
 
 ## SQL Drafts

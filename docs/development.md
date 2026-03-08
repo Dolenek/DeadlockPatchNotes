@@ -19,10 +19,12 @@ Default API URL: `http://localhost:8080`.
 ```bash
 cd web
 npm install
-API_BASE_URL=http://localhost:8080 npm run dev
+npm run dev
 ```
 
 Default web URL: `http://localhost:3000`.
+Default API URL used by the web app: `https://api.deadlock.jakubdolenek.xyz`.
+Override with `API_BASE_URL` when needed (for example `API_BASE_URL=http://localhost:8080 npm run dev`).
 
 ## Run Patch Sync
 ```bash

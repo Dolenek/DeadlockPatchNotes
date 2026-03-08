@@ -18,15 +18,17 @@ type patchDetailRecord struct {
 	Excerpt string
 }
 
-func buildPatchFromThread(ctx context.Context, client *http.Client, thread ForumThread) (patchDetailRecord, []timelineCandidate, time.Time, time.Time) {
+func buildPatchFromThread(ctx context.Context, client *http.Client, thread ForumThread, catalog *AssetCatalog) (patchDetailRecord, []timelineCandidate, time.Time, time.Time) {
 	blocks := make([]timelineCandidate, 0, len(thread.Posts)+2)
 	coverImage := ""
 
 	for index, post := range thread.Posts {
 		isFirstPost := index == 0
+		hasSteamContent := false
 		if post.SteamURL != "" {
 			event, err := FetchSteamEvent(ctx, client, post.SteamURL, post.PublishedAt)
 			if err == nil {
+				hasSteamContent = len(event.BodyBlocks) > 0
 				if coverImage == "" {
 					coverImage = firstNonEmpty(event.HeroImage, post.SteamImage)
 				}
@@ -47,6 +49,10 @@ func buildPatchFromThread(ctx context.Context, client *http.Client, thread Forum
 					})
 				}
 			}
+		}
+
+		if hasSteamContent {
+			continue
 		}
 
 		if strings.TrimSpace(post.BodyText) != "" {
@@ -89,17 +95,16 @@ func buildPatchFromThread(ctx context.Context, client *http.Client, thread Forum
 	publishedAt := blocks[0].ReleasedAt
 	updatedAt := blocks[len(blocks)-1].ReleasedAt
 
-	payload := buildDetailPayload(thread, blocks, coverImage)
+	payload := buildDetailPayload(thread, blocks, coverImage, catalog)
 	excerpt := buildIntro(payload.Sections[0].Entries)
 
 	return patchDetailRecord{Payload: payload, Excerpt: excerpt}, blocks, publishedAt, updatedAt
 }
 
-func buildDetailPayload(thread ForumThread, blocks []timelineCandidate, coverImage string) patches.PatchDetail {
+func buildDetailPayload(thread ForumThread, blocks []timelineCandidate, coverImage string, catalog *AssetCatalog) patches.PatchDetail {
 	timeline := make([]patches.PatchTimelineBlock, 0, len(blocks))
-	entries := make([]patches.PatchEntry, 0, len(blocks))
 
-	for index, block := range blocks {
+	for _, block := range blocks {
 		changeLines := toChangeLines(block.BodyText, block.Key)
 		timeline = append(timeline, patches.PatchTimelineBlock{
 			ID:         block.Key,
@@ -112,24 +117,14 @@ func buildDetailPayload(thread ForumThread, blocks []timelineCandidate, coverIma
 			},
 			Changes: changeLines,
 		})
-
-		entryName := block.Title
-		if entryName == "" {
-			if block.Kind == "initial" {
-				entryName = "Initial Update"
-			} else {
-				entryName = fmt.Sprintf("Hotfix %d", index)
-			}
-		}
-
-		entries = append(entries, patches.PatchEntry{
-			ID:         block.Key,
-			EntityName: entryName,
-			Changes:    changeLines,
-		})
 	}
 
-	intro := buildIntro(entries)
+	sections := buildStructuredSections(blocks, catalog)
+	if len(sections) == 0 {
+		sections = fallbackSectionsFromTimeline(blocks)
+	}
+
+	intro := buildIntro(sections[0].Entries)
 	source := patches.PatchSource{Type: blocks[0].SourceType, URL: blocks[0].SourceURL}
 
 	return patches.PatchDetail{
@@ -141,15 +136,46 @@ func buildDetailPayload(thread ForumThread, blocks []timelineCandidate, coverIma
 		Source:       source,
 		HeroImageURL: coverImage,
 		Intro:        intro,
-		Sections: []patches.PatchSection{
-			{
-				ID:      "updates",
-				Title:   "Updates",
-				Kind:    "general",
-				Entries: entries,
-			},
-		},
+		Sections:     sections,
 		Timeline: timeline,
+	}
+}
+
+func fallbackSectionsFromTimeline(blocks []timelineCandidate) []patches.PatchSection {
+	entries := make([]patches.PatchEntry, 0, len(blocks))
+	for index, block := range blocks {
+		entryName := block.Title
+		if entryName == "" {
+			if block.Kind == "initial" {
+				entryName = "Initial Update"
+			} else {
+				entryName = fmt.Sprintf("Hotfix %d", index)
+			}
+		}
+		entries = append(entries, patches.PatchEntry{
+			ID:         block.Key,
+			EntityName: entryName,
+			Changes:    toChangeLines(block.BodyText, block.Key),
+		})
+	}
+
+	if len(entries) == 0 {
+		entries = append(entries, patches.PatchEntry{
+			ID:         "general-gameplay",
+			EntityName: "Core Gameplay",
+			Changes: []patches.PatchChange{
+				{ID: "general-1", Text: "No line-item changes listed."},
+			},
+		})
+	}
+
+	return []patches.PatchSection{
+		{
+			ID:      "general",
+			Title:   "General",
+			Kind:    "general",
+			Entries: entries,
+		},
 	}
 }
 
