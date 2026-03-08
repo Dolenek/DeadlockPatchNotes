@@ -86,6 +86,12 @@
   transition: transform 260ms ease;
 }
 
+.patch-card-image--empty {
+  background:
+    linear-gradient(160deg, #1a2a47, #0d1728),
+    repeating-linear-gradient(45deg, #ffffff10 0 10px, transparent 10px 20px);
+}
+
 .patch-card:hover .patch-card-image {
   transform: scale(1.08);
 }

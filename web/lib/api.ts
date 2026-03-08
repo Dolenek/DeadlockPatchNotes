@@ -29,12 +29,21 @@ export class APIError extends Error {
 }
 
 async function apiFetch<T>(path: string): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    next: { revalidate: 30 }
-  });
+  const target = `${API_BASE_URL}${path}`;
+  let response: Response;
+  try {
+    response = await fetch(target, {
+      next: { revalidate: 30 }
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new APIError(0, `API fetch failed for ${target}: ${message}`);
+  }
 
   if (!response.ok) {
-    throw new APIError(response.status, `API request failed: ${response.status}`);
+    const detail = await response.text().catch(() => "");
+    const suffix = detail ? ` ${detail.slice(0, 200)}` : "";
+    throw new APIError(response.status, `API request failed for ${target}: ${response.status}${suffix}`);
   }
 
   return (await response.json()) as T;

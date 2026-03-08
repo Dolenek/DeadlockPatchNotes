@@ -71,6 +71,8 @@ function EntryGroups({ groups }: { groups: PatchEntryGroup[] }) {
 
 function PatchEntryArticle({ entry, kind }: { entry: PatchEntry; kind: PatchSection["kind"] }) {
   const portraitLayout = kind === "heroes" || kind === "items";
+  const changes = Array.isArray(entry.changes) ? entry.changes : [];
+  const groups = Array.isArray(entry.groups) ? entry.groups : [];
 
   return (
     <article className={getEntryClassName(kind)}>
@@ -78,13 +80,13 @@ function PatchEntryArticle({ entry, kind }: { entry: PatchEntry; kind: PatchSect
 
       {entry.summary ? <blockquote className="entry-quote">{entry.summary}</blockquote> : null}
 
-      {entry.changes.length ? (
+      {changes.length ? (
         <section className="entry-general-block">
-          <ChangeList changes={entry.changes} />
+          <ChangeList changes={changes} />
         </section>
       ) : null}
 
-      {entry.groups?.length ? <EntryGroups groups={entry.groups} /> : null}
+      {groups.length ? <EntryGroups groups={groups} /> : null}
     </article>
   );
 }
