@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { CSSProperties } from "react";
 import { FallbackImage } from "@/components/FallbackImage";
 import { APIError, getHeroChanges } from "@/lib/api";
+import { getHeroMediaBySlug } from "@/lib/hero-media";
 import { formatDisplayDate, formatUpdateLabel } from "@/lib/utils";
 
 type HeroDetailPageProps = {
@@ -13,10 +15,16 @@ export default async function HeroDetailPage({ params }: HeroDetailPageProps) {
 
   try {
     const payload = await getHeroChanges(slug);
+    const heroMedia = getHeroMediaBySlug(payload.hero.slug);
+    const heroPageStyle = heroMedia?.backgroundImageUrl
+      ? ({
+          "--hero-background-image": `url(${heroMedia.backgroundImageUrl})`,
+        } as CSSProperties)
+      : undefined;
 
     return (
-      <main className="hero-detail-page">
-        <section className="hero-detail-hero">
+      <main className="hero-detail-page hero-detail-page--hero" style={heroPageStyle}>
+        <section className="hero-detail-hero hero-detail-hero--hero-page">
           <div className="shell hero-detail-head">
             <FallbackImage
               src={payload.hero.iconUrl}
@@ -24,9 +32,12 @@ export default async function HeroDetailPage({ params }: HeroDetailPageProps) {
               alt={payload.hero.name}
               className="hero-detail-image"
             />
-            <div className="hero-detail-copy">
-              <p className="eyebrow">Hero Timeline</p>
-              <h1>{payload.hero.name}</h1>
+            <div className="hero-detail-copy hero-detail-copy--hero-page">
+              {heroMedia?.nameImageUrl ? (
+                <img src={heroMedia.nameImageUrl} alt={payload.hero.name} className="hero-detail-name-image" />
+              ) : (
+                <h1>{payload.hero.name}</h1>
+              )}
               <p>
                 Most recent change:{" "}
                 {payload.hero.lastChangedAt ? formatDisplayDate(payload.hero.lastChangedAt) : "Unknown"}

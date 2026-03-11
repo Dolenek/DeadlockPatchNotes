@@ -2,7 +2,7 @@ import Link from "next/link";
 import { FallbackImage } from "@/components/FallbackImage";
 import { APIError, getSpells } from "@/lib/api";
 import { SpellListResponse } from "@/lib/types";
-import { formatDisplayDate } from "@/lib/utils";
+import { formatCompactDate } from "@/lib/utils";
 
 export default async function SpellsPage() {
   let payload: SpellListResponse = { items: [] };
@@ -37,7 +37,7 @@ export default async function SpellsPage() {
                 />
                 <div className="hero-card-copy">
                   <h2>{spell.name}</h2>
-                  <p>Last change: {spell.lastChangedAt ? formatDisplayDate(spell.lastChangedAt) : "Unknown"}</p>
+                  <p>Last change: {spell.lastChangedAt ? formatCompactDate(spell.lastChangedAt) : "Unknown"}</p>
                 </div>
               </Link>
             </article>

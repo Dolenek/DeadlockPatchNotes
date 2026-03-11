@@ -73,6 +73,19 @@
     align-items: flex-start;
   }
 
+  .item-detail-head {
+    gap: 0.8rem;
+  }
+
+  .item-timeline-header {
+    align-items: flex-start;
+  }
+
+  .item-timeline-meta {
+    width: 100%;
+    justify-content: space-between;
+  }
+
   .pagination {
     flex-wrap: wrap;
   }

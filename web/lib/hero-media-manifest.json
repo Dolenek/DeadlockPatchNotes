@@ -1,0 +1,239 @@
+{
+  "generatedAt": "2026-03-11T22:39:05.752Z",
+  "heroes": {
+    "abrams": {
+      "name": "Abrams",
+      "sourceName": "Abrams",
+      "backgroundImageUrl": "/assets/heroes/abrams/background.webp",
+      "nameImageUrl": "/assets/heroes/abrams/name.svg"
+    },
+    "apollo": {
+      "name": "Apollo",
+      "sourceName": "Apollo",
+      "backgroundImageUrl": "/assets/heroes/apollo/background.webp",
+      "nameImageUrl": "/assets/heroes/apollo/name.svg"
+    },
+    "bebop": {
+      "name": "Bebop",
+      "sourceName": "Bebop",
+      "backgroundImageUrl": "/assets/heroes/bebop/background.webp",
+      "nameImageUrl": "/assets/heroes/bebop/name.svg"
+    },
+    "billy": {
+      "name": "Billy",
+      "sourceName": "Billy",
+      "backgroundImageUrl": "/assets/heroes/billy/background.webp",
+      "nameImageUrl": "/assets/heroes/billy/name.svg"
+    },
+    "calico": {
+      "name": "Calico",
+      "sourceName": "Calico",
+      "backgroundImageUrl": "/assets/heroes/calico/background.webp",
+      "nameImageUrl": "/assets/heroes/calico/name.svg"
+    },
+    "celeste": {
+      "name": "Celeste",
+      "sourceName": "Celeste",
+      "backgroundImageUrl": "/assets/heroes/celeste/background.webp",
+      "nameImageUrl": "/assets/heroes/celeste/name.svg"
+    },
+    "drifter": {
+      "name": "Drifter",
+      "sourceName": "Drifter",
+      "backgroundImageUrl": "/assets/heroes/drifter/background.webp",
+      "nameImageUrl": "/assets/heroes/drifter/name.svg"
+    },
+    "dynamo": {
+      "name": "Dynamo",
+      "sourceName": "Dynamo",
+      "backgroundImageUrl": "/assets/heroes/dynamo/background.webp",
+      "nameImageUrl": "/assets/heroes/dynamo/name.svg"
+    },
+    "graves": {
+      "name": "Graves",
+      "sourceName": "Graves",
+      "backgroundImageUrl": "/assets/heroes/graves/background.webp",
+      "nameImageUrl": "/assets/heroes/graves/name.svg"
+    },
+    "grey-talon": {
+      "name": "Grey Talon",
+      "sourceName": "Grey Talon",
+      "backgroundImageUrl": "/assets/heroes/grey-talon/background.webp",
+      "nameImageUrl": "/assets/heroes/grey-talon/name.svg"
+    },
+    "haze": {
+      "name": "Haze",
+      "sourceName": "Haze",
+      "backgroundImageUrl": "/assets/heroes/haze/background.webp",
+      "nameImageUrl": "/assets/heroes/haze/name.svg"
+    },
+    "holliday": {
+      "name": "Holliday",
+      "sourceName": "Holliday",
+      "backgroundImageUrl": "/assets/heroes/holliday/background.webp",
+      "nameImageUrl": "/assets/heroes/holliday/name.svg"
+    },
+    "infernus": {
+      "name": "Infernus",
+      "sourceName": "Infernus",
+      "backgroundImageUrl": "/assets/heroes/infernus/background.webp",
+      "nameImageUrl": "/assets/heroes/infernus/name.svg"
+    },
+    "ivy": {
+      "name": "Ivy",
+      "sourceName": "Ivy",
+      "backgroundImageUrl": "/assets/heroes/ivy/background.webp",
+      "nameImageUrl": "/assets/heroes/ivy/name.svg"
+    },
+    "kelvin": {
+      "name": "Kelvin",
+      "sourceName": "Kelvin",
+      "backgroundImageUrl": "/assets/heroes/kelvin/background.webp",
+      "nameImageUrl": "/assets/heroes/kelvin/name.svg"
+    },
+    "lady-geist": {
+      "name": "Lady Geist",
+      "sourceName": "Lady Geist",
+      "backgroundImageUrl": "/assets/heroes/lady-geist/background.webp",
+      "nameImageUrl": "/assets/heroes/lady-geist/name.svg"
+    },
+    "lash": {
+      "name": "Lash",
+      "sourceName": "Lash",
+      "backgroundImageUrl": "/assets/heroes/lash/background.webp",
+      "nameImageUrl": "/assets/heroes/lash/name.svg"
+    },
+    "mcginnis": {
+      "name": "McGinnis",
+      "sourceName": "McGinnis",
+      "backgroundImageUrl": "/assets/heroes/mcginnis/background.webp",
+      "nameImageUrl": "/assets/heroes/mcginnis/name.svg"
+    },
+    "mina": {
+      "name": "Mina",
+      "sourceName": "Mina",
+      "backgroundImageUrl": "/assets/heroes/mina/background.webp",
+      "nameImageUrl": "/assets/heroes/mina/name.svg"
+    },
+    "mirage": {
+      "name": "Mirage",
+      "sourceName": "Mirage",
+      "backgroundImageUrl": "/assets/heroes/mirage/background.webp",
+      "nameImageUrl": "/assets/heroes/mirage/name.svg"
+    },
+    "mo-krill": {
+      "name": "Mo & Krill",
+      "sourceName": "Mo & Krill",
+      "backgroundImageUrl": "/assets/heroes/mo-krill/background.webp",
+      "nameImageUrl": "/assets/heroes/mo-krill/name.svg"
+    },
+    "paige": {
+      "name": "Paige",
+      "sourceName": "Paige",
+      "backgroundImageUrl": "/assets/heroes/paige/background.webp",
+      "nameImageUrl": "/assets/heroes/paige/name.svg"
+    },
+    "paradox": {
+      "name": "Paradox",
+      "sourceName": "Paradox",
+      "backgroundImageUrl": "/assets/heroes/paradox/background.webp",
+      "nameImageUrl": "/assets/heroes/paradox/name.svg"
+    },
+    "pocket": {
+      "name": "Pocket",
+      "sourceName": "Pocket",
+      "backgroundImageUrl": "/assets/heroes/pocket/background.webp",
+      "nameImageUrl": "/assets/heroes/pocket/name.svg"
+    },
+    "rem": {
+      "name": "Rem",
+      "sourceName": "Rem",
+      "backgroundImageUrl": "/assets/heroes/rem/background.webp",
+      "nameImageUrl": "/assets/heroes/rem/name.svg"
+    },
+    "seven": {
+      "name": "Seven",
+      "sourceName": "Seven",
+      "backgroundImageUrl": "/assets/heroes/seven/background.webp",
+      "nameImageUrl": "/assets/heroes/seven/name.svg"
+    },
+    "shiv": {
+      "name": "Shiv",
+      "sourceName": "Shiv",
+      "backgroundImageUrl": "/assets/heroes/shiv/background.webp",
+      "nameImageUrl": "/assets/heroes/shiv/name.svg"
+    },
+    "silver": {
+      "name": "Silver",
+      "sourceName": "Silver",
+      "backgroundImageUrl": "/assets/heroes/silver/background.webp",
+      "nameImageUrl": "/assets/heroes/silver/name.svg"
+    },
+    "sinclair": {
+      "name": "Sinclair",
+      "sourceName": "Sinclair",
+      "backgroundImageUrl": "/assets/heroes/sinclair/background.webp",
+      "nameImageUrl": "/assets/heroes/sinclair/name.svg"
+    },
+    "the-doorman": {
+      "name": "The Doorman",
+      "sourceName": "The Doorman",
+      "backgroundImageUrl": "/assets/heroes/the-doorman/background.webp",
+      "nameImageUrl": "/assets/heroes/the-doorman/name.svg"
+    },
+    "doorman": {
+      "name": "The Doorman",
+      "sourceName": "The Doorman",
+      "backgroundImageUrl": "/assets/heroes/the-doorman/background.webp",
+      "nameImageUrl": "/assets/heroes/the-doorman/name.svg"
+    },
+    "venator": {
+      "name": "Venator",
+      "sourceName": "Venator",
+      "backgroundImageUrl": "/assets/heroes/venator/background.webp",
+      "nameImageUrl": "/assets/heroes/venator/name.svg"
+    },
+    "victor": {
+      "name": "Victor",
+      "sourceName": "Victor",
+      "backgroundImageUrl": "/assets/heroes/victor/background.webp",
+      "nameImageUrl": "/assets/heroes/victor/name.svg"
+    },
+    "vindicta": {
+      "name": "Vindicta",
+      "sourceName": "Vindicta",
+      "backgroundImageUrl": "/assets/heroes/vindicta/background.webp",
+      "nameImageUrl": "/assets/heroes/vindicta/name.svg"
+    },
+    "viscous": {
+      "name": "Viscous",
+      "sourceName": "Viscous",
+      "backgroundImageUrl": "/assets/heroes/viscous/background.webp",
+      "nameImageUrl": "/assets/heroes/viscous/name.svg"
+    },
+    "vyper": {
+      "name": "Vyper",
+      "sourceName": "Vyper",
+      "backgroundImageUrl": "/assets/heroes/vyper/background.webp",
+      "nameImageUrl": "/assets/heroes/vyper/name.svg"
+    },
+    "warden": {
+      "name": "Warden",
+      "sourceName": "Warden",
+      "backgroundImageUrl": "/assets/heroes/warden/background.webp",
+      "nameImageUrl": "/assets/heroes/warden/name.svg"
+    },
+    "wraith": {
+      "name": "Wraith",
+      "sourceName": "Wraith",
+      "backgroundImageUrl": "/assets/heroes/wraith/background.webp",
+      "nameImageUrl": "/assets/heroes/wraith/name.svg"
+    },
+    "yamato": {
+      "name": "Yamato",
+      "sourceName": "Yamato",
+      "backgroundImageUrl": "/assets/heroes/yamato/background.webp",
+      "nameImageUrl": "/assets/heroes/yamato/name.svg"
+    }
+  }
+}

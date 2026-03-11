@@ -2,9 +2,9 @@
   position: sticky;
   top: 0;
   z-index: 60;
-  border-bottom: 1px solid #ffffff1f;
+  border-bottom: 1px solid #d6e0ed2e;
   backdrop-filter: blur(10px);
-  background: #090d15d1;
+  background: linear-gradient(180deg, #25323ed9, #1b252fd6);
 }
 
 .top-nav-inner {

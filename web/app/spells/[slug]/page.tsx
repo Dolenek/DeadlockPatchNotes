@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { CSSProperties } from "react";
 import { FallbackImage } from "@/components/FallbackImage";
 import { APIError, getSpellChanges } from "@/lib/api";
+import { getHeroMediaBySlug } from "@/lib/hero-media";
 import { formatDisplayDate, formatUpdateLabel } from "@/lib/utils";
 
 type SpellDetailPageProps = {
@@ -13,10 +15,36 @@ export default async function SpellDetailPage({ params }: SpellDetailPageProps) 
 
   try {
     const payload = await getSpellChanges(slug);
+    const slugScores = new Map<string, number>();
+    for (const block of payload.items) {
+      for (const entry of block.entries) {
+        const heroSlug = String(entry.heroSlug || "").trim().toLowerCase();
+        if (!heroSlug) {
+          continue;
+        }
+        slugScores.set(heroSlug, (slugScores.get(heroSlug) ?? 0) + 1);
+      }
+    }
+
+    let dominantHeroSlug = "";
+    let dominantScore = -1;
+    for (const [heroSlug, score] of slugScores.entries()) {
+      if (score > dominantScore) {
+        dominantHeroSlug = heroSlug;
+        dominantScore = score;
+      }
+    }
+
+    const heroMedia = dominantHeroSlug ? getHeroMediaBySlug(dominantHeroSlug) : null;
+    const spellPageStyle = heroMedia?.backgroundImageUrl
+      ? ({
+          "--spell-background-image": `url(${heroMedia.backgroundImageUrl})`,
+        } as CSSProperties)
+      : undefined;
 
     return (
-      <main className="hero-detail-page">
-        <section className="hero-detail-hero">
+      <main className="hero-detail-page spell-detail-page" style={spellPageStyle}>
+        <section className="hero-detail-hero spell-detail-hero">
           <div className="shell hero-detail-head">
             <FallbackImage
               src={payload.spell.iconUrl}

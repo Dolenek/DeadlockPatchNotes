@@ -2,7 +2,7 @@ import Link from "next/link";
 import { FallbackImage } from "@/components/FallbackImage";
 import { APIError, getHeroes } from "@/lib/api";
 import { HeroListResponse } from "@/lib/types";
-import { formatDisplayDate } from "@/lib/utils";
+import { formatCompactDate } from "@/lib/utils";
 
 export default async function HeroesPage() {
   let payload: HeroListResponse = { items: [] };
@@ -37,7 +37,7 @@ export default async function HeroesPage() {
                 />
                 <div className="hero-card-copy">
                   <h2>{hero.name}</h2>
-                  <p>Last change: {hero.lastChangedAt ? formatDisplayDate(hero.lastChangedAt) : "Unknown"}</p>
+                  <p>Last change: {hero.lastChangedAt ? formatCompactDate(hero.lastChangedAt) : "Unknown"}</p>
                 </div>
               </Link>
             </article>

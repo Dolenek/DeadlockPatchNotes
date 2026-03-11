@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   clampPage,
+  formatCompactDate,
   formatDisplayDate,
   formatForumDate,
   formatUpdateLabel,
@@ -25,6 +26,12 @@ describe("clampPage", () => {
 describe("formatDisplayDate", () => {
   it("formats ISO date into long US style", () => {
     expect(formatDisplayDate("2026-03-06T22:36:00Z")).toBe("March 6, 2026");
+  });
+});
+
+describe("formatCompactDate", () => {
+  it("formats ISO date into D.M. YYYY", () => {
+    expect(formatCompactDate("2026-03-06T22:36:00Z")).toBe("6.3. 2026");
   });
 });
 

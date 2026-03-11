@@ -112,6 +112,12 @@ node scripts/generate_patch_fixture.mjs
 
 Related parser modules live in `scripts/patch_fixture/`.
 
+Sync hero page media for heroes marked in-game from the assets API (`background_image*` + `name_image`) into local web assets:
+
+```bash
+node scripts/sync_hero_media.mjs
+```
+
 ### Local Dev Against Server Data
 
 Your local Next.js dev server uses the public API hostname by default:
