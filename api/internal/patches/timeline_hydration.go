@@ -40,6 +40,7 @@ type timelineHeroState struct {
 	abilities   []abilityTemplate
 	groupsByKey map[string]*PatchEntryGroup
 	groupOrder  []string
+	currentSpecialGroup string
 }
 
 func hydratePatchDetail(detail PatchDetail) PatchDetail {

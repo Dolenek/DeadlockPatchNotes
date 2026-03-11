@@ -408,6 +408,12 @@ func spellCandidatesFromHeroEntry(entry PatchEntry, knownItems map[string]bool) 
 		return candidates
 	}
 
+	// Strict fallback mode: ignore standalone hero entries that lack icon metadata.
+	// This prevents generic headings and malformed labels from leaking into the spell index.
+	if strings.TrimSpace(entry.EntityIconURL) == "" && strings.TrimSpace(entry.EntityIconFallbackURL) == "" {
+		return candidates
+	}
+
 	name := strings.TrimSpace(entry.EntityName)
 	if name == "" {
 		return candidates

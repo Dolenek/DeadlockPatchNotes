@@ -101,17 +101,18 @@ function collectHeroMentions(heroesSection, heroesLookup) {
 
   for (const line of heroesSection.lines) {
     const parsed = parseBullet(line);
-    if (!parsed) {
+    const heroName = parsed ? parsed.prefix : extractHeroHeading(line);
+    if (!heroName) {
       continue;
     }
 
-    const heroAsset = heroesLookup.resolve(parsed.prefix);
+    const heroAsset = heroesLookup.resolve(heroName);
     if (!heroAsset) {
       continue;
     }
 
     mentions.push({
-      displayName: resolveHeroDisplayName(parsed.prefix, heroAsset),
+      displayName: resolveHeroDisplayName(heroName, heroAsset),
       asset: heroAsset,
     });
   }
@@ -180,6 +181,18 @@ async function buildHeroEntries(heroesSection, heroesLookup, assetsRegistry, fet
   for (const line of heroesSection.lines) {
     const parsed = parseBullet(line);
     if (!parsed) {
+      const headingState = getOrCreateHeroStateFromLine(line, heroesLookup, heroStateMap, heroEntries, assetsRegistry);
+      if (headingState) {
+        currentHero = headingState.displayName;
+        currentSpecialGroup = null;
+        continue;
+      }
+
+      if (!currentHero) {
+        continue;
+      }
+
+      currentSpecialGroup = applyHeroPlainFollowupChange(heroStateMap.get(currentHero), line, currentSpecialGroup);
       continue;
     }
 
@@ -195,8 +208,13 @@ async function buildHeroEntries(heroesSection, heroesLookup, assetsRegistry, fet
       continue;
     }
 
-    applyHeroFollowupChange(heroStateMap.get(currentHero), parsed, currentSpecialGroup);
-    currentSpecialGroup = norm(parsed.prefix) === "card types" ? "Card Types" : currentSpecialGroup;
+    currentSpecialGroup = applyHeroFollowupChange(
+      heroStateMap.get(currentHero),
+      parsed,
+      currentSpecialGroup,
+      heroAbilitiesByName.get(currentHero) || [],
+      assetsRegistry,
+    );
   }
 
   finalizeHeroEntries(heroEntries);
@@ -204,12 +222,24 @@ async function buildHeroEntries(heroesSection, heroesLookup, assetsRegistry, fet
 }
 
 function getOrCreateHeroState(parsed, heroesLookup, heroStateMap, heroEntries, assetsRegistry) {
-  const resolvedHero = heroesLookup.resolve(parsed.prefix);
+  return getOrCreateHeroStateByName(parsed.prefix, heroesLookup, heroStateMap, heroEntries, assetsRegistry);
+}
+
+function getOrCreateHeroStateFromLine(line, heroesLookup, heroStateMap, heroEntries, assetsRegistry) {
+  const heroName = extractHeroHeading(line);
+  if (!heroName) {
+    return null;
+  }
+  return getOrCreateHeroStateByName(heroName, heroesLookup, heroStateMap, heroEntries, assetsRegistry);
+}
+
+function getOrCreateHeroStateByName(heroName, heroesLookup, heroStateMap, heroEntries, assetsRegistry) {
+  const resolvedHero = heroesLookup.resolve(heroName);
   if (!resolvedHero) {
     return null;
   }
 
-  const displayName = resolveHeroDisplayName(parsed.prefix, resolvedHero);
+  const displayName = resolveHeroDisplayName(heroName, resolvedHero);
   if (!heroStateMap.has(displayName)) {
     const imageUrl = resolvedHero.images?.icon_image_small;
     const iconAsset = registerHeroIcon(assetsRegistry, displayName, imageUrl);
@@ -260,12 +290,12 @@ function applyHeroBulletChange(heroState, parsed, abilities, assetsRegistry) {
   });
 }
 
-function applyHeroFollowupChange(heroState, parsed, currentSpecialGroup) {
+function applyHeroFollowupChange(heroState, parsed, currentSpecialGroup, abilities, assetsRegistry) {
   const prefixKey = norm(parsed.prefix);
 
   if (prefixKey === "card types") {
     ensureGroup(heroState, "card-types", "Card Types", null, null);
-    return;
+    return "Card Types";
   }
 
   if (currentSpecialGroup === "Card Types" && CARD_TYPE_NAMES.has(prefixKey)) {
@@ -274,7 +304,26 @@ function applyHeroFollowupChange(heroState, parsed, currentSpecialGroup) {
       id: `${group.id}-${group.changes.length + 1}`,
       text: `${parsed.prefix}: ${parsed.text}`,
     });
-    return;
+    return currentSpecialGroup;
+  }
+
+  if (parsed.text) {
+    const prefixedAbility = abilityMatch(parsed.prefix, abilities);
+    if (prefixedAbility) {
+      const abilityIcon = registerAbilityIcon(assetsRegistry, heroState.entityName, prefixedAbility);
+      const group = ensureGroup(
+        heroState,
+        `ability-${slugify(prefixedAbility.name)}`,
+        prefixedAbility.name,
+        abilityIcon,
+        prefixedAbility.image,
+      );
+      group.changes.push({
+        id: `${group.id}-${group.changes.length + 1}`,
+        text: parsed.text,
+      });
+      return currentSpecialGroup;
+    }
   }
 
   const text = parsed.text ? `${parsed.prefix}: ${parsed.text}` : parsed.prefix;
@@ -282,6 +331,31 @@ function applyHeroFollowupChange(heroState, parsed, currentSpecialGroup) {
     id: `${heroState.id}-general-${heroState.changes.length + 1}`,
     text,
   });
+
+  return currentSpecialGroup;
+}
+
+function applyHeroPlainFollowupChange(heroState, line, currentSpecialGroup) {
+  const value = extractHeroHeading(line);
+  if (!value) {
+    return currentSpecialGroup;
+  }
+
+  if (norm(value) === "card types") {
+    ensureGroup(heroState, "card-types", "Card Types", null, null);
+    return "Card Types";
+  }
+
+  heroState.changes.push({
+    id: `${heroState.id}-general-${heroState.changes.length + 1}`,
+    text: value,
+  });
+  return currentSpecialGroup;
+}
+
+function extractHeroHeading(line) {
+  const cleaned = String(line || "").replace(/^-\s*/, "").trim();
+  return cleaned || null;
 }
 
 function countHeroChanges(heroEntries) {

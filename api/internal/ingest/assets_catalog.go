@@ -160,7 +160,27 @@ func (c *AssetCatalog) heroAbilities(heroName string) []abilityRef {
 	if c == nil {
 		return nil
 	}
-	return c.abilitiesByHero[normalizeLookupKey(heroName)]
+
+	key := normalizeLookupKey(heroName)
+	if abilities, ok := c.abilitiesByHero[key]; ok {
+		return abilities
+	}
+	if alias, ok := heroAlias[key]; ok {
+		if abilities, ok := c.abilitiesByHero[normalizeLookupKey(alias)]; ok {
+			return abilities
+		}
+	}
+
+	withoutArticle := strings.TrimPrefix(key, "the ")
+	if withoutArticle != key {
+		if abilities, ok := c.abilitiesByHero[withoutArticle]; ok {
+			return abilities
+		}
+	} else if abilities, ok := c.abilitiesByHero["the "+key]; ok {
+		return abilities
+	}
+
+	return nil
 }
 
 func resolveHeroDisplayName(rawPrefix string, hero heroAsset) string {

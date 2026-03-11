@@ -156,6 +156,11 @@ func TestBuildSpellList_SkipsTalentsAndKnownItems(t *testing.T) {
 									EntityName: "Active Reload",
 									Changes:    []PatchChange{{ID: "p1", Text: "Should not be spell"}},
 								},
+								{
+									ID:         "base-changes-polluted",
+									EntityName: "Base Changes",
+									Changes:    []PatchChange{{ID: "p2", Text: "Should not be spell"}},
+								},
 							},
 						},
 					},
@@ -170,6 +175,40 @@ func TestBuildSpellList_SkipsTalentsAndKnownItems(t *testing.T) {
 	}
 	if payload.Items[0].Slug != "shoulder-charge" {
 		t.Fatalf("expected shoulder-charge slug, got %q", payload.Items[0].Slug)
+	}
+}
+
+func TestBuildSpellChanges_RejectsIconlessStandaloneEntries(t *testing.T) {
+	details := []PatchDetail{
+		{
+			Slug:  "u1",
+			Title: "U1",
+			Timeline: []PatchTimelineBlock{
+				{
+					ID:         "b1",
+					Kind:       "initial",
+					ReleasedAt: "2026-03-06T12:00:00Z",
+					Sections: []PatchSection{
+						{
+							ID:    "heroes",
+							Title: "Heroes",
+							Kind:  "heroes",
+							Entries: []PatchEntry{
+								{
+									ID:         "base-changes-polluted",
+									EntityName: "Base Changes",
+									Changes:    []PatchChange{{ID: "p1", Text: "Should not be spell"}},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	if _, err := buildSpellChanges(details, SpellChangesQuery{SpellSlug: "base-changes"}); err != ErrSpellNotFound {
+		t.Fatalf("expected ErrSpellNotFound, got %v", err)
 	}
 }
 

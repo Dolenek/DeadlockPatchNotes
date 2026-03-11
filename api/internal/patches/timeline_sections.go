@@ -7,6 +7,19 @@ import (
 	"strings"
 )
 
+var timelineCardTypeNames = map[string]bool{
+	"spades":  true,
+	"diamond": true,
+	"hearts":  true,
+	"clubs":   true,
+	"joker":   true,
+}
+
+var timelineHeroAlias = map[string]string{
+	"doorman": "the doorman",
+	"vindcita": "vindicta",
+}
+
 func buildParseTemplateCatalog(sections []PatchSection) parseTemplateCatalog {
 	catalog := parseTemplateCatalog{
 		itemsByNorm:  map[string]PatchEntry{},
@@ -91,13 +104,23 @@ func buildBlockSectionsFromChanges(block PatchTimelineBlock, catalog parseTempla
 			continue
 		}
 
+		if mode == "heroes" {
+			if heroKey, template, ok := resolveTimelineHeroTemplate(catalog, line); ok {
+				state := ensureTimelineHeroEntry(block.ID, heroEntries, &heroOrder, heroKey, line, template)
+				currentHero = heroKey
+				currentItem = ""
+				state.currentSpecialGroup = ""
+				continue
+			}
+		}
+
 		prefix, text, hasPrefix := parseStructuredPrefixedLine(line)
 		if hasPrefix {
-			heroKey := normalizeLookupKey(prefix)
-			if template, ok := catalog.heroesByNorm[heroKey]; ok || mode == "heroes" {
+			if heroKey, template, ok := resolveTimelineHeroTemplate(catalog, prefix); ok {
 				state := ensureTimelineHeroEntry(block.ID, heroEntries, &heroOrder, heroKey, prefix, template)
 				currentHero = heroKey
 				currentItem = ""
+				state.currentSpecialGroup = ""
 				if strings.TrimSpace(text) != "" {
 					appendHeroTimelineLine(state, prefix, text)
 				}
@@ -288,6 +311,23 @@ func ensureTimelineHeroEntry(blockID string, entries map[string]*timelineHeroSta
 }
 
 func appendHeroTimelineLine(state *timelineHeroState, prefix, text string) {
+	prefixKey := normalizeLookupKey(prefix)
+	if prefixKey == "card types" || (prefixKey == "" && normalizeLookupKey(text) == "card types") {
+		state.currentSpecialGroup = "card-types"
+		ensureHeroTimelineGroup(state, "card-types", "Card Types", "", "")
+		return
+	}
+
+	if state.currentSpecialGroup == "card-types" && timelineCardTypeNames[prefixKey] {
+		text = strings.TrimSpace(text)
+		if text == "" {
+			return
+		}
+		group := ensureHeroTimelineGroup(state, "card-types", "Card Types", "", "")
+		appendTimelineGroupChange(group, fmt.Sprintf("%s: %s", strings.TrimSpace(prefix), text))
+		return
+	}
+
 	text = strings.TrimSpace(text)
 	if text == "" {
 		return
@@ -297,6 +337,15 @@ func appendHeroTimelineLine(state *timelineHeroState, prefix, text string) {
 		group := ensureHeroTimelineGroup(state, "talents", "Talents", "", "")
 		appendTimelineGroupChange(group, strings.TrimSpace(text[len("talents "):]))
 		return
+	}
+
+	if prefixKey != "" {
+		if ability, ok := matchTimelineAbility(prefix, state.abilities); ok {
+			groupKey := "ability-" + slugifyLookup(ability.name)
+			group := ensureHeroTimelineGroup(state, groupKey, ability.name, ability.iconURL, ability.iconFallbackURL)
+			appendTimelineGroupChange(group, text)
+			return
+		}
 	}
 
 	if ability, ok := matchTimelineAbility(text, state.abilities); ok {
@@ -415,4 +464,36 @@ func cleanTimelineLine(line string) string {
 	line = strings.TrimPrefix(line, "*")
 	line = strings.TrimSpace(line)
 	return line
+}
+
+func resolveTimelineHeroTemplate(catalog parseTemplateCatalog, raw string) (string, heroTemplate, bool) {
+	key := normalizeLookupKey(raw)
+	if key == "" {
+		return "", heroTemplate{}, false
+	}
+
+	if template, ok := catalog.heroesByNorm[key]; ok {
+		return key, template, true
+	}
+
+	if alias, ok := timelineHeroAlias[key]; ok {
+		aliasKey := normalizeLookupKey(alias)
+		if template, ok := catalog.heroesByNorm[aliasKey]; ok {
+			return aliasKey, template, true
+		}
+	}
+
+	if strings.HasPrefix(key, "the ") {
+		trimmed := strings.TrimPrefix(key, "the ")
+		if template, ok := catalog.heroesByNorm[trimmed]; ok {
+			return trimmed, template, true
+		}
+	} else {
+		withArticle := "the " + key
+		if template, ok := catalog.heroesByNorm[withArticle]; ok {
+			return withArticle, template, true
+		}
+	}
+
+	return "", heroTemplate{}, false
 }

@@ -73,15 +73,15 @@ func (a *sectionAccumulator) consumeBlock(block timelineCandidate) {
 			continue
 		}
 
+		if mode == "heroes" && a.consumeHeroHeadingLine(line, &currentHero, &currentItem) {
+			continue
+		}
+
 		prefix, text, hasPrefix := parsePrefixedLine(line)
 		if hasPrefix {
-			if hero, ok := a.catalog.resolveHero(prefix); ok || mode == "heroes" {
-				heroName := prefix
-				heroImage := ""
-				if ok {
-					heroName = resolveHeroDisplayName(prefix, hero)
-					heroImage = hero.Images.IconImageSmall
-				}
+			if hero, ok := a.catalog.resolveHero(prefix); ok {
+				heroName := resolveHeroDisplayName(prefix, hero)
+				heroImage := hero.Images.IconImageSmall
 				state := a.ensureHero(heroName, heroImage)
 				currentHero = normalizeLookupKey(heroName)
 				currentItem = ""
@@ -143,6 +143,20 @@ func (a *sectionAccumulator) consumeBlock(block timelineCandidate) {
 			appendEntryChange(a.ensureGeneral(), line)
 		}
 	}
+}
+
+func (a *sectionAccumulator) consumeHeroHeadingLine(line string, currentHero, currentItem *string) bool {
+	hero, ok := a.catalog.resolveHero(line)
+	if !ok {
+		return false
+	}
+
+	heroName := resolveHeroDisplayName(line, hero)
+	state := a.ensureHero(heroName, hero.Images.IconImageSmall)
+	*currentHero = normalizeLookupKey(heroName)
+	*currentItem = ""
+	state.currentSpecialGroup = ""
+	return true
 }
 
 func (a *sectionAccumulator) ensureGeneral() *patches.PatchEntry {
@@ -255,13 +269,30 @@ func (a *sectionAccumulator) buildSections() []patches.PatchSection {
 }
 
 func applyHeroPlainLine(state *heroEntryState, line string) {
+	if normalizeLookupKey(line) == "card types" {
+		state.currentSpecialGroup = "card-types"
+		ensureHeroGroup(state, "card-types", "Card Types", "")
+		return
+	}
+
 	applyHeroChange(state, "", line)
 }
 
 func applyHeroChange(state *heroEntryState, prefix, text string) {
-	if normalizeLookupKey(prefix) == "card types" {
+	prefixKey := normalizeLookupKey(prefix)
+	if prefixKey == "card types" {
 		state.currentSpecialGroup = "card-types"
 		ensureHeroGroup(state, "card-types", "Card Types", "")
+		return
+	}
+
+	if state.currentSpecialGroup == "card-types" && cardTypeNames[prefixKey] {
+		text = strings.TrimSpace(text)
+		if text == "" {
+			return
+		}
+		group := ensureHeroGroup(state, "card-types", "Card Types", "")
+		appendGroupChange(group, fmt.Sprintf("%s: %s", strings.TrimSpace(prefix), text))
 		return
 	}
 
@@ -270,17 +301,20 @@ func applyHeroChange(state *heroEntryState, prefix, text string) {
 		return
 	}
 
-	if state.currentSpecialGroup == "card-types" && cardTypeNames[normalizeLookupKey(prefix)] {
-		group := ensureHeroGroup(state, "card-types", "Card Types", "")
-		appendGroupChange(group, fmt.Sprintf("%s: %s", strings.TrimSpace(prefix), text))
-		return
-	}
-
 	if strings.HasPrefix(strings.ToLower(text), "talents ") {
 		group := ensureHeroGroup(state, "talents", "Talents", "")
 		talentText := strings.TrimSpace(text[len("talents "):])
 		appendGroupChange(group, talentText)
 		return
+	}
+
+	if prefixKey != "" {
+		if ability, ok := matchAbility(prefix, state.abilities); ok {
+			groupKey := "ability-" + slugifyStructured(ability.Name)
+			group := ensureHeroGroup(state, groupKey, ability.Name, firstNonEmpty(ability.Image, ability.ImageWebP))
+			appendGroupChange(group, text)
+			return
+		}
 	}
 
 	if ability, ok := matchAbility(text, state.abilities); ok {
