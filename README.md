@@ -7,15 +7,21 @@ Deadlock patch notes monorepo with:
 
 ## Documentation
 
-- Main docs index: `docs/index.md`
-- Architecture overview: `docs/architecture.md`
-- Development workflow: `docs/development.md`
+- Canonical docs entrypoint: [`docs/index.md`](./docs/index.md)
+- Current-state technical references are linked from that index:
+  - runtime overview
+  - API contracts
+  - domain model rules
+  - ingestion/parser rules
+  - frontend behavior
+  - ops/scripts
+  - maintenance rules
 
 ## Monorepo Layout
 
 - `web/`: Next.js App Router frontend (SSR React)
 - `api/`: Go API (`net/http` + `chi`) with PostgreSQL storage
-- `scripts/`: helper scripts for checks and server automation
+- `scripts/`: fixture pipeline, source checks, and server automation scripts
 
 ## Local Run
 
@@ -40,6 +46,7 @@ npm run dev
 Frontend runs on `http://localhost:3000`.
 Default API base is `https://api.deadlock.jakubdolenek.xyz`.
 To override, set `API_BASE_URL` (for example `API_BASE_URL=http://localhost:8080 npm run dev`).
+If `API_BASE_URL` is set to an invalid URL, web startup fails fast.
 
 ### Sync patch notes into DB
 
@@ -49,6 +56,15 @@ DATABASE_URL='postgres://deadlock:deadlock@localhost:5432/deadlock_patchnotes?ss
 ```
 
 Default source is `https://forums.playdeadlock.com/forums/changelog.10/`.
+Default max pages is `20`; default timeout is `30` seconds.
+
+### Windows Helper Startup
+
+```bat
+start-site.bat
+```
+
+This launches API and web in separate Windows shells and opens `http://localhost:3000/patches`.
 
 ## API Endpoints
 
@@ -85,6 +101,16 @@ Install sync + backup cron jobs:
 ```bash
 ./scripts/server/install_cron.sh
 ```
+
+## Fixture Generation
+
+Generate/update fixture JSON + mirrored assets for the configured target patch:
+
+```bash
+node scripts/generate_patch_fixture.mjs
+```
+
+Related parser modules live in `scripts/patch_fixture/`.
 
 ### Local Dev Against Server Data
 

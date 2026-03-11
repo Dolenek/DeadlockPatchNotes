@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
 import { PatchSectionRenderer } from "@/components/PatchSectionRenderer";
+import { TableOfContents, TableOfContentsGroup } from "@/components/TableOfContents";
 import { APIError, getPatchBySlug } from "@/lib/api";
 import { PatchSection, PatchTimelineBlock } from "@/lib/types";
-import { formatDisplayDate, formatUpdateLabel } from "@/lib/utils";
+import { formatDisplayDate, formatUpdateLabel, sectionAnchor, timelineBlockAnchor } from "@/lib/utils";
 
 type PatchDetailPageProps = {
   params: Promise<{ slug: string }>;
@@ -14,6 +15,7 @@ export default async function PatchDetailPage({ params }: PatchDetailPageProps) 
   try {
     const patch = await getPatchBySlug(slug);
     const timeline = buildTimelineForDisplay(patch.timeline, patch.sections, patch.source, patch.publishedAt);
+    const tocGroups = buildTimelineTableOfContents(timeline);
 
     return (
       <main className="patch-detail-page">
@@ -24,20 +26,19 @@ export default async function PatchDetailPage({ params }: PatchDetailPageProps) 
               <h1>{patch.title}</h1>
               <div className="patch-meta">
                 <time dateTime={patch.publishedAt}>{formatDisplayDate(patch.publishedAt)}</time>
-                <span>Source: {patch.source.type}</span>
                 <a href={patch.source.url} target="_blank" rel="noreferrer">
                   Open Original
                 </a>
               </div>
-              <p className="patch-intro">{patch.intro}</p>
             </div>
           </div>
         </section>
 
         <section className="shell patch-detail-content patch-detail-content--timeline">
+          <TableOfContents groups={tocGroups} />
           <div className="patch-sections-column">
             {timeline.map((block) => (
-              <article className="timeline-block" key={block.id}>
+              <article className="timeline-block" id={timelineBlockAnchor(block.id)} key={block.id}>
                 <header className="timeline-block-header">
                   <div className="timeline-block-heading">
                     <p className="eyebrow">{formatUpdateLabel(block.kind, block.releasedAt)}</p>
@@ -51,15 +52,10 @@ export default async function PatchDetailPage({ params }: PatchDetailPageProps) 
                   </div>
                 </header>
                 <div className="timeline-block-sections">
-                  {block.sections.map((section) => (
-                    <PatchSectionRenderer
-                      section={{
-                        ...section,
-                        id: `${block.id}-${section.kind}`
-                      }}
-                      key={`${block.id}-${section.kind}`}
-                    />
-                  ))}
+                  {block.sections.map((section) => {
+                    const sectionID = `${block.id}-${section.kind}`;
+                    return <PatchSectionRenderer section={{ ...section, id: sectionID }} key={sectionID} />;
+                  })}
                 </div>
               </article>
             ))}
@@ -100,4 +96,18 @@ function buildTimelineForDisplay(
       sections: fallbackSections
     }
   ];
+}
+
+function buildTimelineTableOfContents(timeline: Array<PatchTimelineBlock & { sections: PatchSection[] }>): TableOfContentsGroup[] {
+  return timeline.map((block) => ({
+    id: timelineBlockAnchor(block.id),
+    label: formatUpdateLabel(block.kind, block.releasedAt),
+    sections: block.sections.map((section) => {
+      const sectionID = `${block.id}-${section.kind}`;
+      return {
+        id: sectionAnchor(sectionID),
+        label: section.title
+      };
+    })
+  }));
 }

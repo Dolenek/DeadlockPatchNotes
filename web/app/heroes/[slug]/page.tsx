@@ -40,8 +40,8 @@ export default async function HeroDetailPage({ params }: HeroDetailPageProps) {
             <article key={block.id} className="hero-timeline-block">
               <header className="hero-timeline-header">
                 <div>
-                  <p className="eyebrow">{formatUpdateLabel(block.kind, block.releasedAt)}</p>
-                  <h2>{block.patch.title}</h2>
+                  <p className="eyebrow">{block.patch.title}</p>
+                  <h2>{formatUpdateLabel(block.kind, block.releasedAt)}</h2>
                 </div>
                 <div className="hero-timeline-meta">
                   <time dateTime={block.releasedAt}>{formatDisplayDate(block.releasedAt)}</time>

@@ -53,18 +53,18 @@
 .patch-detail-content {
   margin-top: 1.5rem;
   display: grid;
-  grid-template-columns: 240px minmax(0, 1fr);
+  grid-template-columns: 280px minmax(0, 1fr);
   gap: 1.5rem;
   align-items: start;
 }
 
 .patch-detail-content--timeline {
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: 280px minmax(0, 1fr);
 }
 
 .toc {
   position: sticky;
-  top: 85px;
+  top: 84px;
   border: 1px solid #21426f;
   border-radius: 8px;
   background: linear-gradient(180deg, #0d1a31f2, #091120f2);
@@ -81,6 +81,14 @@
   text-align: left;
   cursor: pointer;
   font-family: "Barlow", sans-serif;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toc-toggle-symbol {
+  font-size: 1.2rem;
+  line-height: 1;
 }
 
 .toc-list {
@@ -94,14 +102,47 @@
   display: block;
 }
 
-.toc-list li + li {
+.toc-list > li + li {
   margin-top: 0.55rem;
 }
 
-.toc-list a {
+.toc-group + .toc-group {
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid #ffffff15;
+}
+
+.toc-sublist {
+  margin: 0.5rem 0 0;
+  padding: 0 0 0 0.85rem;
+  list-style: none;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.toc-link {
+  display: block;
+  border-left: 2px solid transparent;
+  padding-left: 0.5rem;
   color: #b8c9e8;
   text-decoration: none;
   font-size: 0.9rem;
+  line-height: 1.38;
+  transition: color 120ms ease, border-color 120ms ease;
+}
+
+.toc-sublink {
+  color: #9eb3d8;
+  font-size: 0.86rem;
+}
+
+.toc-link:hover {
+  color: #dbe9ff;
+}
+
+.toc-link.is-active {
+  color: #f4f9ff;
+  border-left-color: #8bcff7;
 }
 
 .patch-sections-column {
@@ -113,6 +154,7 @@
   border: 1px solid #355a8f;
   background: linear-gradient(180deg, #0c1730f0, #091226f2);
   box-shadow: 0 10px 24px #00000055;
+  scroll-margin-top: 84px;
 }
 
 .timeline-block-header {
@@ -156,6 +198,7 @@
     linear-gradient(145deg, #0f1f39f0, #0a1528f0),
     repeating-linear-gradient(125deg, #ffffff07 0, #ffffff07 1px, transparent 1px, transparent 80px);
   box-shadow: 0 10px 30px #00000055;
+  scroll-margin-top: 84px;
 }
 
 .patch-section-header {

@@ -18,9 +18,6 @@ export default async function PatchesPage({ searchParams }: PatchesPageProps) {
         <div className="shell">
           <p className="eyebrow">Deadlock Updates</p>
           <h1>Patch Notes</h1>
-          <p>
-            A focused archive of gameplay updates with a visual style inspired by modern competitive game patch portals.
-          </p>
         </div>
       </section>
 

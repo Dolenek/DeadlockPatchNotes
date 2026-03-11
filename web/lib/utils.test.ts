@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { clampPage, formatDisplayDate, formatForumDate, formatUpdateLabel, sectionAnchor } from "@/lib/utils";
+import {
+  clampPage,
+  formatDisplayDate,
+  formatForumDate,
+  formatUpdateLabel,
+  sectionAnchor,
+  timelineBlockAnchor
+} from "@/lib/utils";
 
 describe("clampPage", () => {
   it("falls back to page 1 for invalid input", () => {
@@ -24,6 +31,12 @@ describe("formatDisplayDate", () => {
 describe("sectionAnchor", () => {
   it("prefixes section id", () => {
     expect(sectionAnchor("general")).toBe("section-general");
+  });
+});
+
+describe("timelineBlockAnchor", () => {
+  it("prefixes timeline block id", () => {
+    expect(timelineBlockAnchor("update-2026-03-10")).toBe("timeline-update-2026-03-10");
   });
 });
 

@@ -25,6 +25,10 @@ export function sectionAnchor(sectionID: string): string {
   return `section-${sectionID}`;
 }
 
+export function timelineBlockAnchor(blockID: string): string {
+  return `timeline-${blockID}`;
+}
+
 export function formatForumDate(isoDate: string): string {
   const date = new Date(isoDate);
   const month = String(date.getUTCMonth() + 1).padStart(2, "0");

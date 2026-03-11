@@ -1,53 +1,63 @@
 # Architecture
 
 ## Overview
-The repository is a monorepo for a Deadlock patch notes product:
-- `api/`: serves patch list/detail payloads for the frontend.
-- `web/`: Next.js App Router UI rendering patch list and patch detail views.
-- `scripts/`: helper scripts for source checks and server automation.
+
+Monorepo structure:
+
+- `api/`: Go HTTP API + ingestion sync process + PostgreSQL persistence.
+- `web/`: Next.js App Router frontend.
+- `scripts/`: fixture pipeline, source-limit checks, and server automation.
 
 ## API Layer (`api/`)
-- Server entrypoint: `api/cmd/server/main.go`.
-- Router: `api/internal/httpapi/router.go` using `chi`.
-- Storage: `api/internal/patches/postgres_store.go` reads `patches.detail_payload` JSON from PostgreSQL.
-- API surface includes patch list/detail plus hero/spell/item timeline endpoints:
-  - `/api/v1/heroes`, `/api/v1/heroes/{heroSlug}/changes`
-  - `/api/v1/spells`, `/api/v1/spells/{spellSlug}/changes`
-  - `/api/v1/items`, `/api/v1/items/{itemSlug}/changes`
-- Migrations: `api/internal/db/migrations/*.sql` applied on startup.
-- Sync command: `api/cmd/sync/main.go` crawls forum/Steam sources and upserts DB rows.
 
-Primary runtime source is PostgreSQL (`DATABASE_URL` required).
+- Server entrypoint: `api/cmd/server/main.go`.
+- Router: `api/internal/httpapi/router.go` (`chi`).
+- Repository: `api/internal/patches/postgres_store.go`.
+- API surface:
+  - `/api/healthz`
+  - `/api/v1/patches`, `/api/v1/patches/{slug}`
+  - `/api/v1/heroes`, `/api/v1/heroes/{heroSlug}/changes`
+  - `/api/v1/items`, `/api/v1/items/{itemSlug}/changes`
+  - `/api/v1/spells`, `/api/v1/spells/{spellSlug}/changes`
+
+Read path split:
+
+- Patch list reads summary columns directly from `patches` table.
+- Patch detail/entity timelines load `patches.detail_payload` JSON and apply hydration/query builders.
+
+Migrations in `api/internal/db/migrations/*.sql` are applied at startup.
+
+## Ingestion Pipeline (`api/cmd/sync` + `api/internal/ingest`)
+
+- Crawls changelog forum listing pages.
+- Fetches patch threads and keeps official `Yoshi` posts.
+- Parses Steam event payload when available, with forum fallback behavior.
+- Builds canonical patch detail payload and timeline blocks.
+- Upserts:
+  - `patches` (summary + detail JSON)
+  - `patch_release_blocks` (timeline block metadata)
+  - `sync_runs` (run observability)
 
 ## Web Layer (`web/`)
+
 - App routes:
-  - `web/app/patches/page.tsx`
-  - `web/app/patches/[slug]/page.tsx`
-  - `web/app/heroes/page.tsx`
-  - `web/app/heroes/[slug]/page.tsx`
-  - `web/app/spells/page.tsx`
-  - `web/app/spells/[slug]/page.tsx`
-  - `web/app/items/page.tsx`
-  - `web/app/items/[slug]/page.tsx`
+  - `web/app/patches/...`
+  - `web/app/heroes/...`
+  - `web/app/items/...`
+  - `web/app/spells/...`
 - API client: `web/lib/api.ts`.
 - Domain types: `web/lib/types.ts`.
-- Main presentation components under `web/components/`.
+- Shared components: `web/components/`.
 
-The frontend defaults to `API_BASE_URL=http://localhost:8080`.
+Frontend API base behavior:
 
-## Ingestion Pipeline
-- Source list crawl: `https://forums.playdeadlock.com/forums/changelog.10/`.
-- Thread parser: extracts official posts from `Yoshi` and their timestamps/content.
-- Steam click-through parser: resolves linked `store.steampowered.com/news/.../view/<id>` pages and parses embedded partner event payloads.
-- Output persistence:
-  - `patches` table (summary + detail JSON)
-  - `patch_release_blocks` table (initial/hotfix timeline blocks)
-  - `sync_runs` table (sync observability)
-
-At runtime, API list/detail reads from DB only.
+- Default API base is `https://api.deadlock.jakubdolenek.xyz`.
+- `API_BASE_URL` may override it.
+- Invalid non-empty `API_BASE_URL` throws during client initialization.
 
 ## Deployment Model
-- `docker-compose.yml` runs `db`, `api`, `web`, and one-shot `sync` service.
+
+- `docker-compose.yml` runs `db`, `api`, `web`, and one-shot `sync`.
 - PostgreSQL persistence uses named volume `pgdata`.
-- Web binds to loopback-only host port (`127.0.0.1:${WEB_PORT}`).
-- Recommended external exposure is via Cloudflare Tunnel to the web port.
+- API is loopback-published by default (`127.0.0.1:${API_PORT}`)
+- Web bind host/port is configurable via `WEB_HOST_BIND` and `WEB_PORT`.

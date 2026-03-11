@@ -1,4 +1,4 @@
-@media (min-width: 901px) {
+@media (min-width: 1025px) {
   .toc-list {
     display: block;
   }
@@ -7,6 +7,10 @@
     pointer-events: none;
     background: transparent;
     border-bottom: 1px solid #ffffff1f;
+  }
+
+  .toc-toggle-symbol {
+    display: none;
   }
 }
 
