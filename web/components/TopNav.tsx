@@ -9,6 +9,7 @@ export function TopNav() {
         </Link>
         <nav className="main-links" aria-label="Main navigation">
           <Link href="/patches">Patch Notes</Link>
+          <Link href="/heroes">Heroes</Link>
           <a href="https://forums.playdeadlock.com/forums/changelog.10/" target="_blank" rel="noreferrer">
             Changelog Forum
           </a>

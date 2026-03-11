@@ -62,6 +62,7 @@ type PatchTimelineBlock struct {
 	ReleasedAt string        `json:"releasedAt"`
 	Source     PatchSource   `json:"source"`
 	Changes    []PatchChange `json:"changes"`
+	Sections   []PatchSection `json:"sections,omitempty"`
 }
 
 // PatchDetail powers the patch detail page.
@@ -92,4 +93,52 @@ type ListResponse struct {
 	Limit      int            `json:"limit"`
 	Total      int            `json:"total"`
 	TotalPages int            `json:"totalPages"`
+}
+
+type HeroSummary struct {
+	Slug          string `json:"slug"`
+	Name          string `json:"name"`
+	IconURL       string `json:"iconUrl,omitempty"`
+	IconFallbackURL string `json:"iconFallbackUrl,omitempty"`
+	LastChangedAt string `json:"lastChangedAt"`
+}
+
+type HeroListResponse struct {
+	Items []HeroSummary `json:"items"`
+}
+
+type HeroPatchRef struct {
+	Slug string `json:"slug"`
+	Title string `json:"title"`
+}
+
+type HeroTimelineSkill struct {
+	ID              string       `json:"id"`
+	Title           string       `json:"title"`
+	IconURL         string       `json:"iconUrl,omitempty"`
+	IconFallbackURL string       `json:"iconFallbackUrl,omitempty"`
+	Changes         []PatchChange `json:"changes"`
+}
+
+type HeroTimelineBlock struct {
+	ID              string            `json:"id"`
+	Kind            string            `json:"kind"`
+	Label           string            `json:"label"`
+	ReleasedAt      string            `json:"releasedAt"`
+	Patch           HeroPatchRef      `json:"patch"`
+	Source          PatchSource       `json:"source"`
+	GeneralChanges  []PatchChange     `json:"generalChanges,omitempty"`
+	Skills          []HeroTimelineSkill `json:"skills"`
+}
+
+type HeroChangesResponse struct {
+	Hero  HeroSummary         `json:"hero"`
+	Items []HeroTimelineBlock `json:"items"`
+}
+
+type HeroChangesQuery struct {
+	HeroSlug string
+	Skill    string
+	From     *time.Time
+	To       *time.Time
 }

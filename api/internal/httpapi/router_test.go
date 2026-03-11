@@ -115,3 +115,70 @@ func TestGetPatchMissingReturns404(t *testing.T) {
 		t.Fatalf("expected status 404, got %d", rr.Code)
 	}
 }
+
+func TestListHeroes(t *testing.T) {
+	h := NewRouter(patches.NewStore())
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/heroes", nil)
+	rr := httptest.NewRecorder()
+
+	h.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", rr.Code)
+	}
+
+	var payload patches.HeroListResponse
+	if err := json.Unmarshal(rr.Body.Bytes(), &payload); err != nil {
+		t.Fatalf("decode response: %v", err)
+	}
+	if len(payload.Items) == 0 {
+		t.Fatal("expected at least one hero")
+	}
+}
+
+func TestGetHeroChanges(t *testing.T) {
+	h := NewRouter(patches.NewStore())
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/heroes/abrams/changes?skill=Shoulder%20Charge", nil)
+	rr := httptest.NewRecorder()
+
+	h.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", rr.Code)
+	}
+
+	var payload patches.HeroChangesResponse
+	if err := json.Unmarshal(rr.Body.Bytes(), &payload); err != nil {
+		t.Fatalf("decode response: %v", err)
+	}
+	if payload.Hero.Slug != "abrams" {
+		t.Fatalf("unexpected hero slug: %s", payload.Hero.Slug)
+	}
+	if len(payload.Items) == 0 {
+		t.Fatal("expected hero timeline items")
+	}
+}
+
+func TestGetHeroChangesInvalidDateReturns400(t *testing.T) {
+	h := NewRouter(patches.NewStore())
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/heroes/abrams/changes?from=not-a-date", nil)
+	rr := httptest.NewRecorder()
+
+	h.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusBadRequest {
+		t.Fatalf("expected status 400, got %d", rr.Code)
+	}
+}
+
+func TestGetHeroChangesMissingReturns404(t *testing.T) {
+	h := NewRouter(patches.NewStore())
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/heroes/nope/changes", nil)
+	rr := httptest.NewRecorder()
+
+	h.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusNotFound {
+		t.Fatalf("expected status 404, got %d", rr.Code)
+	}
+}

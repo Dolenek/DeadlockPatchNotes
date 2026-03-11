@@ -1,4 +1,4 @@
-import { PatchDetail, PatchListResponse } from "@/lib/types";
+import { HeroChangesResponse, HeroListResponse, PatchDetail, PatchListResponse } from "@/lib/types";
 
 const DEFAULT_API_BASE_URL = "https://api.deadlock.jakubdolenek.xyz";
 
@@ -56,4 +56,29 @@ export async function getPatches(page: number, limit = 12): Promise<PatchListRes
 
 export async function getPatchBySlug(slug: string): Promise<PatchDetail> {
   return apiFetch<PatchDetail>(`/api/v1/patches/${slug}`);
+}
+
+type HeroChangesQuery = {
+  skill?: string;
+  from?: string;
+  to?: string;
+};
+
+export async function getHeroes(): Promise<HeroListResponse> {
+  return apiFetch<HeroListResponse>("/api/v1/heroes");
+}
+
+export async function getHeroChanges(slug: string, query: HeroChangesQuery = {}): Promise<HeroChangesResponse> {
+  const params = new URLSearchParams();
+  if (query.skill) {
+    params.set("skill", query.skill);
+  }
+  if (query.from) {
+    params.set("from", query.from);
+  }
+  if (query.to) {
+    params.set("to", query.to);
+  }
+  const suffix = params.size > 0 ? `?${params.toString()}` : "";
+  return apiFetch<HeroChangesResponse>(`/api/v1/heroes/${encodeURIComponent(slug)}/changes${suffix}`);
 }

@@ -1,0 +1,166 @@
+.heroes-masthead {
+  padding: clamp(2.8rem, 6vw, 4.6rem) 0 1.6rem;
+  border-bottom: 1px solid #ffffff1f;
+  background:
+    radial-gradient(900px 400px at 20% -10%, #2d53883d, transparent 70%),
+    linear-gradient(180deg, #090f1e, #070d18);
+}
+
+.heroes-masthead h1 {
+  margin: 0.4rem 0 0.7rem;
+  font-family: "Cinzel", serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.heroes-list-section {
+  padding-top: 1.3rem;
+  padding-bottom: 2.4rem;
+}
+
+.heroes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.95rem;
+}
+
+.hero-card {
+  border: 1px solid #355a8f;
+  background: linear-gradient(180deg, #0b1730f3, #0a1122f3);
+}
+
+.hero-card-link {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 0.85rem;
+  align-items: center;
+  padding: 0.7rem;
+  text-decoration: none;
+}
+
+.hero-card-image {
+  width: 84px;
+  height: 84px;
+  object-fit: cover;
+  background: #09142a;
+}
+
+.hero-card-copy h2 {
+  margin: 0;
+  font-size: 1.12rem;
+  line-height: 1.2;
+}
+
+.hero-card-copy p {
+  margin: 0.35rem 0 0;
+  color: #c1d5f7;
+  font-size: 0.9rem;
+}
+
+.hero-detail-page {
+  padding-bottom: 2.4rem;
+}
+
+.hero-detail-hero {
+  border-bottom: 1px solid #ffffff1f;
+  background:
+    radial-gradient(900px 360px at 30% -20%, #335e9338, transparent 72%),
+    linear-gradient(180deg, #0a1020, #090f1b);
+}
+
+.hero-detail-head {
+  padding: clamp(2.4rem, 5vw, 3.8rem) 0 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.hero-detail-image {
+  width: clamp(92px, 13vw, 148px);
+  height: clamp(92px, 13vw, 148px);
+  object-fit: cover;
+  background: #09142a;
+}
+
+.hero-detail-copy h1 {
+  margin: 0.35rem 0 0.5rem;
+  font-family: "Cinzel", serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hero-detail-copy p {
+  margin: 0;
+  color: #c7d9f8;
+}
+
+.hero-timeline-section {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+
+.hero-timeline-block {
+  border: 1px solid #355a8f;
+  background: linear-gradient(180deg, #0a162df2, #091226f2);
+}
+
+.hero-timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #ffffff24;
+}
+
+.hero-timeline-header h2 {
+  margin: 0.2rem 0 0;
+  font-size: clamp(1.05rem, 2.7vw, 1.4rem);
+}
+
+.hero-timeline-meta {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  font-size: 0.88rem;
+  color: #c1d7f8;
+}
+
+.hero-timeline-meta a {
+  color: #9fdaf2;
+}
+
+.hero-skill-group {
+  padding: 0.8rem 1rem 1rem;
+  border-top: 1px solid #ffffff14;
+}
+
+.hero-skill-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hero-skill-image {
+  width: 2.3rem;
+  height: 2.3rem;
+  object-fit: cover;
+  background: #0c1d39;
+}
+
+.hero-skill-group h3 {
+  margin: 0;
+  font-size: 1.03rem;
+}
+
+.hero-skill-group ul {
+  margin: 0.55rem 0 0;
+  padding-left: 1.4rem;
+}
+
+.hero-skill-group li {
+  margin-top: 0.45rem;
+  line-height: 1.5;
+}

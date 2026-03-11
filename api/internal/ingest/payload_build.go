@@ -105,6 +105,10 @@ func buildDetailPayload(thread ForumThread, blocks []timelineCandidate, coverIma
 	timeline := make([]patches.PatchTimelineBlock, 0, len(blocks))
 
 	for _, block := range blocks {
+		blockSections := buildStructuredSections([]timelineCandidate{block}, catalog)
+		if len(blockSections) == 0 {
+			blockSections = fallbackSectionsFromTimeline([]timelineCandidate{block})
+		}
 		changeLines := toChangeLines(block.BodyText, block.Key)
 		timeline = append(timeline, patches.PatchTimelineBlock{
 			ID:         block.Key,
@@ -115,7 +119,8 @@ func buildDetailPayload(thread ForumThread, blocks []timelineCandidate, coverIma
 				Type: block.SourceType,
 				URL:  block.SourceURL,
 			},
-			Changes: changeLines,
+			Changes:  changeLines,
+			Sections: blockSections,
 		})
 	}
 
@@ -246,10 +251,15 @@ func normalizeBodyForHash(value string) string {
 		return ""
 	}
 	lines := strings.Split(value, "\n")
+	normalized := make([]string, 0, len(lines))
 	for i := range lines {
-		lines[i] = strings.TrimSpace(lines[i])
+		line := strings.TrimSpace(lines[i])
+		if line == "" {
+			continue
+		}
+		normalized = append(normalized, line)
 	}
-	return strings.TrimSpace(strings.Join(lines, "\n"))
+	return strings.TrimSpace(strings.Join(normalized, "\n"))
 }
 
 func hashText(value string) string {

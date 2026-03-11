@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import { PatchSectionRenderer } from "@/components/PatchSectionRenderer";
-import { TableOfContents } from "@/components/TableOfContents";
 import { APIError, getPatchBySlug } from "@/lib/api";
-import { formatDisplayDate } from "@/lib/utils";
+import { PatchSection, PatchTimelineBlock } from "@/lib/types";
+import { formatDisplayDate, formatUpdateLabel } from "@/lib/utils";
 
 type PatchDetailPageProps = {
   params: Promise<{ slug: string }>;
@@ -13,6 +13,7 @@ export default async function PatchDetailPage({ params }: PatchDetailPageProps) 
 
   try {
     const patch = await getPatchBySlug(slug);
+    const timeline = buildTimelineForDisplay(patch.timeline, patch.sections, patch.source, patch.publishedAt);
 
     return (
       <main className="patch-detail-page">
@@ -33,11 +34,34 @@ export default async function PatchDetailPage({ params }: PatchDetailPageProps) 
           </div>
         </section>
 
-        <section className="shell patch-detail-content">
-          <TableOfContents sections={patch.sections} />
+        <section className="shell patch-detail-content patch-detail-content--timeline">
           <div className="patch-sections-column">
-            {patch.sections.map((section) => (
-              <PatchSectionRenderer section={section} key={section.id} />
+            {timeline.map((block) => (
+              <article className="timeline-block" key={block.id}>
+                <header className="timeline-block-header">
+                  <div className="timeline-block-heading">
+                    <p className="eyebrow">{formatUpdateLabel(block.kind, block.releasedAt)}</p>
+                    <h2>{block.title}</h2>
+                  </div>
+                  <div className="timeline-block-meta">
+                    <time dateTime={block.releasedAt}>{formatDisplayDate(block.releasedAt)}</time>
+                    <a href={block.source.url} target="_blank" rel="noreferrer">
+                      Open Source
+                    </a>
+                  </div>
+                </header>
+                <div className="timeline-block-sections">
+                  {block.sections.map((section) => (
+                    <PatchSectionRenderer
+                      section={{
+                        ...section,
+                        id: `${block.id}-${section.kind}`
+                      }}
+                      key={`${block.id}-${section.kind}`}
+                    />
+                  ))}
+                </div>
+              </article>
             ))}
           </div>
         </section>
@@ -50,4 +74,30 @@ export default async function PatchDetailPage({ params }: PatchDetailPageProps) 
 
     throw error;
   }
+}
+
+function buildTimelineForDisplay(
+  timeline: PatchTimelineBlock[] | undefined,
+  fallbackSections: PatchSection[],
+  fallbackSource: { type: string; url: string },
+  fallbackPublishedAt: string
+) {
+  if (Array.isArray(timeline) && timeline.length > 0) {
+    return timeline.map((block) => ({
+      ...block,
+      sections: Array.isArray(block.sections) && block.sections.length > 0 ? block.sections : fallbackSections
+    }));
+  }
+
+  return [
+    {
+      id: "fallback-initial",
+      kind: "initial",
+      title: "Initial Update",
+      releasedAt: fallbackPublishedAt,
+      source: fallbackSource,
+      changes: [],
+      sections: fallbackSections
+    }
+  ];
 }

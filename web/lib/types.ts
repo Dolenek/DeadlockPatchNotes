@@ -49,6 +49,7 @@ export type PatchTimelineBlock = {
     url: string;
   };
   changes: PatchChange[];
+  sections?: PatchSection[];
 };
 
 export type PatchDetail = {
@@ -73,4 +74,46 @@ export type PatchListResponse = {
   limit: number;
   total: number;
   totalPages: number;
+};
+
+export type HeroSummary = {
+  slug: string;
+  name: string;
+  iconUrl?: string;
+  iconFallbackUrl?: string;
+  lastChangedAt: string;
+};
+
+export type HeroListResponse = {
+  items: HeroSummary[];
+};
+
+export type HeroTimelineSkill = {
+  id: string;
+  title: string;
+  iconUrl?: string;
+  iconFallbackUrl?: string;
+  changes: PatchChange[];
+};
+
+export type HeroTimelineBlock = {
+  id: string;
+  kind: string;
+  label: string;
+  releasedAt: string;
+  patch: {
+    slug: string;
+    title: string;
+  };
+  source: {
+    type: string;
+    url: string;
+  };
+  generalChanges?: PatchChange[];
+  skills: HeroTimelineSkill[];
+};
+
+export type HeroChangesResponse = {
+  hero: HeroSummary;
+  items: HeroTimelineBlock[];
 };

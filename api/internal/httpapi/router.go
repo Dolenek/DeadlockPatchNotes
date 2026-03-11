@@ -5,6 +5,8 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"strings"
+	"time"
 
 	"deadlockpatchnotes/api/internal/patches"
 	"github.com/go-chi/chi/v5"
@@ -29,6 +31,8 @@ func NewRouter(store patches.Repository) http.Handler {
 	r.Route("/api/v1", func(v1 chi.Router) {
 		v1.Get("/patches", api.listPatches)
 		v1.Get("/patches/{slug}", api.getPatch)
+		v1.Get("/heroes", api.listHeroes)
+		v1.Get("/heroes/{heroSlug}/changes", api.getHeroChanges)
 	})
 
 	return r
@@ -70,6 +74,47 @@ func (a *API) getPatch(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, patch)
 }
 
+func (a *API) listHeroes(w http.ResponseWriter, _ *http.Request) {
+	payload := a.store.ListHeroes()
+	writeJSON(w, http.StatusOK, payload)
+}
+
+func (a *API) getHeroChanges(w http.ResponseWriter, r *http.Request) {
+	heroSlug := strings.TrimSpace(chi.URLParam(r, "heroSlug"))
+	if heroSlug == "" {
+		writeError(w, http.StatusBadRequest, "missing hero slug")
+		return
+	}
+
+	from, err := parseTimeQuery(r, "from", true)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid from query value")
+		return
+	}
+	to, err := parseTimeQuery(r, "to", false)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid to query value")
+		return
+	}
+
+	payload, err := a.store.GetHeroChanges(patches.HeroChangesQuery{
+		HeroSlug: heroSlug,
+		Skill:    strings.TrimSpace(r.URL.Query().Get("skill")),
+		From:     from,
+		To:       to,
+	})
+	if err != nil {
+		if errors.Is(err, patches.ErrHeroNotFound) {
+			writeError(w, http.StatusNotFound, "hero not found")
+			return
+		}
+		writeError(w, http.StatusInternalServerError, "failed to load hero changes")
+		return
+	}
+
+	writeJSON(w, http.StatusOK, payload)
+}
+
 func parseIntQuery(r *http.Request, key string, fallback int) int {
 	raw := r.URL.Query().Get(key)
 	if raw == "" {
@@ -80,6 +125,28 @@ func parseIntQuery(r *http.Request, key string, fallback int) int {
 		return fallback
 	}
 	return value
+}
+
+func parseTimeQuery(r *http.Request, key string, startOfDay bool) (*time.Time, error) {
+	raw := strings.TrimSpace(r.URL.Query().Get(key))
+	if raw == "" {
+		return nil, nil
+	}
+
+	if parsed, err := time.Parse(time.RFC3339, raw); err == nil {
+		utc := parsed.UTC()
+		return &utc, nil
+	}
+
+	if parsed, err := time.Parse("2006-01-02", raw); err == nil {
+		utc := time.Date(parsed.Year(), parsed.Month(), parsed.Day(), 0, 0, 0, 0, time.UTC)
+		if !startOfDay {
+			utc = utc.Add(24*time.Hour - time.Nanosecond)
+		}
+		return &utc, nil
+	}
+
+	return nil, errors.New("invalid time query")
 }
 
 func writeJSON(w http.ResponseWriter, status int, payload any) {

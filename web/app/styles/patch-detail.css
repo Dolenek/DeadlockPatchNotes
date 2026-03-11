@@ -58,6 +58,10 @@
   align-items: start;
 }
 
+.patch-detail-content--timeline {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .toc {
   position: sticky;
   top: 85px;
@@ -103,6 +107,47 @@
 .patch-sections-column {
   display: grid;
   gap: 1.35rem;
+}
+
+.timeline-block {
+  border: 1px solid #355a8f;
+  background: linear-gradient(180deg, #0c1730f0, #091226f2);
+  box-shadow: 0 10px 24px #00000055;
+}
+
+.timeline-block-header {
+  padding: 1rem 1rem 0.8rem;
+  border-bottom: 1px solid #ffffff22;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.timeline-block-heading h2 {
+  margin: 0.2rem 0 0;
+  font-family: "Cinzel", serif;
+  font-size: clamp(1.2rem, 2.8vw, 1.7rem);
+  letter-spacing: 0.03em;
+}
+
+.timeline-block-meta {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  color: #c6d8fa;
+  font-size: 0.88rem;
+}
+
+.timeline-block-meta a {
+  color: #9fdaf2;
+}
+
+.timeline-block-sections {
+  display: grid;
+  gap: 1rem;
+  padding: 0.95rem;
 }
 
 .patch-section {

@@ -10,6 +10,7 @@ The repository is a monorepo for a Deadlock patch notes product:
 - Server entrypoint: `api/cmd/server/main.go`.
 - Router: `api/internal/httpapi/router.go` using `chi`.
 - Storage: `api/internal/patches/postgres_store.go` reads `patches.detail_payload` JSON from PostgreSQL.
+- API surface includes patch list/detail plus hero timeline endpoints (`/api/v1/heroes`, `/api/v1/heroes/{heroSlug}/changes`).
 - Migrations: `api/internal/db/migrations/*.sql` applied on startup.
 - Sync command: `api/cmd/sync/main.go` crawls forum/Steam sources and upserts DB rows.
 
@@ -19,6 +20,8 @@ Primary runtime source is PostgreSQL (`DATABASE_URL` required).
 - App routes:
   - `web/app/patches/page.tsx`
   - `web/app/patches/[slug]/page.tsx`
+  - `web/app/heroes/page.tsx`
+  - `web/app/heroes/[slug]/page.tsx`
 - API client: `web/lib/api.ts`.
 - Domain types: `web/lib/types.ts`.
 - Main presentation components under `web/components/`.

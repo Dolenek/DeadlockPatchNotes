@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { clampPage, formatDisplayDate, sectionAnchor } from "@/lib/utils";
+import { clampPage, formatDisplayDate, formatForumDate, formatUpdateLabel, sectionAnchor } from "@/lib/utils";
 
 describe("clampPage", () => {
   it("falls back to page 1 for invalid input", () => {
@@ -24,5 +24,21 @@ describe("formatDisplayDate", () => {
 describe("sectionAnchor", () => {
   it("prefixes section id", () => {
     expect(sectionAnchor("general")).toBe("section-general");
+  });
+});
+
+describe("formatForumDate", () => {
+  it("formats ISO date into MM-DD-YYYY UTC", () => {
+    expect(formatForumDate("2026-03-06T22:36:00Z")).toBe("03-06-2026");
+  });
+});
+
+describe("formatUpdateLabel", () => {
+  it("uses update prefix for initial blocks", () => {
+    expect(formatUpdateLabel("initial", "2026-03-06T22:36:00Z")).toBe("Update 03-06-2026");
+  });
+
+  it("uses patch prefix for hotfix blocks", () => {
+    expect(formatUpdateLabel("hotfix", "2026-03-07T12:00:00Z")).toBe("Patch 03-07-2026");
   });
 });

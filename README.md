@@ -55,6 +55,8 @@ Default source is `https://forums.playdeadlock.com/forums/changelog.10/`.
 - `GET /api/healthz`
 - `GET /api/v1/patches?page=<int>&limit=<int>`
 - `GET /api/v1/patches/{slug}`
+- `GET /api/v1/heroes`
+- `GET /api/v1/heroes/{heroSlug}/changes?skill=<name>&from=<date|rfc3339>&to=<date|rfc3339>`
 
 ## Docker Deployment
 

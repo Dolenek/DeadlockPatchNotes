@@ -110,5 +110,55 @@ func (s *PostgresStore) GetBySlug(slug string) (PatchDetail, error) {
 		return PatchDetail{}, fmt.Errorf("decode patch detail: %w", err)
 	}
 
-	return detail, nil
+	return hydratePatchDetail(detail), nil
+}
+
+func (s *PostgresStore) ListHeroes() HeroListResponse {
+	details, err := s.loadAllDetails()
+	if err != nil {
+		return HeroListResponse{Items: []HeroSummary{}}
+	}
+	return buildHeroList(details)
+}
+
+func (s *PostgresStore) GetHeroChanges(query HeroChangesQuery) (HeroChangesResponse, error) {
+	details, err := s.loadAllDetails()
+	if err != nil {
+		return HeroChangesResponse{}, fmt.Errorf("load details: %w", err)
+	}
+	return buildHeroChanges(details, query)
+}
+
+func (s *PostgresStore) loadAllDetails() ([]PatchDetail, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	rows, err := s.db.QueryContext(ctx, `
+		SELECT detail_payload
+		FROM patches
+		ORDER BY published_at ASC
+	`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	details := make([]PatchDetail, 0, 128)
+	for rows.Next() {
+		var raw []byte
+		if err := rows.Scan(&raw); err != nil {
+			return nil, err
+		}
+		var detail PatchDetail
+		if err := json.Unmarshal(raw, &detail); err != nil {
+			continue
+		}
+		details = append(details, detail)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return details, nil
 }

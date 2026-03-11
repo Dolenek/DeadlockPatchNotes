@@ -14,6 +14,7 @@ import (
 )
 
 var ErrPatchNotFound = errors.New("patch not found")
+var ErrHeroNotFound = errors.New("hero not found")
 
 //go:embed data/*.json
 var fixtureFS embed.FS
@@ -84,7 +85,23 @@ func (s *Store) GetBySlug(slug string) (PatchDetail, error) {
 	if !ok {
 		return PatchDetail{}, ErrPatchNotFound
 	}
-	return item.detail, nil
+	return hydratePatchDetail(item.detail), nil
+}
+
+func (s *Store) ListHeroes() HeroListResponse {
+	details := make([]PatchDetail, 0, len(s.order))
+	for _, item := range s.order {
+		details = append(details, item.detail)
+	}
+	return buildHeroList(details)
+}
+
+func (s *Store) GetHeroChanges(query HeroChangesQuery) (HeroChangesResponse, error) {
+	details := make([]PatchDetail, 0, len(s.order))
+	for _, item := range s.order {
+		details = append(details, item.detail)
+	}
+	return buildHeroChanges(details, query)
 }
 
 func seedPatchData() []listItem {
