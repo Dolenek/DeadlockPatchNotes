@@ -26,6 +26,9 @@ func buildHeroList(details []PatchDetail) HeroListResponse {
 					continue
 				}
 				for _, entry := range section.Entries {
+					if !isHeroTimelineEntry(entry) {
+						continue
+					}
 					if len(entry.Changes) == 0 && len(entry.Groups) == 0 {
 						continue
 					}
@@ -102,7 +105,7 @@ func buildHeroChanges(details []PatchDetail, query HeroChangesQuery) (HeroChange
 		hydrated := hydratePatchDetail(detail)
 		for _, block := range hydrated.Timeline {
 			releasedAt := parseRFC3339(block.ReleasedAt)
-			if !withinHeroDateRange(releasedAt, query.From, query.To) {
+			if !withinDateRange(releasedAt, query.From, query.To) {
 				continue
 			}
 			for _, section := range block.Sections {
@@ -110,6 +113,9 @@ func buildHeroChanges(details []PatchDetail, query HeroChangesQuery) (HeroChange
 					continue
 				}
 				for _, entry := range section.Entries {
+					if !isHeroTimelineEntry(entry) {
+						continue
+					}
 					entrySlug := slugifyLookup(entry.EntityName)
 					if entrySlug != targetSlug {
 						continue
@@ -173,7 +179,7 @@ func buildHeroChanges(details []PatchDetail, query HeroChangesQuery) (HeroChange
 						Kind:           block.Kind,
 						Label:          formatTimelineLabel(block.Kind, block.ReleasedAt),
 						ReleasedAt:     block.ReleasedAt,
-						Patch:          HeroPatchRef{Slug: detail.Slug, Title: detail.Title},
+						Patch:          TimelinePatchRef{Slug: detail.Slug, Title: detail.Title},
 						Source:         block.Source,
 						GeneralChanges: generalChanges,
 						Skills:         skills,
@@ -205,7 +211,7 @@ func buildHeroChanges(details []PatchDetail, query HeroChangesQuery) (HeroChange
 	}, nil
 }
 
-func withinHeroDateRange(releasedAt time.Time, from, to *time.Time) bool {
+func withinDateRange(releasedAt time.Time, from, to *time.Time) bool {
 	if from != nil && !releasedAt.IsZero() && releasedAt.Before(from.UTC()) {
 		return false
 	}
@@ -213,6 +219,16 @@ func withinHeroDateRange(releasedAt time.Time, from, to *time.Time) bool {
 		return false
 	}
 	return true
+}
+
+func isHeroTimelineEntry(entry PatchEntry) bool {
+	if len(entry.Groups) > 0 {
+		return true
+	}
+	if strings.TrimSpace(entry.EntityIconURL) != "" {
+		return true
+	}
+	return strings.TrimSpace(entry.EntityIconFallbackURL) != ""
 }
 
 func formatTimelineLabel(kind, releasedAt string) string {

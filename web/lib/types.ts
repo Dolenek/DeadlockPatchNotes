@@ -117,3 +117,78 @@ export type HeroChangesResponse = {
   hero: HeroSummary;
   items: HeroTimelineBlock[];
 };
+
+export type ItemSummary = {
+  slug: string;
+  name: string;
+  iconUrl?: string;
+  iconFallbackUrl?: string;
+  lastChangedAt: string;
+};
+
+export type ItemListResponse = {
+  items: ItemSummary[];
+};
+
+export type ItemTimelineBlock = {
+  id: string;
+  kind: string;
+  label: string;
+  releasedAt: string;
+  patch: {
+    slug: string;
+    title: string;
+  };
+  source: {
+    type: string;
+    url: string;
+  };
+  changes: PatchChange[];
+};
+
+export type ItemChangesResponse = {
+  item: ItemSummary;
+  items: ItemTimelineBlock[];
+};
+
+export type SpellSummary = {
+  slug: string;
+  name: string;
+  iconUrl?: string;
+  iconFallbackUrl?: string;
+  lastChangedAt: string;
+};
+
+export type SpellListResponse = {
+  items: SpellSummary[];
+};
+
+export type SpellTimelineEntry = {
+  id: string;
+  heroSlug?: string;
+  heroName?: string;
+  heroIconUrl?: string;
+  heroIconFallbackUrl?: string;
+  changes: PatchChange[];
+};
+
+export type SpellTimelineBlock = {
+  id: string;
+  kind: string;
+  label: string;
+  releasedAt: string;
+  patch: {
+    slug: string;
+    title: string;
+  };
+  source: {
+    type: string;
+    url: string;
+  };
+  entries: SpellTimelineEntry[];
+};
+
+export type SpellChangesResponse = {
+  spell: SpellSummary;
+  items: SpellTimelineBlock[];
+};

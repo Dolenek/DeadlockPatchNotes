@@ -1,4 +1,13 @@
-import { HeroChangesResponse, HeroListResponse, PatchDetail, PatchListResponse } from "@/lib/types";
+import {
+  HeroChangesResponse,
+  HeroListResponse,
+  ItemChangesResponse,
+  ItemListResponse,
+  PatchDetail,
+  PatchListResponse,
+  SpellChangesResponse,
+  SpellListResponse
+} from "@/lib/types";
 
 const DEFAULT_API_BASE_URL = "https://api.deadlock.jakubdolenek.xyz";
 
@@ -81,4 +90,38 @@ export async function getHeroChanges(slug: string, query: HeroChangesQuery = {})
   }
   const suffix = params.size > 0 ? `?${params.toString()}` : "";
   return apiFetch<HeroChangesResponse>(`/api/v1/heroes/${encodeURIComponent(slug)}/changes${suffix}`);
+}
+
+type TimelineDateQuery = {
+  from?: string;
+  to?: string;
+};
+
+function buildDateQuerySuffix(query: TimelineDateQuery = {}) {
+  const params = new URLSearchParams();
+  if (query.from) {
+    params.set("from", query.from);
+  }
+  if (query.to) {
+    params.set("to", query.to);
+  }
+  return params.size > 0 ? `?${params.toString()}` : "";
+}
+
+export async function getItems(): Promise<ItemListResponse> {
+  return apiFetch<ItemListResponse>("/api/v1/items");
+}
+
+export async function getItemChanges(slug: string, query: TimelineDateQuery = {}): Promise<ItemChangesResponse> {
+  const suffix = buildDateQuerySuffix(query);
+  return apiFetch<ItemChangesResponse>(`/api/v1/items/${encodeURIComponent(slug)}/changes${suffix}`);
+}
+
+export async function getSpells(): Promise<SpellListResponse> {
+  return apiFetch<SpellListResponse>("/api/v1/spells");
+}
+
+export async function getSpellChanges(slug: string, query: TimelineDateQuery = {}): Promise<SpellChangesResponse> {
+  const suffix = buildDateQuerySuffix(query);
+  return apiFetch<SpellChangesResponse>(`/api/v1/spells/${encodeURIComponent(slug)}/changes${suffix}`);
 }

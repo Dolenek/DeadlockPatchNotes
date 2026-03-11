@@ -121,3 +121,47 @@ func TestBuildHeroChanges_AppliesSkillAndDateFilters(t *testing.T) {
 		t.Fatalf("unexpected skills payload: %+v", payload.Items[0].Skills)
 	}
 }
+
+func TestBuildHeroList_SkipsNonHeroTimelineEntries(t *testing.T) {
+	details := []PatchDetail{
+		{
+			Slug:  "u1",
+			Title: "U1",
+			Timeline: []PatchTimelineBlock{
+				{
+					ID:         "b1",
+					Kind:       "initial",
+					ReleasedAt: "2026-03-06T12:00:00Z",
+					Sections: []PatchSection{
+						{
+							ID:    "heroes",
+							Title: "Heroes",
+							Kind:  "heroes",
+							Entries: []PatchEntry{
+								{
+									ID:                    "abrams",
+									EntityName:            "Abrams",
+									EntityIconFallbackURL: "https://example.test/abrams.png",
+									Changes:               []PatchChange{{ID: "c1", Text: "Base health increased"}},
+								},
+								{
+									ID:         "active-reload",
+									EntityName: "Active Reload",
+									Changes:    []PatchChange{{ID: "c2", Text: "Cooldown reduced"}},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	payload := buildHeroList(details)
+	if len(payload.Items) != 1 {
+		t.Fatalf("expected only hero entries, got %d", len(payload.Items))
+	}
+	if payload.Items[0].Slug != "abrams" {
+		t.Fatalf("expected abrams slug, got %q", payload.Items[0].Slug)
+	}
+}

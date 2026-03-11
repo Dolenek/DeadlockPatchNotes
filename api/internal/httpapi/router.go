@@ -33,6 +33,10 @@ func NewRouter(store patches.Repository) http.Handler {
 		v1.Get("/patches/{slug}", api.getPatch)
 		v1.Get("/heroes", api.listHeroes)
 		v1.Get("/heroes/{heroSlug}/changes", api.getHeroChanges)
+		v1.Get("/items", api.listItems)
+		v1.Get("/items/{itemSlug}/changes", api.getItemChanges)
+		v1.Get("/spells", api.listSpells)
+		v1.Get("/spells/{spellSlug}/changes", api.getSpellChanges)
 	})
 
 	return r
@@ -109,6 +113,86 @@ func (a *API) getHeroChanges(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		writeError(w, http.StatusInternalServerError, "failed to load hero changes")
+		return
+	}
+
+	writeJSON(w, http.StatusOK, payload)
+}
+
+func (a *API) listItems(w http.ResponseWriter, _ *http.Request) {
+	payload := a.store.ListItems()
+	writeJSON(w, http.StatusOK, payload)
+}
+
+func (a *API) getItemChanges(w http.ResponseWriter, r *http.Request) {
+	itemSlug := strings.TrimSpace(chi.URLParam(r, "itemSlug"))
+	if itemSlug == "" {
+		writeError(w, http.StatusBadRequest, "missing item slug")
+		return
+	}
+
+	from, err := parseTimeQuery(r, "from", true)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid from query value")
+		return
+	}
+	to, err := parseTimeQuery(r, "to", false)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid to query value")
+		return
+	}
+
+	payload, err := a.store.GetItemChanges(patches.ItemChangesQuery{
+		ItemSlug: itemSlug,
+		From:     from,
+		To:       to,
+	})
+	if err != nil {
+		if errors.Is(err, patches.ErrItemNotFound) {
+			writeError(w, http.StatusNotFound, "item not found")
+			return
+		}
+		writeError(w, http.StatusInternalServerError, "failed to load item changes")
+		return
+	}
+
+	writeJSON(w, http.StatusOK, payload)
+}
+
+func (a *API) listSpells(w http.ResponseWriter, _ *http.Request) {
+	payload := a.store.ListSpells()
+	writeJSON(w, http.StatusOK, payload)
+}
+
+func (a *API) getSpellChanges(w http.ResponseWriter, r *http.Request) {
+	spellSlug := strings.TrimSpace(chi.URLParam(r, "spellSlug"))
+	if spellSlug == "" {
+		writeError(w, http.StatusBadRequest, "missing spell slug")
+		return
+	}
+
+	from, err := parseTimeQuery(r, "from", true)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid from query value")
+		return
+	}
+	to, err := parseTimeQuery(r, "to", false)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid to query value")
+		return
+	}
+
+	payload, err := a.store.GetSpellChanges(patches.SpellChangesQuery{
+		SpellSlug: spellSlug,
+		From:      from,
+		To:        to,
+	})
+	if err != nil {
+		if errors.Is(err, patches.ErrSpellNotFound) {
+			writeError(w, http.StatusNotFound, "spell not found")
+			return
+		}
+		writeError(w, http.StatusInternalServerError, "failed to load spell changes")
 		return
 	}
 

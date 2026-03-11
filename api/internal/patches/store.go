@@ -15,6 +15,8 @@ import (
 
 var ErrPatchNotFound = errors.New("patch not found")
 var ErrHeroNotFound = errors.New("hero not found")
+var ErrItemNotFound = errors.New("item not found")
+var ErrSpellNotFound = errors.New("spell not found")
 
 //go:embed data/*.json
 var fixtureFS embed.FS
@@ -102,6 +104,38 @@ func (s *Store) GetHeroChanges(query HeroChangesQuery) (HeroChangesResponse, err
 		details = append(details, item.detail)
 	}
 	return buildHeroChanges(details, query)
+}
+
+func (s *Store) ListItems() ItemListResponse {
+	details := make([]PatchDetail, 0, len(s.order))
+	for _, item := range s.order {
+		details = append(details, item.detail)
+	}
+	return buildItemList(details)
+}
+
+func (s *Store) GetItemChanges(query ItemChangesQuery) (ItemChangesResponse, error) {
+	details := make([]PatchDetail, 0, len(s.order))
+	for _, item := range s.order {
+		details = append(details, item.detail)
+	}
+	return buildItemChanges(details, query)
+}
+
+func (s *Store) ListSpells() SpellListResponse {
+	details := make([]PatchDetail, 0, len(s.order))
+	for _, item := range s.order {
+		details = append(details, item.detail)
+	}
+	return buildSpellList(details)
+}
+
+func (s *Store) GetSpellChanges(query SpellChangesQuery) (SpellChangesResponse, error) {
+	details := make([]PatchDetail, 0, len(s.order))
+	for _, item := range s.order {
+		details = append(details, item.detail)
+	}
+	return buildSpellChanges(details, query)
 }
 
 func seedPatchData() []listItem {

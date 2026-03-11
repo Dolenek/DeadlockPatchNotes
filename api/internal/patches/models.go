@@ -56,26 +56,26 @@ type PatchSource struct {
 
 // PatchTimelineBlock captures initial release and follow-up hotfixes.
 type PatchTimelineBlock struct {
-	ID         string        `json:"id"`
-	Kind       string        `json:"kind"`
-	Title      string        `json:"title"`
-	ReleasedAt string        `json:"releasedAt"`
-	Source     PatchSource   `json:"source"`
-	Changes    []PatchChange `json:"changes"`
+	ID         string         `json:"id"`
+	Kind       string         `json:"kind"`
+	Title      string         `json:"title"`
+	ReleasedAt string         `json:"releasedAt"`
+	Source     PatchSource    `json:"source"`
+	Changes    []PatchChange  `json:"changes"`
 	Sections   []PatchSection `json:"sections,omitempty"`
 }
 
 // PatchDetail powers the patch detail page.
 type PatchDetail struct {
-	ID           string              `json:"id"`
-	Slug         string              `json:"slug"`
-	Title        string              `json:"title"`
-	PublishedAt  string              `json:"publishedAt"`
-	Category     string              `json:"category"`
-	Source       PatchSource         `json:"source"`
-	HeroImageURL string              `json:"heroImageUrl"`
-	Intro        string              `json:"intro"`
-	Sections     []PatchSection      `json:"sections"`
+	ID           string             `json:"id"`
+	Slug         string             `json:"slug"`
+	Title        string             `json:"title"`
+	PublishedAt  string             `json:"publishedAt"`
+	Category     string             `json:"category"`
+	Source       PatchSource        `json:"source"`
+	HeroImageURL string             `json:"heroImageUrl"`
+	Intro        string             `json:"intro"`
+	Sections     []PatchSection     `json:"sections"`
 	Timeline     []PatchTimelineBlock `json:"timeline,omitempty"`
 }
 
@@ -96,19 +96,19 @@ type ListResponse struct {
 }
 
 type HeroSummary struct {
-	Slug          string `json:"slug"`
-	Name          string `json:"name"`
-	IconURL       string `json:"iconUrl,omitempty"`
+	Slug            string `json:"slug"`
+	Name            string `json:"name"`
+	IconURL         string `json:"iconUrl,omitempty"`
 	IconFallbackURL string `json:"iconFallbackUrl,omitempty"`
-	LastChangedAt string `json:"lastChangedAt"`
+	LastChangedAt   string `json:"lastChangedAt"`
 }
 
 type HeroListResponse struct {
 	Items []HeroSummary `json:"items"`
 }
 
-type HeroPatchRef struct {
-	Slug string `json:"slug"`
+type TimelinePatchRef struct {
+	Slug  string `json:"slug"`
 	Title string `json:"title"`
 }
 
@@ -121,13 +121,13 @@ type HeroTimelineSkill struct {
 }
 
 type HeroTimelineBlock struct {
-	ID              string            `json:"id"`
-	Kind            string            `json:"kind"`
-	Label           string            `json:"label"`
-	ReleasedAt      string            `json:"releasedAt"`
-	Patch           HeroPatchRef      `json:"patch"`
-	Source          PatchSource       `json:"source"`
-	GeneralChanges  []PatchChange     `json:"generalChanges,omitempty"`
+	ID             string             `json:"id"`
+	Kind           string             `json:"kind"`
+	Label          string             `json:"label"`
+	ReleasedAt     string             `json:"releasedAt"`
+	Patch          TimelinePatchRef   `json:"patch"`
+	Source         PatchSource        `json:"source"`
+	GeneralChanges []PatchChange      `json:"generalChanges,omitempty"`
 	Skills          []HeroTimelineSkill `json:"skills"`
 }
 
@@ -141,4 +141,79 @@ type HeroChangesQuery struct {
 	Skill    string
 	From     *time.Time
 	To       *time.Time
+}
+
+type ItemSummary struct {
+	Slug            string `json:"slug"`
+	Name            string `json:"name"`
+	IconURL         string `json:"iconUrl,omitempty"`
+	IconFallbackURL string `json:"iconFallbackUrl,omitempty"`
+	LastChangedAt   string `json:"lastChangedAt"`
+}
+
+type ItemListResponse struct {
+	Items []ItemSummary `json:"items"`
+}
+
+type ItemTimelineBlock struct {
+	ID         string           `json:"id"`
+	Kind       string           `json:"kind"`
+	Label      string           `json:"label"`
+	ReleasedAt string           `json:"releasedAt"`
+	Patch      TimelinePatchRef `json:"patch"`
+	Source     PatchSource      `json:"source"`
+	Changes    []PatchChange    `json:"changes"`
+}
+
+type ItemChangesResponse struct {
+	Item  ItemSummary        `json:"item"`
+	Items []ItemTimelineBlock `json:"items"`
+}
+
+type ItemChangesQuery struct {
+	ItemSlug string
+	From     *time.Time
+	To       *time.Time
+}
+
+type SpellSummary struct {
+	Slug            string `json:"slug"`
+	Name            string `json:"name"`
+	IconURL         string `json:"iconUrl,omitempty"`
+	IconFallbackURL string `json:"iconFallbackUrl,omitempty"`
+	LastChangedAt   string `json:"lastChangedAt"`
+}
+
+type SpellListResponse struct {
+	Items []SpellSummary `json:"items"`
+}
+
+type SpellTimelineEntry struct {
+	ID              string       `json:"id"`
+	HeroSlug        string       `json:"heroSlug,omitempty"`
+	HeroName        string       `json:"heroName,omitempty"`
+	HeroIconURL     string       `json:"heroIconUrl,omitempty"`
+	HeroIconFallbackURL string   `json:"heroIconFallbackUrl,omitempty"`
+	Changes         []PatchChange `json:"changes"`
+}
+
+type SpellTimelineBlock struct {
+	ID         string             `json:"id"`
+	Kind       string             `json:"kind"`
+	Label      string             `json:"label"`
+	ReleasedAt string             `json:"releasedAt"`
+	Patch      TimelinePatchRef   `json:"patch"`
+	Source     PatchSource        `json:"source"`
+	Entries    []SpellTimelineEntry `json:"entries"`
+}
+
+type SpellChangesResponse struct {
+	Spell SpellSummary       `json:"spell"`
+	Items []SpellTimelineBlock `json:"items"`
+}
+
+type SpellChangesQuery struct {
+	SpellSlug string
+	From      *time.Time
+	To        *time.Time
 }

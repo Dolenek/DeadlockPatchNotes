@@ -129,6 +129,38 @@ func (s *PostgresStore) GetHeroChanges(query HeroChangesQuery) (HeroChangesRespo
 	return buildHeroChanges(details, query)
 }
 
+func (s *PostgresStore) ListItems() ItemListResponse {
+	details, err := s.loadAllDetails()
+	if err != nil {
+		return ItemListResponse{Items: []ItemSummary{}}
+	}
+	return buildItemList(details)
+}
+
+func (s *PostgresStore) GetItemChanges(query ItemChangesQuery) (ItemChangesResponse, error) {
+	details, err := s.loadAllDetails()
+	if err != nil {
+		return ItemChangesResponse{}, fmt.Errorf("load details: %w", err)
+	}
+	return buildItemChanges(details, query)
+}
+
+func (s *PostgresStore) ListSpells() SpellListResponse {
+	details, err := s.loadAllDetails()
+	if err != nil {
+		return SpellListResponse{Items: []SpellSummary{}}
+	}
+	return buildSpellList(details)
+}
+
+func (s *PostgresStore) GetSpellChanges(query SpellChangesQuery) (SpellChangesResponse, error) {
+	details, err := s.loadAllDetails()
+	if err != nil {
+		return SpellChangesResponse{}, fmt.Errorf("load details: %w", err)
+	}
+	return buildSpellChanges(details, query)
+}
+
 func (s *PostgresStore) loadAllDetails() ([]PatchDetail, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
