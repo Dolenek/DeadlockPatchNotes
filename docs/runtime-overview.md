@@ -99,7 +99,8 @@ Schema notes:
 ### Web
 
 - `API_BASE_URL`
-  - default: `https://api.deadlock.jakubdolenek.xyz`
+  - default: `https://deadlock.jakubdolenek.xyz/api`
+  - exact `/api` suffix is normalized, so host-only and `/api`-suffixed values are accepted
   - invalid non-empty value throws during API client initialization
 
 ### Docker Compose

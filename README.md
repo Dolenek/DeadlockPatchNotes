@@ -44,7 +44,7 @@ npm run dev
 ```
 
 Frontend runs on `http://localhost:3000`.
-Default API base is `https://api.deadlock.jakubdolenek.xyz`.
+Default API base is `https://deadlock.jakubdolenek.xyz/api`.
 To override, set `API_BASE_URL` (for example `API_BASE_URL=http://localhost:8080 npm run dev`).
 If `API_BASE_URL` is set to an invalid URL, web startup fails fast.
 
@@ -69,6 +69,8 @@ This launches API and web in separate Windows shells and opens `http://localhost
 ## API Endpoints
 
 - `GET /api/healthz`
+- `GET /api/scalar`
+- `GET /api/openapi.json`
 - `GET /api/v1/patches?page=<int>&limit=<int>`
 - `GET /api/v1/patches/{slug}`
 - `GET /api/v1/heroes`

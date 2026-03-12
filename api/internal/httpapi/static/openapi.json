@@ -1,0 +1,1489 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Deadlock Patch Notes API",
+    "version": "1.0.0",
+    "description": "HTTP API for patch timelines, heroes, items, and spells used by deadlock.jakubdolenek.xyz.\n\nDate filters (`from`, `to`) accept RFC3339 timestamps or date-only `YYYY-MM-DD` values in UTC."
+  },
+  "servers": [
+    {
+      "url": "https://deadlock.jakubdolenek.xyz/api",
+      "description": "Production"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Meta"
+    },
+    {
+      "name": "Patches"
+    },
+    {
+      "name": "Heroes"
+    },
+    {
+      "name": "Items"
+    },
+    {
+      "name": "Spells"
+    }
+  ],
+  "paths": {
+    "/healthz": {
+      "get": {
+        "tags": [
+          "Meta"
+        ],
+        "summary": "Health check",
+        "operationId": "getHealthz",
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    }
+                  }
+                },
+                "example": {
+                  "status": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/patches": {
+      "get": {
+        "tags": [
+          "Patches"
+        ],
+        "summary": "List patches",
+        "operationId": "listPatches",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (default 1). Invalid values fall back to 1.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Page size (default 12, max 50). Invalid values fall back to 12.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 12,
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Patch list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatchListResponse"
+                },
+                "example": {
+                  "items": [
+                    {
+                      "id": "patch-2026-03-06-update",
+                      "slug": "2026-03-06-update",
+                      "title": "03-06-2026 Update",
+                      "publishedAt": "2026-03-06T22:36:00Z",
+                      "category": "Gameplay Update",
+                      "coverImageUrl": "https://assets.deadlock-api.com/v2/images/patches/2026-03-06-update/header",
+                      "sourceUrl": "https://forums.playdeadlock.com/threads/03-06-2026-update.32190/",
+                      "timeline": [
+                        {
+                          "id": "initial",
+                          "kind": "initial",
+                          "title": "Initial Update",
+                          "releasedAt": "2026-03-06T22:36:00Z"
+                        },
+                        {
+                          "id": "hotfix-2026-03-07",
+                          "kind": "hotfix",
+                          "title": "Hotfix 2026-03-07",
+                          "releasedAt": "2026-03-07T18:11:00Z"
+                        }
+                      ]
+                    }
+                  ],
+                  "page": 1,
+                  "limit": 12,
+                  "total": 1,
+                  "totalPages": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/patches/{slug}": {
+      "get": {
+        "tags": [
+          "Patches"
+        ],
+        "summary": "Get patch detail",
+        "operationId": "getPatchBySlug",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "2026-03-06-update"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Patch detail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatchDetail"
+                },
+                "example": {
+                  "id": "patch-2026-03-06-update",
+                  "slug": "2026-03-06-update",
+                  "title": "03-06-2026 Update",
+                  "publishedAt": "2026-03-06T22:36:00Z",
+                  "category": "Gameplay Update",
+                  "source": {
+                    "type": "forum",
+                    "url": "https://forums.playdeadlock.com/threads/03-06-2026-update.32190/"
+                  },
+                  "heroImageUrl": "https://assets.deadlock-api.com/v2/images/patches/2026-03-06-update/header",
+                  "intro": "Balance update with hero, item, and ability changes.",
+                  "sections": [
+                    {
+                      "id": "heroes",
+                      "title": "Heroes",
+                      "kind": "heroes",
+                      "entries": [
+                        {
+                          "id": "abrams",
+                          "entityName": "Abrams",
+                          "entityIconUrl": "https://assets.deadlock-api.com/v2/heroes/abrams/icon",
+                          "changes": [
+                            {
+                              "id": "abrams-1",
+                              "text": "Base health reduced from 650 to 625."
+                            }
+                          ],
+                          "groups": [
+                            {
+                              "id": "shoulder-charge",
+                              "title": "Shoulder Charge",
+                              "changes": [
+                                {
+                                  "id": "abrams-s1",
+                                  "text": "Cooldown increased from 28s to 32s."
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "timeline": [
+                    {
+                      "id": "initial",
+                      "kind": "initial",
+                      "title": "Initial Update",
+                      "releasedAt": "2026-03-06T22:36:00Z",
+                      "source": {
+                        "type": "forum",
+                        "url": "https://forums.playdeadlock.com/threads/03-06-2026-update.32190/"
+                      },
+                      "changes": [
+                        {
+                          "id": "global-1",
+                          "text": "Trooper lane pressure reduced in first 5 minutes."
+                        }
+                      ],
+                      "sections": [
+                        {
+                          "id": "items",
+                          "title": "Items",
+                          "kind": "items",
+                          "entries": [
+                            {
+                              "id": "active-reload",
+                              "entityName": "Active Reload",
+                              "entityIconUrl": "https://assets.deadlock-api.com/v2/items/active-reload/icon",
+                              "changes": [
+                                {
+                                  "id": "item-1",
+                                  "text": "Perfect reload window reduced by 0.1s."
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Patch not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "patch not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "failed to load patch"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/heroes": {
+      "get": {
+        "tags": [
+          "Heroes"
+        ],
+        "summary": "List heroes",
+        "operationId": "listHeroes",
+        "responses": {
+          "200": {
+            "description": "Hero list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HeroListResponse"
+                },
+                "example": {
+                  "items": [
+                    {
+                      "slug": "abrams",
+                      "name": "Abrams",
+                      "iconUrl": "https://assets.deadlock-api.com/v2/heroes/abrams/icon",
+                      "lastChangedAt": "2026-03-07T18:11:00Z"
+                    },
+                    {
+                      "slug": "dynamo",
+                      "name": "Dynamo",
+                      "iconUrl": "https://assets.deadlock-api.com/v2/heroes/dynamo/icon",
+                      "lastChangedAt": "2026-03-06T22:36:00Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/heroes/{heroSlug}/changes": {
+      "get": {
+        "tags": [
+          "Heroes"
+        ],
+        "summary": "Get hero timeline",
+        "operationId": "getHeroChanges",
+        "parameters": [
+          {
+            "name": "heroSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "abrams"
+          },
+          {
+            "name": "skill",
+            "in": "query",
+            "required": false,
+            "description": "Filter by skill name. Use `general` to get only general hero changes.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Shoulder Charge"
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "description": "Inclusive UTC start. Accepts RFC3339 or YYYY-MM-DD.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "2026-03-01"
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "description": "Inclusive UTC end. Accepts RFC3339 or YYYY-MM-DD.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "2026-03-12T23:59:59Z"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hero timeline",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HeroChangesResponse"
+                },
+                "example": {
+                  "hero": {
+                    "slug": "abrams",
+                    "name": "Abrams",
+                    "iconUrl": "https://assets.deadlock-api.com/v2/heroes/abrams/icon",
+                    "lastChangedAt": "2026-03-07T18:11:00Z"
+                  },
+                  "items": [
+                    {
+                      "id": "2026-03-07-hotfix",
+                      "kind": "hotfix",
+                      "label": "Patch 03-07-2026",
+                      "releasedAt": "2026-03-07T18:11:00Z",
+                      "patch": {
+                        "slug": "2026-03-06-update",
+                        "title": "03-06-2026 Update"
+                      },
+                      "source": {
+                        "type": "forum",
+                        "url": "https://forums.playdeadlock.com/threads/03-06-2026-update.32190/"
+                      },
+                      "generalChanges": [
+                        {
+                          "id": "g-1",
+                          "text": "Base health reduced from 650 to 625."
+                        }
+                      ],
+                      "skills": [
+                        {
+                          "id": "shoulder-charge",
+                          "title": "Shoulder Charge",
+                          "changes": [
+                            {
+                              "id": "s-1",
+                              "text": "Cooldown increased from 28s to 32s."
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid date query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "invalid from query value"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Hero not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "hero not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "failed to load hero changes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/items": {
+      "get": {
+        "tags": [
+          "Items"
+        ],
+        "summary": "List items",
+        "operationId": "listItems",
+        "responses": {
+          "200": {
+            "description": "Item list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ItemListResponse"
+                },
+                "example": {
+                  "items": [
+                    {
+                      "slug": "active-reload",
+                      "name": "Active Reload",
+                      "iconUrl": "https://assets.deadlock-api.com/v2/items/active-reload/icon",
+                      "lastChangedAt": "2026-03-07T18:11:00Z"
+                    },
+                    {
+                      "slug": "swift-striker",
+                      "name": "Swift Striker",
+                      "iconUrl": "https://assets.deadlock-api.com/v2/items/swift-striker/icon",
+                      "lastChangedAt": "2026-03-06T22:36:00Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/items/{itemSlug}/changes": {
+      "get": {
+        "tags": [
+          "Items"
+        ],
+        "summary": "Get item timeline",
+        "operationId": "getItemChanges",
+        "parameters": [
+          {
+            "name": "itemSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "active-reload"
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "description": "Inclusive UTC start. Accepts RFC3339 or YYYY-MM-DD.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "2026-03-01"
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "description": "Inclusive UTC end. Accepts RFC3339 or YYYY-MM-DD.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "2026-03-31"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item timeline",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ItemChangesResponse"
+                },
+                "example": {
+                  "item": {
+                    "slug": "active-reload",
+                    "name": "Active Reload",
+                    "iconUrl": "https://assets.deadlock-api.com/v2/items/active-reload/icon",
+                    "lastChangedAt": "2026-03-07T18:11:00Z"
+                  },
+                  "items": [
+                    {
+                      "id": "2026-03-07-hotfix",
+                      "kind": "hotfix",
+                      "label": "Patch 03-07-2026",
+                      "releasedAt": "2026-03-07T18:11:00Z",
+                      "patch": {
+                        "slug": "2026-03-06-update",
+                        "title": "03-06-2026 Update"
+                      },
+                      "source": {
+                        "type": "forum",
+                        "url": "https://forums.playdeadlock.com/threads/03-06-2026-update.32190/"
+                      },
+                      "changes": [
+                        {
+                          "id": "i-1",
+                          "text": "Perfect reload window reduced by 0.1s."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid date query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "invalid from query value"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Item not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "item not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "failed to load item changes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/spells": {
+      "get": {
+        "tags": [
+          "Spells"
+        ],
+        "summary": "List spells",
+        "operationId": "listSpells",
+        "responses": {
+          "200": {
+            "description": "Spell list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpellListResponse"
+                },
+                "example": {
+                  "items": [
+                    {
+                      "slug": "shoulder-charge",
+                      "name": "Shoulder Charge",
+                      "iconUrl": "https://assets.deadlock-api.com/v2/abilities/abrams-shoulder-charge/icon",
+                      "lastChangedAt": "2026-03-07T18:11:00Z"
+                    },
+                    {
+                      "slug": "sleep-dagger",
+                      "name": "Sleep Dagger",
+                      "iconUrl": "https://assets.deadlock-api.com/v2/abilities/haze-sleep-dagger/icon",
+                      "lastChangedAt": "2026-03-06T22:36:00Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/spells/{spellSlug}/changes": {
+      "get": {
+        "tags": [
+          "Spells"
+        ],
+        "summary": "Get spell timeline",
+        "operationId": "getSpellChanges",
+        "parameters": [
+          {
+            "name": "spellSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "shoulder-charge"
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "description": "Inclusive UTC start. Accepts RFC3339 or YYYY-MM-DD.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "2026-03-01"
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "description": "Inclusive UTC end. Accepts RFC3339 or YYYY-MM-DD.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "2026-03-31"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Spell timeline",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpellChangesResponse"
+                },
+                "example": {
+                  "spell": {
+                    "slug": "shoulder-charge",
+                    "name": "Shoulder Charge",
+                    "iconUrl": "https://assets.deadlock-api.com/v2/abilities/abrams-shoulder-charge/icon",
+                    "lastChangedAt": "2026-03-07T18:11:00Z"
+                  },
+                  "items": [
+                    {
+                      "id": "2026-03-07-hotfix",
+                      "kind": "hotfix",
+                      "label": "Patch 03-07-2026",
+                      "releasedAt": "2026-03-07T18:11:00Z",
+                      "patch": {
+                        "slug": "2026-03-06-update",
+                        "title": "03-06-2026 Update"
+                      },
+                      "source": {
+                        "type": "forum",
+                        "url": "https://forums.playdeadlock.com/threads/03-06-2026-update.32190/"
+                      },
+                      "entries": [
+                        {
+                          "id": "entry-abrams",
+                          "heroSlug": "abrams",
+                          "heroName": "Abrams",
+                          "heroIconUrl": "https://assets.deadlock-api.com/v2/heroes/abrams/icon",
+                          "changes": [
+                            {
+                              "id": "sp-1",
+                              "text": "Cooldown increased from 28s to 32s."
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid date query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "invalid to query value"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Spell not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "spell not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "failed to load spell changes"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        }
+      },
+      "PatchTimelineSummary": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "title",
+          "releasedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "releasedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PatchSummary": {
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "publishedAt",
+          "category",
+          "coverImageUrl",
+          "sourceUrl"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "publishedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "category": {
+            "type": "string"
+          },
+          "coverImageUrl": {
+            "type": "string"
+          },
+          "sourceUrl": {
+            "type": "string"
+          },
+          "timeline": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PatchTimelineSummary"
+            }
+          }
+        }
+      },
+      "PatchListResponse": {
+        "type": "object",
+        "required": [
+          "items",
+          "page",
+          "limit",
+          "total",
+          "totalPages"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PatchSummary"
+            }
+          },
+          "page": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          },
+          "totalPages": {
+            "type": "integer"
+          }
+        }
+      },
+      "PatchSource": {
+        "type": "object",
+        "required": [
+          "type",
+          "url"
+        ],
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "PatchChange": {
+        "type": "object",
+        "required": [
+          "id",
+          "text"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "PatchEntryGroup": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "changes"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "iconUrl": {
+            "type": "string"
+          },
+          "iconFallbackUrl": {
+            "type": "string"
+          },
+          "changes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PatchChange"
+            }
+          }
+        }
+      },
+      "PatchEntry": {
+        "type": "object",
+        "required": [
+          "id",
+          "entityName",
+          "changes"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "entityName": {
+            "type": "string"
+          },
+          "entityIconUrl": {
+            "type": "string"
+          },
+          "entityIconFallbackUrl": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "changes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PatchChange"
+            }
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PatchEntryGroup"
+            }
+          }
+        }
+      },
+      "PatchSection": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "kind",
+          "entries"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "general",
+              "items",
+              "heroes"
+            ]
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PatchEntry"
+            }
+          }
+        }
+      },
+      "PatchTimelineBlock": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "title",
+          "releasedAt",
+          "source",
+          "changes"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "releasedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "source": {
+            "$ref": "#/components/schemas/PatchSource"
+          },
+          "changes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PatchChange"
+            }
+          },
+          "sections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PatchSection"
+            }
+          }
+        }
+      },
+      "PatchDetail": {
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "publishedAt",
+          "category",
+          "source",
+          "heroImageUrl",
+          "intro",
+          "sections"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "publishedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "category": {
+            "type": "string"
+          },
+          "source": {
+            "$ref": "#/components/schemas/PatchSource"
+          },
+          "heroImageUrl": {
+            "type": "string"
+          },
+          "intro": {
+            "type": "string"
+          },
+          "sections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PatchSection"
+            }
+          },
+          "timeline": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PatchTimelineBlock"
+            }
+          }
+        }
+      },
+      "HeroSummary": {
+        "type": "object",
+        "required": [
+          "slug",
+          "name",
+          "lastChangedAt"
+        ],
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "iconUrl": {
+            "type": "string"
+          },
+          "iconFallbackUrl": {
+            "type": "string"
+          },
+          "lastChangedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "HeroListResponse": {
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HeroSummary"
+            }
+          }
+        }
+      },
+      "TimelinePatchRef": {
+        "type": "object",
+        "required": [
+          "slug",
+          "title"
+        ],
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "HeroTimelineSkill": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "changes"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "iconUrl": {
+            "type": "string"
+          },
+          "iconFallbackUrl": {
+            "type": "string"
+          },
+          "changes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PatchChange"
+            }
+          }
+        }
+      },
+      "HeroTimelineBlock": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "label",
+          "releasedAt",
+          "patch",
+          "source",
+          "skills"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "releasedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "patch": {
+            "$ref": "#/components/schemas/TimelinePatchRef"
+          },
+          "source": {
+            "$ref": "#/components/schemas/PatchSource"
+          },
+          "generalChanges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PatchChange"
+            }
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HeroTimelineSkill"
+            }
+          }
+        }
+      },
+      "HeroChangesResponse": {
+        "type": "object",
+        "required": [
+          "hero",
+          "items"
+        ],
+        "properties": {
+          "hero": {
+            "$ref": "#/components/schemas/HeroSummary"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HeroTimelineBlock"
+            }
+          }
+        }
+      },
+      "ItemSummary": {
+        "type": "object",
+        "required": [
+          "slug",
+          "name",
+          "lastChangedAt"
+        ],
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "iconUrl": {
+            "type": "string"
+          },
+          "iconFallbackUrl": {
+            "type": "string"
+          },
+          "lastChangedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ItemListResponse": {
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemSummary"
+            }
+          }
+        }
+      },
+      "ItemTimelineBlock": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "label",
+          "releasedAt",
+          "patch",
+          "source",
+          "changes"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "releasedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "patch": {
+            "$ref": "#/components/schemas/TimelinePatchRef"
+          },
+          "source": {
+            "$ref": "#/components/schemas/PatchSource"
+          },
+          "changes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PatchChange"
+            }
+          }
+        }
+      },
+      "ItemChangesResponse": {
+        "type": "object",
+        "required": [
+          "item",
+          "items"
+        ],
+        "properties": {
+          "item": {
+            "$ref": "#/components/schemas/ItemSummary"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemTimelineBlock"
+            }
+          }
+        }
+      },
+      "SpellSummary": {
+        "type": "object",
+        "required": [
+          "slug",
+          "name",
+          "lastChangedAt"
+        ],
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "iconUrl": {
+            "type": "string"
+          },
+          "iconFallbackUrl": {
+            "type": "string"
+          },
+          "lastChangedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SpellListResponse": {
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SpellSummary"
+            }
+          }
+        }
+      },
+      "SpellTimelineEntry": {
+        "type": "object",
+        "required": [
+          "id",
+          "changes"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "heroSlug": {
+            "type": "string"
+          },
+          "heroName": {
+            "type": "string"
+          },
+          "heroIconUrl": {
+            "type": "string"
+          },
+          "heroIconFallbackUrl": {
+            "type": "string"
+          },
+          "changes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PatchChange"
+            }
+          }
+        }
+      },
+      "SpellTimelineBlock": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "label",
+          "releasedAt",
+          "patch",
+          "source",
+          "entries"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "releasedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "patch": {
+            "$ref": "#/components/schemas/TimelinePatchRef"
+          },
+          "source": {
+            "$ref": "#/components/schemas/PatchSource"
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SpellTimelineEntry"
+            }
+          }
+        }
+      },
+      "SpellChangesResponse": {
+        "type": "object",
+        "required": [
+          "spell",
+          "items"
+        ],
+        "properties": {
+          "spell": {
+            "$ref": "#/components/schemas/SpellSummary"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SpellTimelineBlock"
+            }
+          }
+        }
+      }
+    }
+  }
+}

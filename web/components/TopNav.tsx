@@ -15,6 +15,9 @@ export function TopNav() {
           <a href="https://forums.playdeadlock.com/forums/changelog.10/" target="_blank" rel="noreferrer">
             Changelog Forum
           </a>
+          <a href="/api/scalar" target="_blank" rel="noreferrer">
+            API Docs
+          </a>
           <a href="https://assets.deadlock-api.com/scalar" target="_blank" rel="noreferrer">
             Assets API
           </a>

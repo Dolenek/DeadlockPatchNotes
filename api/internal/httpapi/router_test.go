@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"deadlockpatchnotes/api/internal/patches"
@@ -26,6 +27,58 @@ func TestHealthz(t *testing.T) {
 	}
 	if payload["status"] != "ok" {
 		t.Fatalf("expected status ok, got %q", payload["status"])
+	}
+}
+
+func TestScalarDocs(t *testing.T) {
+	h := NewRouter(patches.NewStore())
+	req := httptest.NewRequest(http.MethodGet, "/api/scalar", nil)
+	rr := httptest.NewRecorder()
+
+	h.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", rr.Code)
+	}
+	if !strings.Contains(rr.Header().Get("Content-Type"), "text/html") {
+		t.Fatalf("expected html content-type, got %q", rr.Header().Get("Content-Type"))
+	}
+	body := rr.Body.String()
+	if !strings.Contains(body, "Scalar.createApiReference") {
+		t.Fatal("expected scalar initialization in html")
+	}
+	if !strings.Contains(body, "/api/openapi.json") {
+		t.Fatal("expected scalar page to reference /api/openapi.json")
+	}
+}
+
+func TestOpenAPISpec(t *testing.T) {
+	h := NewRouter(patches.NewStore())
+	req := httptest.NewRequest(http.MethodGet, "/api/openapi.json", nil)
+	rr := httptest.NewRecorder()
+
+	h.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", rr.Code)
+	}
+	if !strings.Contains(rr.Header().Get("Content-Type"), "application/json") {
+		t.Fatalf("expected json content-type, got %q", rr.Header().Get("Content-Type"))
+	}
+
+	var payload map[string]any
+	if err := json.Unmarshal(rr.Body.Bytes(), &payload); err != nil {
+		t.Fatalf("decode openapi response: %v", err)
+	}
+	if payload["openapi"] != "3.1.0" {
+		t.Fatalf("expected openapi 3.1.0, got %v", payload["openapi"])
+	}
+	paths, ok := payload["paths"].(map[string]any)
+	if !ok {
+		t.Fatal("expected paths object in openapi response")
+	}
+	if _, exists := paths["/v1/patches"]; !exists {
+		t.Fatal("expected /v1/patches path in openapi response")
 	}
 }
 

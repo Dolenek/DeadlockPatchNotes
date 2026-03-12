@@ -35,6 +35,8 @@ Web local env (`web/.env.example`):
 Runtime defaults in code:
 
 - API address default `:8080`.
+- Web API client default base URL: `https://deadlock.jakubdolenek.xyz/api`.
+- `API_BASE_URL` exact `/api` suffix is normalized in web client config parsing.
 - Sync defaults:
   - changelog URL `https://forums.playdeadlock.com/forums/changelog.10/`
   - max pages `20`

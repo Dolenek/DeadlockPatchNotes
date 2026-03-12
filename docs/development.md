@@ -26,12 +26,14 @@ npm run dev
 ```
 
 Default web URL: `http://localhost:3000`.
-Default API base in web code: `https://api.deadlock.jakubdolenek.xyz`.
+Default API base in web code: `https://deadlock.jakubdolenek.xyz/api`.
 Override with `API_BASE_URL` when needed, for example:
 
 ```bash
 API_BASE_URL=http://localhost:8080 npm run dev
 ```
+
+`API_BASE_URL` accepts both host-only and `/api`-suffixed values for the production domain.
 
 ## Run Patch Sync
 

@@ -9,7 +9,18 @@ import {
   SpellListResponse
 } from "@/lib/types";
 
-const DEFAULT_API_BASE_URL = "https://apideadlock.jakubdolenek.xyz";
+const DEFAULT_API_BASE_URL = "https://deadlock.jakubdolenek.xyz/api";
+
+function normalizeBasePath(pathname: string) {
+  const trimmed = pathname.replace(/\/+$/, "");
+  if (trimmed === "" || trimmed === "/") {
+    return "";
+  }
+  if (trimmed === "/api") {
+    return "";
+  }
+  return trimmed;
+}
 
 function resolveAPIBaseURL() {
   const candidate = (process.env.API_BASE_URL ?? DEFAULT_API_BASE_URL).trim();
@@ -19,7 +30,7 @@ function resolveAPIBaseURL() {
 
   try {
     const parsed = new URL(candidate);
-    const path = parsed.pathname === "/" ? "" : parsed.pathname.replace(/\/+$/, "");
+    const path = normalizeBasePath(parsed.pathname);
     return `${parsed.origin}${path}`;
   } catch {
     throw new Error(`Invalid API_BASE_URL: ${candidate}`);

@@ -15,6 +15,7 @@ Monorepo structure:
 - Repository: `api/internal/patches/postgres_store.go`.
 - API surface:
   - `/api/healthz`
+  - `/api/scalar`, `/api/openapi.json`
   - `/api/v1/patches`, `/api/v1/patches/{slug}`
   - `/api/v1/heroes`, `/api/v1/heroes/{heroSlug}/changes`
   - `/api/v1/items`, `/api/v1/items/{itemSlug}/changes`
@@ -51,8 +52,9 @@ Migrations in `api/internal/db/migrations/*.sql` are applied at startup.
 
 Frontend API base behavior:
 
-- Default API base is `https://api.deadlock.jakubdolenek.xyz`.
+- Default API base is `https://deadlock.jakubdolenek.xyz/api`.
 - `API_BASE_URL` may override it.
+- Exact `/api` suffix is normalized, so both host-only and `/api`-suffixed values are accepted.
 - Invalid non-empty `API_BASE_URL` throws during client initialization.
 
 ## Deployment Model

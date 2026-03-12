@@ -27,6 +27,8 @@ func NewRouter(store patches.Repository) http.Handler {
 	r.Use(corsMiddleware)
 
 	r.Get("/api/healthz", api.healthz)
+	r.Get("/api/scalar", api.scalarDocs)
+	r.Get("/api/openapi.json", api.openapiSpec)
 
 	r.Route("/api/v1", func(v1 chi.Router) {
 		v1.Get("/patches", api.listPatches)
@@ -44,6 +46,18 @@ func NewRouter(store patches.Repository) http.Handler {
 
 func (a *API) healthz(w http.ResponseWriter, _ *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]string{"status": "ok"})
+}
+
+func (a *API) scalarDocs(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write(scalarHTML)
+}
+
+func (a *API) openapiSpec(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write(openAPISpecJSON)
 }
 
 func (a *API) listPatches(w http.ResponseWriter, r *http.Request) {

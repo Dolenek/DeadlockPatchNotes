@@ -42,6 +42,20 @@ Response:
 { "status": "ok" }
 ```
 
+## `GET /api/scalar`
+
+Response:
+
+- `200` with `Content-Type: text/html; charset=utf-8`.
+- Serves a Scalar API reference page that loads schema from `/api/openapi.json`.
+
+## `GET /api/openapi.json`
+
+Response:
+
+- `200` with `Content-Type: application/json`.
+- Returns the committed OpenAPI 3.1 schema used by `/api/scalar`.
+
 ## `GET /api/v1/patches`
 
 Query:

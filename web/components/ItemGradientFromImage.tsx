@@ -74,7 +74,7 @@ function resolveSampleSource(source: string) {
   try {
     const parsed = new URL(source);
     if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-      return `/api/image-proxy?url=${encodeURIComponent(parsed.toString())}`;
+      return `/image-proxy?url=${encodeURIComponent(parsed.toString())}`;
     }
   } catch {
     return source;

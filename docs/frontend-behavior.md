@@ -13,7 +13,8 @@
 API base URL resolution:
 
 - Uses `API_BASE_URL` env when set.
-- Falls back to `https://api.deadlock.jakubdolenek.xyz` when env is missing/blank.
+- Falls back to `https://deadlock.jakubdolenek.xyz/api` when env is missing/blank.
+- Normalizes exact `/api` suffix so both `https://deadlock.jakubdolenek.xyz` and `https://deadlock.jakubdolenek.xyz/api` are valid inputs.
 - Invalid non-empty `API_BASE_URL` throws `Invalid API_BASE_URL: ...`.
 
 Fetch caching:
@@ -90,7 +91,12 @@ Detail-page behavior:
   - seams use `scratch_mask_*` overlays between layer transitions
 - Top nav includes:
   - internal links: patches, heroes, spells, items
-  - external links: changelog forum, assets API docs, Steam store page
+  - docs/links: changelog forum, API docs (`/api/scalar`), assets API docs, Steam store page
+
+### Image Proxy Route
+
+- Web utility route for remote image sampling is `GET /image-proxy?url=<https-url>`.
+- This route is intentionally outside `/api/*` to avoid overlap with backend API reverse-proxy routing.
 
 ### `FallbackImage` (`use client`)
 
