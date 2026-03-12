@@ -37,7 +37,7 @@ Web local env (`web/.env.example`):
 Runtime defaults in code:
 
 - API address default `:8080`.
-- Web API client default base URL: `https://deadlock.jakubdolenek.xyz/api`.
+- Web API client default base URL: `https://deadlockpatchnotes.com/api`.
 - `API_BASE_URL` exact `/api` suffix is normalized in web client config parsing.
 - Sync defaults:
   - changelog URL `https://forums.playdeadlock.com/forums/changelog.10/`
@@ -139,6 +139,33 @@ Behavior details:
 
 - String normalization/slug/hash helpers.
 - Ability-prefix matching helpers.
+
+### `scripts/audit_api_icons.mjs`
+
+Purpose:
+
+- Crawls production-compatible API endpoints and inventories icon/media URL fields used by web pages.
+- Reports unique URLs and classifies each as local existing, local missing, remote allowed-host, remote disallowed-host, or other.
+
+Behavior details:
+
+- Scans list + detail endpoints for patches/heroes/items/spells.
+- Writes JSON and CSV reports (defaults to `/tmp/deadlock-icon-audit-<timestamp>.{json,csv}`).
+- Accepts API base URL override and detail fetch concurrency.
+
+### `scripts/mirror_api_icons.mjs`
+
+Purpose:
+
+- Downloads allowed-host remote icon URLs from an audit report into deduped local paths.
+- Writes mirror manifest used by `web/lib/api.ts` URL normalization.
+
+Behavior details:
+
+- Input is required via `--audit <path>` using output from `audit_api_icons.mjs`.
+- Stores assets under `web/public/assets/mirror/icons/<sha1>.<ext>`.
+- Writes/updates `web/public/assets/mirror/manifest.json` with `url -> localPath` mappings.
+- Keeps failed URLs in manifest `failed` metadata and logs warnings.
 
 ## Source Guidance Script
 

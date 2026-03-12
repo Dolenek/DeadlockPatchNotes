@@ -9,12 +9,16 @@
   - `TableOfContents`
   - `PatchHeroesRail`
 - Data source: API via `web/lib/api.ts`.
+- Icon URL normalization in `web/lib/api.ts`:
+  - checks `web/public/assets/mirror/manifest.json` for `remote-url -> local-path` mappings
+  - when found, promotes local path to primary icon URL field
+  - preserves remote URL as fallback field when available
 
 API base URL resolution:
 
 - Uses `API_BASE_URL` env when set.
-- Falls back to `https://deadlock.jakubdolenek.xyz/api` when env is missing/blank.
-- Normalizes exact `/api` suffix so both `https://deadlock.jakubdolenek.xyz` and `https://deadlock.jakubdolenek.xyz/api` are valid inputs.
+- Falls back to `https://deadlockpatchnotes.com/api` when env is missing/blank.
+- Normalizes exact `/api` suffix so both `https://deadlockpatchnotes.com` and `https://deadlockpatchnotes.com/api` are valid inputs.
 - Invalid non-empty `API_BASE_URL` throws `Invalid API_BASE_URL: ...`.
 
 Fetch caching:
@@ -98,7 +102,7 @@ Detail-page behavior:
   - seams use `scratch_mask_*` overlays between layer transitions
 - Top nav includes:
   - internal links: patches, heroes, spells, items
-  - docs/links: changelog forum, API docs (`/api/scalar`), assets API docs, Steam store page
+  - docs/links: changelog forum, PatchNotes API (`/api/scalar`), assets API docs, Steam store page
 
 ### Image Proxy Route
 

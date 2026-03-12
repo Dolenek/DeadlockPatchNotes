@@ -1197,6 +1197,10 @@
                 {
                   "id": "apollo-flawless-advance-2",
                   "text": "now gets interrupted by stun and sleep"
+                },
+                {
+                  "id": "apollo-flawless-advance-3",
+                  "text": "T3 now also increases Apollo's attacking lunge speed"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/apollo-flawless-advance.png",
@@ -1225,13 +1229,21 @@
           "entityName": "Bebop",
           "entityIconUrl": "/assets/patches/2026-03-06-update/heroes/bebop.png",
           "entityIconFallbackUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/bebop_sm.png",
-          "changes": [
+          "changes": [],
+          "groups": [
             {
-              "id": "bebop-general-1",
-              "text": "Hook can now be canceled"
+              "id": "bebop-grapple-arm",
+              "title": "Grapple Arm",
+              "changes": [
+                {
+                  "id": "bebop-grapple-arm-1",
+                  "text": "Hook can now be canceled"
+                }
+              ],
+              "iconUrl": "/assets/patches/2026-03-06-update/abilities/bebop-grapple-arm.png",
+              "iconFallbackUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bebop/bebop_hook.png"
             }
-          ],
-          "groups": []
+          ]
         },
         {
           "id": "billy",
@@ -1379,6 +1391,14 @@
             {
               "id": "calico-general-2",
               "text": "Now fires an additional pellet right down the center (DPS is the same). The center pellet is now considered the primary pellet for headshots."
+            },
+            {
+              "id": "calico-general-3",
+              "text": "Move speed reduced from 7.2 to 6.8"
+            },
+            {
+              "id": "calico-general-4",
+              "text": "Fixed Gloom Bombs T2 giving an extra +15 flat bonus (released a couple days ago)"
             }
           ],
           "groups": [
@@ -1429,6 +1449,14 @@
                 {
                   "id": "calico-leaping-slash-5",
                   "text": "radius reduced from 4.5m to 4m"
+                },
+                {
+                  "id": "calico-leaping-slash-6",
+                  "text": "scaling reduced from 1.5 to 1.2"
+                },
+                {
+                  "id": "calico-leaping-slash-7",
+                  "text": "T2 reduced from 300 Souls to 225"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/calico-leaping-slash.png",
@@ -1533,6 +1561,14 @@
             {
               "id": "celeste-general-2",
               "text": "Air Control/Acceleration reduced from +50/18% to +38/12% (less air control and acceleration)"
+            },
+            {
+              "id": "celeste-general-3",
+              "text": "Gravity from 28% to 25% (was 20% previous patch)"
+            },
+            {
+              "id": "celeste-general-4",
+              "text": "Air Control increased from 38% to 44% (was 50% previous patch)"
             }
           ],
           "groups": [
@@ -1547,10 +1583,42 @@
                 {
                   "id": "celeste-shining-wonder-2",
                   "text": "linger duration reduced from 4.5s to 3.25s"
+                },
+                {
+                  "id": "celeste-shining-wonder-3",
+                  "text": "no longer refunds half cooldown on miss"
+                },
+                {
+                  "id": "celeste-shining-wonder-4",
+                  "text": "linger time reduced from 3.25s to 3s"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/celeste-shining-wonder.png",
               "iconFallbackUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/unicorn/unicorn_orb.png"
+            },
+            {
+              "id": "celeste-light-eater",
+              "title": "Light Eater",
+              "changes": [
+                {
+                  "id": "celeste-light-eater-1",
+                  "text": "on hit damage reduced from 25 to 20"
+                }
+              ],
+              "iconUrl": "/assets/patches/2026-03-06-update/abilities/celeste-light-eater.png",
+              "iconFallbackUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/unicorn/unicorn_flare.png"
+            },
+            {
+              "id": "celeste-dazzling-trick",
+              "title": "Dazzling Trick",
+              "changes": [
+                {
+                  "id": "celeste-dazzling-trick-1",
+                  "text": "barrier spirit scaling reduced from 1.1 to 0.8"
+                }
+              ],
+              "iconUrl": "/assets/patches/2026-03-06-update/abilities/celeste-dazzling-trick.png",
+              "iconFallbackUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/unicorn/unicorn_shield.png"
             }
           ]
         },
@@ -1609,6 +1677,18 @@
                 {
                   "id": "doorman-call-bell-9",
                   "text": "T3 changed from \"Impact causes half radius explosions\" to \"+1 Charge and +22s Lifetime. Causes the radius to continuously apply it's slow\""
+                },
+                {
+                  "id": "doorman-call-bell-10",
+                  "text": "now has Impact Damage (40+1) and Explosion Damage (55+1.7) as separate components again (previous values for impact/explosion)"
+                },
+                {
+                  "id": "doorman-call-bell-11",
+                  "text": "T2 is now \"+30 Impact Damage and +40 Explosion Damage\""
+                },
+                {
+                  "id": "doorman-call-bell-12",
+                  "text": "T3 now also increases slow by 15%"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/doorman-call-bell.png",
@@ -1705,6 +1785,10 @@
                 {
                   "id": "doorman-hotel-guest-10",
                   "text": "T3 changed from \"-50s Cooldown\" to \"Unstoppable while Hotel is occupied. 10s Cooldown on Failure to Check Out\""
+                },
+                {
+                  "id": "doorman-hotel-guest-11",
+                  "text": "T3 late checkout cooldown increased from 10s to 13s"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/doorman-hotel-guest.png",
@@ -1717,7 +1801,12 @@
           "entityName": "Drifter",
           "entityIconUrl": "/assets/patches/2026-03-06-update/heroes/drifter.png",
           "entityIconFallbackUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/drifter_sm.png",
-          "changes": [],
+          "changes": [
+            {
+              "id": "drifter-general-1",
+              "text": "Fixed Quicksilver Reload dealing bonus multiple times with Rend"
+            }
+          ],
           "groups": [
             {
               "id": "drifter-rend",
@@ -2325,6 +2414,10 @@
             {
               "id": "ivy-general-4",
               "text": "Watcher's Covenant renamed to Kudzu Connection"
+            },
+            {
+              "id": "ivy-general-5",
+              "text": "Bullet damage growth increased from 0.06 to 0.08"
             }
           ],
           "groups": [
@@ -2347,6 +2440,10 @@
                 {
                   "id": "ivy-entangling-thorns-4",
                   "text": "T3 changed from \"+36 DPS and +2m Radius\" to \"Entangles enemies that remain in it for 2s. Lasts 1.6s\""
+                },
+                {
+                  "id": "ivy-entangling-thorns-5",
+                  "text": "spirit scaling reduced from 0.55 to 0.45"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/ivy-entangling-thorns.png",
@@ -2375,6 +2472,10 @@
                 {
                   "id": "ivy-kudzu-connection-5",
                   "text": "T3 changed from \"+1 Tether Count\" to \"Ability is now always active\""
+                },
+                {
+                  "id": "ivy-kudzu-connection-6",
+                  "text": "now only gives you half the bonus if you aren't connected to an ally"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/ivy-kudzu-connection.png",
@@ -2475,6 +2576,18 @@
                 {
                   "id": "ivy-air-drop-16",
                   "text": "T3 now also increases damage scaling by +1.5 and barrier scaling by +1.0"
+                },
+                {
+                  "id": "ivy-air-drop-17",
+                  "text": "damage spirit scaling reduced from 1 to 0.7"
+                },
+                {
+                  "id": "ivy-air-drop-18",
+                  "text": "T1 barrier spirit scaling reduced from 1 to 0.7"
+                },
+                {
+                  "id": "ivy-air-drop-19",
+                  "text": "T2 slow reduced from 50% to 40%"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/ivy-air-drop.png",
@@ -2839,6 +2952,22 @@
                 {
                   "id": "lash-death-slam-5",
                   "text": "T3 now also increases cast range by +10m"
+                },
+                {
+                  "id": "lash-death-slam-6",
+                  "text": "throw range increased from 12m to 14m"
+                },
+                {
+                  "id": "lash-death-slam-7",
+                  "text": "throw range now scales with spirit power (+0.14)"
+                },
+                {
+                  "id": "lash-death-slam-8",
+                  "text": "T3 cast range reduced from +10m to +6m"
+                },
+                {
+                  "id": "lash-death-slam-9",
+                  "text": "T3 stun increased from 1s to 1.2s"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/lash-death-slam.png",
@@ -3045,6 +3174,22 @@
                 {
                   "id": "mcginnis-heavy-barrage-11",
                   "text": "T3 now also increases explosion radius by 2m"
+                },
+                {
+                  "id": "mcginnis-heavy-barrage-12",
+                  "text": "radius reduced from 5m to 4.5m"
+                },
+                {
+                  "id": "mcginnis-heavy-barrage-13",
+                  "text": "T1 slow duration reduced from 1.5s to 1s"
+                },
+                {
+                  "id": "mcginnis-heavy-barrage-14",
+                  "text": "T3 spirit scaling reduced from +0.25 to +0.2"
+                },
+                {
+                  "id": "mcginnis-heavy-barrage-15",
+                  "text": "T3 damage reduced from +25 to +22"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/mcginnis-heavy-barrage.png",
@@ -3261,6 +3406,10 @@
                 {
                   "id": "mirage-fire-scarabs-12",
                   "text": "no longer has a reduced effect against non-heroes"
+                },
+                {
+                  "id": "mirage-fire-scarabs-13",
+                  "text": "cooldown reduced from 45s to 35s"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/mirage-fire-scarabs.png",
@@ -3381,6 +3530,10 @@
                 {
                   "id": "mirage-traveler-8",
                   "text": "T3 \"Unstoppable for 3s\" to \"-80s Cooldown\""
+                },
+                {
+                  "id": "mirage-traveler-9",
+                  "text": "T1 now also increases Fire Rate by 20%"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/mirage-traveler.png",
@@ -3418,6 +3571,14 @@
                 {
                   "id": "mo-krill-scorn-5",
                   "text": "T2 changed from \"+21 Damage\" to \"-5s Cooldown and +1m Radius\""
+                },
+                {
+                  "id": "mo-krill-scorn-6",
+                  "text": "heal vs non-heroes reduced from 0.5x to 0.35x"
+                },
+                {
+                  "id": "mo-krill-scorn-7",
+                  "text": "cooldown increased from 12.5s to 13s"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/mo-krill-scorn.png",
@@ -3510,6 +3671,22 @@
                 {
                   "id": "mo-krill-combo-5",
                   "text": "T3 changed from \"+32 DPS and 80% Lifesteal\" to \"+0.7s Duration and -60s Cooldown\""
+                },
+                {
+                  "id": "mo-krill-combo-6",
+                  "text": "DPS reduced from 60 to 45"
+                },
+                {
+                  "id": "mo-krill-combo-7",
+                  "text": "cooldown reduced from 150s to 140s"
+                },
+                {
+                  "id": "mo-krill-combo-8",
+                  "text": "T2 changed from \"+60 DPS and +50% Bullet Resist\" to \"-35s Cooldown and +50% Bullet Resist\""
+                },
+                {
+                  "id": "mo-krill-combo-9",
+                  "text": "T3 changed from +0.7s Duration and -60s Cooldown\" to \"+0.7s Duration and +60 Damage\""
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/mo-krill-combo.png",
@@ -3677,6 +3854,14 @@
                 {
                   "id": "paradox-pulse-grenade-9",
                   "text": "T3 changed from \"+36 Pulse Damage and +0.8m Radius per Pulse\" to \"+4% Damage Amp Per Stack and +1.6s Duration\""
+                },
+                {
+                  "id": "paradox-pulse-grenade-10",
+                  "text": "spirit scaling reduced from 0.4 to 0.3"
+                },
+                {
+                  "id": "paradox-pulse-grenade-11",
+                  "text": "does half damage to objectives"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/paradox-pulse-grenade.png",
@@ -3713,6 +3898,22 @@
                 {
                   "id": "paradox-time-wall-7",
                   "text": "T3 changed from silencing enemies to Allowing Charges and Granting +1 Charge (4s Charge Time)"
+                },
+                {
+                  "id": "paradox-time-wall-8",
+                  "text": "slow duration increased from 1.25s to 2s"
+                },
+                {
+                  "id": "paradox-time-wall-9",
+                  "text": "T1 now also increases duration by +2.5s"
+                },
+                {
+                  "id": "paradox-time-wall-10",
+                  "text": "T2 no longer increases duration by +2.5s"
+                },
+                {
+                  "id": "paradox-time-wall-11",
+                  "text": "T2 now also silences enemies for 2.3s"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/paradox-time-wall.png",
@@ -3773,6 +3974,18 @@
                 {
                   "id": "paradox-paradoxical-swap-6",
                   "text": "T3 changed from \"+15m Cast Range\" to \"Swaps additional enemies in 7m radius and +10% Current Health Damage\""
+                },
+                {
+                  "id": "paradox-paradoxical-swap-7",
+                  "text": "damage changed from 10% Current Health to 125 with 1.1 spirit scaling"
+                },
+                {
+                  "id": "paradox-paradoxical-swap-8",
+                  "text": "T3 changed from 10% Current Health to 10% Max Health"
+                },
+                {
+                  "id": "paradox-paradoxical-swap-9",
+                  "text": "can now be alt casted to swap only a single target with the T3"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/paradox-paradoxical-swap.png",
@@ -3922,6 +4135,22 @@
                 {
                   "id": "pocket-affliction-10",
                   "text": "T3 increases spirit scaling by +0.1"
+                },
+                {
+                  "id": "pocket-affliction-11",
+                  "text": "duration reduced from 12s to 11s (overall total damage is reduced slightly)"
+                },
+                {
+                  "id": "pocket-affliction-12",
+                  "text": "DPS increased from 32+0.2 to 34+0.22"
+                },
+                {
+                  "id": "pocket-affliction-13",
+                  "text": "T2 duration reduced from +4s to +3s"
+                },
+                {
+                  "id": "pocket-affliction-14",
+                  "text": "T3 DPS increased from 16+0.1 to 18+0.11"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/pocket-affliction.png",
@@ -4013,6 +4242,10 @@
                 {
                   "id": "seven-lightning-ball-3",
                   "text": "T2 now also increases lifetime by 1s"
+                },
+                {
+                  "id": "seven-lightning-ball-4",
+                  "text": "charge time reduced from 8s to 7s"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/seven-lightning-ball.png",
@@ -4101,6 +4334,10 @@
                 {
                   "id": "seven-storm-cloud-4",
                   "text": "T3 increases move speed by +3m (was +3.8m before)"
+                },
+                {
+                  "id": "seven-storm-cloud-5",
+                  "text": "T3 increases speed from +3m to +4m"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/seven-storm-cloud.png",
@@ -4125,6 +4362,10 @@
             {
               "id": "shiv-general-3",
               "text": "Bullet damage growth increased from 0.154 to 0.165"
+            },
+            {
+              "id": "shiv-general-4",
+              "text": "Alt fire knockback increased by 10%"
             }
           ],
           "groups": [
@@ -4163,6 +4404,10 @@
                 {
                   "id": "shiv-serrated-knives-8",
                   "text": "T3 increases spirit scaling by +0.10"
+                },
+                {
+                  "id": "shiv-serrated-knives-9",
+                  "text": "cooldown increased from 16s to 18s"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/shiv-serrated-knives.png",
@@ -4223,6 +4468,14 @@
                 {
                   "id": "shiv-killing-blow-5",
                   "text": "T3 now also increases enemy health threshold by +5%"
+                },
+                {
+                  "id": "shiv-killing-blow-6",
+                  "text": "range increased from 13m to 18m"
+                },
+                {
+                  "id": "shiv-killing-blow-7",
+                  "text": "travel speed increased a bit"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/shiv-killing-blow.png",
@@ -4285,6 +4538,22 @@
                 {
                   "id": "silver-lycan-curse-6",
                   "text": "T2 bonus health increased from 125 to 150"
+                },
+                {
+                  "id": "silver-lycan-curse-7",
+                  "text": "base health bonus increased from +75 to +125"
+                },
+                {
+                  "id": "silver-lycan-curse-8",
+                  "text": "T2 increased from +3m to +4m"
+                },
+                {
+                  "id": "silver-lycan-curse-9",
+                  "text": "cooldown reduced from 50s to 40s"
+                },
+                {
+                  "id": "silver-lycan-curse-10",
+                  "text": "T1 increased from 15% Resists to 18%"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/silver-lycan-curse.png",
@@ -4331,6 +4600,10 @@
                 {
                   "id": "victor-pain-battery-6",
                   "text": "T3 now also increases spirit scaling by +0.6"
+                },
+                {
+                  "id": "victor-pain-battery-7",
+                  "text": "T3 reduced from 18% Missing Health to 15%"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/victor-pain-battery.png",
@@ -4371,6 +4644,10 @@
                 {
                   "id": "victor-jumpstart-8",
                   "text": "T3 now also increases spirit scaling by 0.8"
+                },
+                {
+                  "id": "victor-jumpstart-9",
+                  "text": "T3 spirit scaling reduced from 0.8 to 0.6"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/victor-jumpstart.png",
@@ -4419,6 +4696,18 @@
                 {
                   "id": "victor-aura-of-suffering-10",
                   "text": "T3 reduced from +13% Damage to +15%"
+                },
+                {
+                  "id": "victor-aura-of-suffering-11",
+                  "text": "can now be activated on the zipline"
+                },
+                {
+                  "id": "victor-aura-of-suffering-12",
+                  "text": "radius reduced from 10m to 9.5m"
+                },
+                {
+                  "id": "victor-aura-of-suffering-13",
+                  "text": "Base and T2 Max DPS and scaling reduced by 10%"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/victor-aura-of-suffering.png",
@@ -4447,6 +4736,14 @@
                 {
                   "id": "victor-shocking-reanimation-5",
                   "text": "T3 changed from \"While on Cooldown: +18% Fire Rate and +9 Spirit Damage Per Bullet (0.06 scaling)\" to \"+6m Radius, +1s Stun and -50s Cooldown\""
+                },
+                {
+                  "id": "victor-shocking-reanimation-6",
+                  "text": "cooldown increased from 190s to 210s"
+                },
+                {
+                  "id": "victor-shocking-reanimation-7",
+                  "text": "T3 increased from -50s Cooldown to -70s"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/victor-shocking-reanimation.png",
@@ -4475,6 +4772,10 @@
             {
               "id": "vindicta-general-4",
               "text": "Bullet Velocity increased from 557 to 660"
+            },
+            {
+              "id": "vindicta-general-5",
+              "text": "Fixed not gaining bonus damage if a proc bonus was the killing blow"
             }
           ],
           "groups": [
@@ -4629,7 +4930,12 @@
           "entityName": "Viscous",
           "entityIconUrl": "/assets/patches/2026-03-06-update/heroes/viscous.png",
           "entityIconFallbackUrl": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/viscous_sm.png",
-          "changes": [],
+          "changes": [
+            {
+              "id": "viscous-general-1",
+              "text": "Fixed Puddle Punch T3 giving an extra +60 melee damage (released a couple days ago)"
+            }
+          ],
           "groups": [
             {
               "id": "viscous-splatter",
@@ -4670,6 +4976,10 @@
                 {
                   "id": "viscous-splatter-9",
                   "text": "T3 still adds 2 bounces"
+                },
+                {
+                  "id": "viscous-splatter-10",
+                  "text": "T3 spirit scaling reduced from 1.3 to 1.1"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/viscous-splatter.png",
@@ -4722,6 +5032,14 @@
                 {
                   "id": "viscous-puddle-punch-6",
                   "text": "T2 changed from \"+27 Damage and -15% Move Slow\" to \"+1.5m Radius and +30 Damage\""
+                },
+                {
+                  "id": "viscous-puddle-punch-7",
+                  "text": "scaling reduced from 1.1 to 1.0"
+                },
+                {
+                  "id": "viscous-puddle-punch-8",
+                  "text": "scaling reduced from 1 to 0.8"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/viscous-puddle-punch.png",
@@ -4908,6 +5226,14 @@
                 {
                   "id": "warden-last-stand-6",
                   "text": "T3 now also grants you Unstoppable while channeling"
+                },
+                {
+                  "id": "warden-last-stand-7",
+                  "text": "Bullet and Spirit Resist while channeling reduced from 60% to 50%"
+                },
+                {
+                  "id": "warden-last-stand-8",
+                  "text": "T3 now also increases Bullet and Spirit Resist while channeling by +30%"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/warden-last-stand.png",
@@ -4924,6 +5250,50 @@
             {
               "id": "wraith-general-1",
               "text": "Fixed Project Mind interaction with stuns"
+            },
+            {
+              "id": "wraith-general-2",
+              "text": "Fixed Card Trick Heart heal doing full value for non-heroes (instead of half)"
+            },
+            {
+              "id": "wraith-general-3",
+              "text": "03-10-2026 Patch:"
+            },
+            {
+              "id": "wraith-general-4",
+              "text": "Base Guardians HP reduced from 5500 to 4000"
+            },
+            {
+              "id": "wraith-general-5",
+              "text": "Zipline can now be captured a little bit more forward towards the enemy base"
+            },
+            {
+              "id": "wraith-general-6",
+              "text": "The minimum always captured zipline distance in your base is now reduced a little bit inwards"
+            },
+            {
+              "id": "wraith-general-7",
+              "text": "Super troopers (when a lane shrine is down) now have 15% less bounty"
+            },
+            {
+              "id": "wraith-general-8",
+              "text": "Hero base health increased by 40"
+            },
+            {
+              "id": "wraith-general-9",
+              "text": "Hero health increased growth by +4 and 8%"
+            },
+            {
+              "id": "wraith-general-10",
+              "text": "Vitality investment bonuses increased by 12%"
+            },
+            {
+              "id": "wraith-general-11",
+              "text": "Golden Goose Egg: souls per buff improved from every 200 souls to every 150"
+            },
+            {
+              "id": "wraith-general-12",
+              "text": "Vortex Web: Will now only unit target when used with alt cast"
             }
           ],
           "groups": [
@@ -4978,6 +5348,42 @@
                 {
                   "id": "wraith-card-trick-12",
                   "text": "T2 changed from \"+50% Card Summon Rate and 30% slow for 1s\" to \"Improves Card Suites and increased joker chances\" (new totals are Spades: 2.5x, Diamond: -13%, Heal: 150/2.0, Clubs: 50%, Joker: 1/5th chance)"
+                },
+                {
+                  "id": "wraith-card-trick-13",
+                  "text": "Spade reduced from +70% to +60%"
+                },
+                {
+                  "id": "wraith-card-trick-14",
+                  "text": "Heart scaling reduced from 1.25 to 1.0"
+                },
+                {
+                  "id": "wraith-card-trick-15",
+                  "text": "T3 Heart scaling increased from 0.5 to 0.75"
+                },
+                {
+                  "id": "wraith-card-trick-16",
+                  "text": "cooldown increased from 0.5s to 0.6s"
+                },
+                {
+                  "id": "wraith-card-trick-17",
+                  "text": "Joker no longer bounces to other targets"
+                },
+                {
+                  "id": "wraith-card-trick-18",
+                  "text": "gaining charges (AP or shop) no longer automatically builds them up"
+                },
+                {
+                  "id": "wraith-card-trick-19",
+                  "text": "can now be alt casted to fire from the inverse order"
+                },
+                {
+                  "id": "wraith-card-trick-20",
+                  "text": "T3 Spade bonus reduced from +50% to +40%"
+                },
+                {
+                  "id": "wraith-card-trick-21",
+                  "text": "T3 Heart healing scale reduced from +0.75 to +0.5"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/wraith-card-trick.png",
@@ -5076,6 +5482,22 @@
                 {
                   "id": "wraith-telekinesis-7",
                   "text": "T3 changed from \"Bounces to nearby target\" to \"+1.5s Debuff duration and +6m Throw and Cast Range"
+                },
+                {
+                  "id": "wraith-telekinesis-8",
+                  "text": "debuff duration reduced from 3s to 2.75s"
+                },
+                {
+                  "id": "wraith-telekinesis-9",
+                  "text": "cast range reduced from 14m to 13m"
+                },
+                {
+                  "id": "wraith-telekinesis-10",
+                  "text": "throw range reduced from 14m to 13m"
+                },
+                {
+                  "id": "wraith-telekinesis-11",
+                  "text": "cast delay increased from 0.3s to 0.35s"
                 }
               ],
               "iconUrl": "/assets/patches/2026-03-06-update/abilities/wraith-telekinesis.png",
@@ -5120,6 +5542,18 @@
             {
               "id": "yamato-general-8",
               "text": "Shadow Transformation T3 increased from +20% Bullet and Spirit Resist to +30%"
+            },
+            {
+              "id": "yamato-general-9",
+              "text": "03-07-2026 Patch:"
+            },
+            {
+              "id": "yamato-general-10",
+              "text": "Golden Egg Goose: Souls Per Minute increased from 75 to 90"
+            },
+            {
+              "id": "yamato-general-11",
+              "text": "Torment Pulse: Pulse Damage reduced from 27+0.25 to 25+0.23"
             }
           ],
           "groups": [

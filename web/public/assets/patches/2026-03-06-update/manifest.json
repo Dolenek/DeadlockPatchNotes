@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-03-08T10:47:13.855Z",
+  "generatedAt": "2026-03-12T22:17:59.040Z",
   "patchSlug": "2026-03-06-update",
-  "assetCount": 201,
+  "assetCount": 204,
   "assets": [
     {
       "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/goose_egg.png",
@@ -270,6 +270,10 @@
     {
       "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/bebop_sm.png",
       "localPath": "/assets/patches/2026-03-06-update/heroes/bebop.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bebop/bebop_hook.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/bebop-grapple-arm.png"
     },
     {
       "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/punkgoat_sm.png",
@@ -806,6 +810,14 @@
     {
       "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/yamato/yamato_crimson_slash.png",
       "localPath": "/assets/patches/2026-03-06-update/abilities/yamato-crimson-slash.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/unicorn/unicorn_flare.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/celeste-light-eater.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/unicorn/unicorn_shield.png",
+      "localPath": "/assets/patches/2026-03-06-update/abilities/celeste-dazzling-trick.png"
     }
   ]
 }

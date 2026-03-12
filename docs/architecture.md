@@ -52,7 +52,7 @@ Migrations in `api/internal/db/migrations/*.sql` are applied at startup.
 
 Frontend API base behavior:
 
-- Default API base is `https://deadlock.jakubdolenek.xyz/api`.
+- Default API base is `https://deadlockpatchnotes.com/api`.
 - `API_BASE_URL` may override it.
 - Exact `/api` suffix is normalized, so both host-only and `/api`-suffixed values are accepted.
 - Invalid non-empty `API_BASE_URL` throws during client initialization.

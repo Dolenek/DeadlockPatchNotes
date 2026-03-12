@@ -97,5 +97,10 @@ export function ensureGroup(heroState, key, title, iconInfo, iconFallback) {
 }
 
 export function resolveHeroDisplayName(prefix, resolvedHero) {
-  return norm(prefix) === "doorman" ? "Doorman" : resolvedHero.name;
+  const prefixKey = norm(prefix);
+  const resolvedKey = norm(resolvedHero?.name);
+  if (prefixKey === "doorman" || prefixKey === "the doorman" || resolvedKey === "doorman" || resolvedKey === "the doorman") {
+    return "Doorman";
+  }
+  return resolvedHero.name;
 }

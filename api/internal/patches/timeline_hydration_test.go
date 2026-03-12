@@ -104,8 +104,9 @@ func TestHydratePatchDetail_BindsPrefixedAbilityLinesToCurrentHero(t *testing.T)
 						ID:         "bebop",
 						EntityName: "Bebop",
 						Groups: []PatchEntryGroup{
-							{ID: "hook", Title: "Hook"},
+							{ID: "grapple-arm", Title: "Grapple Arm"},
 							{ID: "hyper-beam", Title: "Hyper Beam"},
+							{ID: "exploding-uppercut", Title: "Exploding Uppercut"},
 						},
 					},
 					{
@@ -127,9 +128,10 @@ func TestHydratePatchDetail_BindsPrefixedAbilityLinesToCurrentHero(t *testing.T)
 					{ID: "1", Text: "[Heroes]"},
 					{ID: "2", Text: "Bebop"},
 					{ID: "3", Text: "Hook: Reworked code to reduce mispredicts."},
-					{ID: "4", Text: "Hyper Beam: Effect revisions for projections on vertical surfaces."},
-					{ID: "5", Text: "Calico"},
-					{ID: "6", Text: "Leaping Slash: Fixed animation getting stuck when stunned during the ability cast."},
+					{ID: "4", Text: "Hyperbeam: Effect revisions for projections on vertical surfaces."},
+					{ID: "5", Text: "Uppercut: T3 no longer grants +100% Ammo"},
+					{ID: "6", Text: "Calico"},
+					{ID: "7", Text: "Leaping Slash: Fixed animation getting stuck when stunned during the ability cast."},
 				},
 			},
 		},
@@ -148,14 +150,17 @@ func TestHydratePatchDetail_BindsPrefixedAbilityLinesToCurrentHero(t *testing.T)
 	if bebop == nil {
 		t.Fatal("expected Bebop entry")
 	}
-	if timelineGroupByTitle(*bebop, "Hook") == nil {
-		t.Fatal("expected Hook group under Bebop")
+	if timelineGroupByTitle(*bebop, "Grapple Arm") == nil {
+		t.Fatal("expected Grapple Arm group under Bebop")
 	}
 	if timelineGroupByTitle(*bebop, "Hyper Beam") == nil {
 		t.Fatal("expected Hyper Beam group under Bebop")
 	}
+	if timelineGroupByTitle(*bebop, "Exploding Uppercut") == nil {
+		t.Fatal("expected Exploding Uppercut group under Bebop")
+	}
 
-	if timelineEntryByName(heroes.Entries, "Hook") != nil || timelineEntryByName(heroes.Entries, "Hyper Beam") != nil {
+	if timelineEntryByName(heroes.Entries, "Hook") != nil || timelineEntryByName(heroes.Entries, "Hyperbeam") != nil || timelineEntryByName(heroes.Entries, "Uppercut") != nil {
 		t.Fatal("ability prefixes should not become standalone hero entries")
 	}
 }
@@ -216,6 +221,60 @@ func TestHydratePatchDetail_CardTypesRemainUnderHeroGroup(t *testing.T) {
 
 	if timelineEntryByName(heroes.Entries, "Spades") != nil || timelineEntryByName(heroes.Entries, "Diamond") != nil {
 		t.Fatal("card type labels should not become standalone hero entries")
+	}
+}
+
+func TestHydratePatchDetail_CanonicalizesDoormanNameAcrossArticleVariants(t *testing.T) {
+	detail := PatchDetail{
+		Slug:        "test-update",
+		PublishedAt: "2026-03-06T12:00:00Z",
+		Sections: []PatchSection{
+			{
+				ID:    "heroes",
+				Title: "Heroes",
+				Kind:  "heroes",
+				Entries: []PatchEntry{
+					{
+						ID:         "the-doorman",
+						EntityName: "The Doorman",
+						Groups: []PatchEntryGroup{
+							{ID: "call-bell", Title: "Call Bell"},
+							{ID: "hotel-guest", Title: "Hotel Guest"},
+						},
+					},
+				},
+			},
+		},
+		Timeline: []PatchTimelineBlock{
+			{
+				ID:         "block-1",
+				Kind:       "initial",
+				ReleasedAt: "2026-03-06T12:00:00Z",
+				Changes: []PatchChange{
+					{ID: "1", Text: "[Heroes]"},
+					{ID: "2", Text: "The Doorman: Call Bell cooldown increased from 16s to 18s."},
+					{ID: "3", Text: "Doorman: Hotel Guest cast range increased from 6m to 7m."},
+				},
+			},
+		},
+	}
+
+	hydrated := hydratePatchDetail(detail)
+	heroes := timelineSectionByKind(hydrated.Timeline[0].Sections, "heroes")
+	if heroes == nil {
+		t.Fatal("expected heroes section")
+	}
+	if len(heroes.Entries) != 1 {
+		t.Fatalf("expected 1 hero entry, got %d", len(heroes.Entries))
+	}
+	if heroes.Entries[0].EntityName != "Doorman" {
+		t.Fatalf("expected canonical Doorman name, got %q", heroes.Entries[0].EntityName)
+	}
+	if timelineGroupByTitle(heroes.Entries[0], "Call Bell") == nil {
+		t.Fatal("expected Call Bell group under Doorman")
+	}
+	if timelineGroupByTitle(heroes.Entries[0], "Hotel Guest") == nil {
+		t.Fatal("expected Hotel Guest group under Doorman")
 	}
 }
 

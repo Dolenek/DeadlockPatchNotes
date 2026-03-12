@@ -15,11 +15,6 @@ var timelineCardTypeNames = map[string]bool{
 	"joker":   true,
 }
 
-var timelineHeroAlias = map[string]string{
-	"doorman": "the doorman",
-	"vindcita": "vindicta",
-}
-
 func buildParseTemplateCatalog(sections []PatchSection) parseTemplateCatalog {
 	catalog := parseTemplateCatalog{
 		itemsByNorm:  map[string]PatchEntry{},
@@ -43,7 +38,7 @@ func buildParseTemplateCatalog(sections []PatchSection) parseTemplateCatalog {
 					continue
 				}
 				template := heroTemplate{
-					name:            entry.EntityName,
+					name:            canonicalTimelineHeroName(entry.EntityName),
 					iconURL:         entry.EntityIconURL,
 					iconFallbackURL: entry.EntityIconFallbackURL,
 					abilities:       make([]abilityTemplate, 0, len(entry.Groups)),
@@ -52,12 +47,22 @@ func buildParseTemplateCatalog(sections []PatchSection) parseTemplateCatalog {
 					if strings.TrimSpace(group.Title) == "" {
 						continue
 					}
-					template.abilities = append(template.abilities, abilityTemplate{
+					ability := abilityTemplate{
 						name:            group.Title,
 						normName:        normalizeLookupKey(group.Title),
 						iconURL:         group.IconURL,
 						iconFallbackURL: group.IconFallbackURL,
-					})
+					}
+					template.abilities = append(template.abilities, ability)
+
+					for _, alias := range timelineAbilityAlias[canonicalTimelineHeroKey(key)][ability.normName] {
+						template.abilities = append(template.abilities, abilityTemplate{
+							name:            ability.name,
+							normName:        normalizeLookupKey(alias),
+							iconURL:         ability.iconURL,
+							iconFallbackURL: ability.iconFallbackURL,
+						})
+					}
 				}
 				sort.SliceStable(template.abilities, func(i, j int) bool {
 					return len(template.abilities[i].normName) > len(template.abilities[j].normName)
@@ -294,6 +299,7 @@ func ensureTimelineHeroEntry(blockID string, entries map[string]*timelineHeroSta
 	if entityName == "" {
 		entityName = strings.TrimSpace(fallback)
 	}
+	entityName = canonicalTimelineHeroName(entityName)
 
 	state := &timelineHeroState{
 		entry: &PatchEntry{
@@ -355,7 +361,7 @@ func appendHeroTimelineLine(state *timelineHeroState, prefix, text string) {
 		return
 	}
 
-	if prefix != "" && normalizeLookupKey(prefix) != normalizeLookupKey(state.entry.EntityName) {
+	if prefix != "" && canonicalTimelineHeroKey(prefix) != canonicalTimelineHeroKey(state.entry.EntityName) {
 		appendTimelineEntryChange(state.entry, fmt.Sprintf("%s: %s", strings.TrimSpace(prefix), text))
 		return
 	}
@@ -419,53 +425,6 @@ func appendTimelineGroupChange(group *PatchEntryGroup, text string) {
 	})
 }
 
-func parseStructuredSectionHeader(line string) (string, bool) {
-	match := structuredSectionHeaderRegex.FindStringSubmatch(strings.TrimSpace(line))
-	if len(match) == 2 {
-		return strings.ToLower(match[1]), true
-	}
-
-	switch strings.ToLower(strings.TrimSpace(line)) {
-	case "general":
-		return "general", true
-	case "items":
-		return "items", true
-	case "heroes":
-		return "heroes", true
-	}
-	return "", false
-}
-
-func parseStructuredPrefixedLine(line string) (string, string, bool) {
-	match := structuredPrefixedLineRegex.FindStringSubmatch(strings.TrimSpace(line))
-	if len(match) != 3 {
-		return "", "", false
-	}
-	return strings.TrimSpace(match[1]), strings.TrimSpace(match[2]), true
-}
-
-func shouldSkipTimelineLine(line string) bool {
-	lower := strings.ToLower(strings.TrimSpace(line))
-	if lower == "" {
-		return true
-	}
-	if lower == "read more" {
-		return true
-	}
-	if strings.HasPrefix(lower, "deadlock - ") && strings.Contains(lower, "steam news") {
-		return true
-	}
-	return structuredDateHeadingRegex.MatchString(line)
-}
-
-func cleanTimelineLine(line string) string {
-	line = strings.TrimSpace(line)
-	line = strings.TrimPrefix(line, "-")
-	line = strings.TrimPrefix(line, "*")
-	line = strings.TrimSpace(line)
-	return line
-}
-
 func resolveTimelineHeroTemplate(catalog parseTemplateCatalog, raw string) (string, heroTemplate, bool) {
 	key := normalizeLookupKey(raw)
 	if key == "" {
@@ -473,25 +432,25 @@ func resolveTimelineHeroTemplate(catalog parseTemplateCatalog, raw string) (stri
 	}
 
 	if template, ok := catalog.heroesByNorm[key]; ok {
-		return key, template, true
+		return canonicalTimelineHeroKey(key), template, true
 	}
 
 	if alias, ok := timelineHeroAlias[key]; ok {
 		aliasKey := normalizeLookupKey(alias)
 		if template, ok := catalog.heroesByNorm[aliasKey]; ok {
-			return aliasKey, template, true
+			return canonicalTimelineHeroKey(aliasKey), template, true
 		}
 	}
 
 	if strings.HasPrefix(key, "the ") {
 		trimmed := strings.TrimPrefix(key, "the ")
 		if template, ok := catalog.heroesByNorm[trimmed]; ok {
-			return trimmed, template, true
+			return canonicalTimelineHeroKey(trimmed), template, true
 		}
 	} else {
 		withArticle := "the " + key
 		if template, ok := catalog.heroesByNorm[withArticle]; ok {
-			return withArticle, template, true
+			return canonicalTimelineHeroKey(withArticle), template, true
 		}
 	}
 

@@ -87,6 +87,7 @@ func TestBuildStructuredSections_AbilityPrefixesStayOnCurrentHero(t *testing.T) 
 - Bebop
 - Hook: Reworked code to reduce mispredicts.
 - Hyper Beam: Effect revisions for projections on vertical surfaces.
+- Uppercut: T3 no longer grants +100% Ammo
 - Calico
 - Leaping Slash: Fixed animation getting stuck when stunned during the ability cast.`,
 		},
@@ -105,11 +106,14 @@ func TestBuildStructuredSections_AbilityPrefixesStayOnCurrentHero(t *testing.T) 
 	if bebop == nil {
 		t.Fatal("expected Bebop entry")
 	}
-	if groupByTitle(*bebop, "Hook") == nil {
-		t.Fatal("expected Hook group under Bebop")
+	if groupByTitle(*bebop, "Grapple Arm") == nil {
+		t.Fatal("expected Grapple Arm group under Bebop")
 	}
 	if groupByTitle(*bebop, "Hyper Beam") == nil {
 		t.Fatal("expected Hyper Beam group under Bebop")
+	}
+	if groupByTitle(*bebop, "Exploding Uppercut") == nil {
+		t.Fatal("expected Exploding Uppercut group under Bebop")
 	}
 
 	calico := heroByName(heroes.Entries, "Calico")
@@ -120,7 +124,7 @@ func TestBuildStructuredSections_AbilityPrefixesStayOnCurrentHero(t *testing.T) 
 		t.Fatal("expected Leaping Slash group under Calico")
 	}
 
-	if heroByName(heroes.Entries, "Hook") != nil || heroByName(heroes.Entries, "Hyper Beam") != nil {
+	if heroByName(heroes.Entries, "Hook") != nil || heroByName(heroes.Entries, "Hyper Beam") != nil || heroByName(heroes.Entries, "Uppercut") != nil {
 		t.Fatal("ability prefixes should not become standalone hero entries")
 	}
 }
@@ -164,13 +168,13 @@ func TestBuildStructuredSections_CardTypesStayInHeroGroup(t *testing.T) {
 	}
 }
 
-func TestBuildStructuredSections_ResolvesDoormanAbilitiesWithoutArticle(t *testing.T) {
+func TestBuildStructuredSections_ResolvesDoormanAbilitiesWithOrWithoutArticle(t *testing.T) {
 	catalog := testAssetCatalog()
 	blocks := []timelineCandidate{
 		{
 			Key: "post-1-steam-1",
 			BodyText: `[ Heroes ]
-- Doorman: Call Bell cooldown increased from 16s to 18s
+- The Doorman: Call Bell cooldown increased from 16s to 18s
 - Doorman: Hotel Guest cast range increased from 6m to 7m`,
 		},
 	}
@@ -272,8 +276,12 @@ func testAssetCatalog() *AssetCatalog {
 				{Name: "Sleep Dagger", NormName: "sleep dagger", Image: "https://example.test/sleep_dagger.png"},
 			},
 			"bebop": {
-				{Name: "Hook", NormName: "hook", Image: "https://example.test/hook.png"},
+				{Name: "Grapple Arm", NormName: "grapple arm", Image: "https://example.test/hook.png"},
 				{Name: "Hyper Beam", NormName: "hyper beam", Image: "https://example.test/hyper_beam.png"},
+				{Name: "Exploding Uppercut", NormName: "exploding uppercut", Image: "https://example.test/uppercut.png"},
+				{Name: "Grapple Arm", NormName: "hook", Image: "https://example.test/hook.png"},
+				{Name: "Hyper Beam", NormName: "hyperbeam", Image: "https://example.test/hyper_beam.png"},
+				{Name: "Exploding Uppercut", NormName: "uppercut", Image: "https://example.test/uppercut.png"},
 			},
 			"calico": {
 				{Name: "Leaping Slash", NormName: "leaping slash", Image: "https://example.test/leaping_slash.png"},

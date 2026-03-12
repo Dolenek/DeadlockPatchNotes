@@ -20,6 +20,13 @@ var (
 		"doorman": "the doorman",
 		"vindcita": "vindicta",
 	}
+	heroAbilityAlias = map[string]map[string][]string{
+		"bebop": {
+			"grapple arm": []string{"hook"},
+			"hyper beam":  []string{"hyperbeam"},
+			"exploding uppercut": []string{"uppercut"},
+		},
+	}
 	itemAlias = map[string]string{
 		"backstabber": "stalker",
 	}
@@ -95,12 +102,22 @@ func LoadAssetCatalog(ctx context.Context, client *http.Client) (*AssetCatalog, 
 			continue
 		}
 		heroKey := normalizeLookupKey(hero.Name)
-		catalog.abilitiesByHero[heroKey] = append(catalog.abilitiesByHero[heroKey], abilityRef{
+		baseRef := abilityRef{
 			Name:      item.Name,
 			NormName:  normalizeLookupKey(item.Name),
 			Image:     item.Image,
 			ImageWebP: item.ImageWebP,
-		})
+		}
+		catalog.abilitiesByHero[heroKey] = append(catalog.abilitiesByHero[heroKey], baseRef)
+
+		for _, alias := range heroAbilityAlias[heroKey][baseRef.NormName] {
+			catalog.abilitiesByHero[heroKey] = append(catalog.abilitiesByHero[heroKey], abilityRef{
+				Name:      baseRef.Name,
+				NormName:  normalizeLookupKey(alias),
+				Image:     baseRef.Image,
+				ImageWebP: baseRef.ImageWebP,
+			})
+		}
 	}
 
 	for heroKey := range catalog.abilitiesByHero {
@@ -184,7 +201,9 @@ func (c *AssetCatalog) heroAbilities(heroName string) []abilityRef {
 }
 
 func resolveHeroDisplayName(rawPrefix string, hero heroAsset) string {
-	if normalizeLookupKey(rawPrefix) == "doorman" {
+	prefixKey := normalizeLookupKey(rawPrefix)
+	heroKey := normalizeLookupKey(hero.Name)
+	if prefixKey == "doorman" || prefixKey == "the doorman" || heroKey == "doorman" || heroKey == "the doorman" {
 		return "Doorman"
 	}
 	return hero.Name

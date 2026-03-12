@@ -100,7 +100,7 @@ Schema notes:
 ### Web
 
 - `API_BASE_URL`
-  - default: `https://deadlock.jakubdolenek.xyz/api`
+  - default: `https://deadlockpatchnotes.com/api`
   - exact `/api` suffix is normalized, so host-only and `/api`-suffixed values are accepted
   - invalid non-empty value throws during API client initialization
 

@@ -3,11 +3,11 @@
   "info": {
     "title": "Deadlock Patch Notes API",
     "version": "1.1.0",
-    "description": "HTTP API for patch timelines, heroes, items, and spells used by deadlock.jakubdolenek.xyz."
+    "description": "HTTP API for patch timelines, heroes, items, and spells used by deadlockpatchnotes.com."
   },
   "servers": [
     {
-      "url": "https://deadlock.jakubdolenek.xyz/api",
+      "url": "https://deadlockpatchnotes.com/api",
       "description": "Production"
     }
   ],

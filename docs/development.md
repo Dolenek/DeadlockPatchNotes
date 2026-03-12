@@ -30,7 +30,7 @@ npm run dev
 ```
 
 Default web URL: `http://localhost:3000`.
-Default API base in web code: `https://deadlock.jakubdolenek.xyz/api`.
+Default API base in web code: `https://deadlockpatchnotes.com/api`.
 Override with `API_BASE_URL` when needed, for example:
 
 ```bash

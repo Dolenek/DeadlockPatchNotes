@@ -266,7 +266,7 @@ function applyHeroBulletChange(heroState, parsed, abilities, assetsRegistry) {
     return;
   }
 
-  const matchedAbility = abilityMatch(normalizedText, abilities);
+  const matchedAbility = abilityMatch(normalizedText, abilities, heroState.entityName);
   if (matchedAbility) {
     const abilityIcon = registerAbilityIcon(assetsRegistry, heroState.entityName, matchedAbility);
     const group = ensureGroup(
@@ -308,7 +308,7 @@ function applyHeroFollowupChange(heroState, parsed, currentSpecialGroup, abiliti
   }
 
   if (parsed.text) {
-    const prefixedAbility = abilityMatch(parsed.prefix, abilities);
+    const prefixedAbility = abilityMatch(parsed.prefix, abilities, heroState.entityName);
     if (prefixedAbility) {
       const abilityIcon = registerAbilityIcon(assetsRegistry, heroState.entityName, prefixedAbility);
       const group = ensureGroup(

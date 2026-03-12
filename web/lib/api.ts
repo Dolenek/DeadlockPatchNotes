@@ -8,8 +8,9 @@ import {
   SpellChangesResponse,
   SpellListResponse
 } from "@/lib/types";
+import { resolveMirroredAssetURL } from "@/lib/asset-mirror";
 
-const DEFAULT_API_BASE_URL = "https://deadlock.jakubdolenek.xyz/api";
+const DEFAULT_API_BASE_URL = "https://deadlockpatchnotes.com/api";
 
 function normalizeBasePath(pathname: string) {
   const trimmed = pathname.replace(/\/+$/, "");
@@ -76,33 +77,109 @@ async function apiFetch<T>(path: string): Promise<T> {
   return (await response.json()) as T;
 }
 
+function toRequiredString(raw: any): string {
+  return String(raw ?? "");
+}
+
+function toOptionalString(raw: any): string | undefined {
+  const value = String(raw ?? "").trim();
+  return value === "" ? undefined : value;
+}
+
+function localizeIconPair(primaryRaw: any, fallbackRaw: any): { iconUrl?: string; iconFallbackUrl?: string } {
+  const primary = toOptionalString(primaryRaw);
+  const fallback = toOptionalString(fallbackRaw);
+
+  if (primary?.startsWith("/")) {
+    return { iconUrl: primary, iconFallbackUrl: fallback };
+  }
+
+  const mappedPrimary = resolveMirroredAssetURL(primary);
+  if (mappedPrimary) {
+    return {
+      iconUrl: mappedPrimary,
+      iconFallbackUrl: fallback ?? primary,
+    };
+  }
+
+  const mappedFallback = resolveMirroredAssetURL(fallback);
+  if (mappedFallback) {
+    return {
+      iconUrl: mappedFallback,
+      iconFallbackUrl: fallback ?? primary,
+    };
+  }
+
+  return { iconUrl: primary, iconFallbackUrl: fallback };
+}
+
 function normalizeTimelineSummary(raw: any) {
   return {
-    id: String(raw?.id ?? ""),
-    releaseType: String(raw?.releaseType ?? raw?.kind ?? ""),
-    title: String(raw?.title ?? ""),
-    releasedAt: String(raw?.releasedAt ?? "")
+    id: toRequiredString(raw?.id),
+    releaseType: toRequiredString(raw?.releaseType ?? raw?.kind),
+    title: toRequiredString(raw?.title),
+    releasedAt: toRequiredString(raw?.releasedAt)
   };
 }
 
 function normalizePatchSource(raw: any) {
   if (raw && typeof raw === "object") {
     return {
-      type: String(raw.type ?? ""),
-      url: String(raw.url ?? "")
+      type: toRequiredString(raw.type),
+      url: toRequiredString(raw.url)
     };
   }
   return { type: "", url: "" };
 }
 
+function normalizePatchChange(raw: any) {
+  return {
+    id: toRequiredString(raw?.id),
+    text: toRequiredString(raw?.text)
+  };
+}
+
+function normalizePatchEntryGroup(raw: any) {
+  const localized = localizeIconPair(raw?.iconUrl, raw?.iconFallbackUrl);
+  return {
+    id: toRequiredString(raw?.id),
+    title: toRequiredString(raw?.title),
+    iconUrl: localized.iconUrl,
+    iconFallbackUrl: localized.iconFallbackUrl,
+    changes: Array.isArray(raw?.changes) ? raw.changes.map(normalizePatchChange) : []
+  };
+}
+
+function normalizePatchEntry(raw: any) {
+  const localized = localizeIconPair(raw?.entityIconUrl, raw?.entityIconFallbackUrl);
+  return {
+    id: toRequiredString(raw?.id),
+    entityName: toRequiredString(raw?.entityName),
+    entityIconUrl: localized.iconUrl,
+    entityIconFallbackUrl: localized.iconFallbackUrl,
+    summary: toOptionalString(raw?.summary),
+    changes: Array.isArray(raw?.changes) ? raw.changes.map(normalizePatchChange) : [],
+    groups: Array.isArray(raw?.groups) ? raw.groups.map(normalizePatchEntryGroup) : undefined
+  };
+}
+
+function normalizePatchSection(raw: any) {
+  return {
+    id: toRequiredString(raw?.id),
+    title: toRequiredString(raw?.title),
+    kind: toRequiredString(raw?.kind) as "general" | "items" | "heroes",
+    entries: Array.isArray(raw?.entries) ? raw.entries.map(normalizePatchEntry) : []
+  };
+}
+
 function normalizePatchSummary(raw: any) {
   return {
-    id: String(raw?.id ?? ""),
-    slug: String(raw?.slug ?? ""),
-    title: String(raw?.title ?? ""),
-    publishedAt: String(raw?.publishedAt ?? ""),
-    category: String(raw?.category ?? ""),
-    imageUrl: String(raw?.imageUrl ?? raw?.coverImageUrl ?? ""),
+    id: toRequiredString(raw?.id),
+    slug: toRequiredString(raw?.slug),
+    title: toRequiredString(raw?.title),
+    publishedAt: toRequiredString(raw?.publishedAt),
+    category: toRequiredString(raw?.category),
+    imageUrl: toRequiredString(raw?.imageUrl ?? raw?.coverImageUrl),
     source: raw?.source ? normalizePatchSource(raw.source) : normalizePatchSource({ type: "forum", url: raw?.sourceUrl ?? "" }),
     releaseTimeline: Array.isArray(raw?.releaseTimeline)
       ? raw.releaseTimeline.map(normalizeTimelineSummary)
@@ -114,13 +191,13 @@ function normalizePatchSummary(raw: any) {
 
 function normalizePatchTimelineBlock(raw: any) {
   return {
-    id: String(raw?.id ?? ""),
-    releaseType: String(raw?.releaseType ?? raw?.kind ?? ""),
-    title: String(raw?.title ?? ""),
-    releasedAt: String(raw?.releasedAt ?? ""),
+    id: toRequiredString(raw?.id),
+    releaseType: toRequiredString(raw?.releaseType ?? raw?.kind),
+    title: toRequiredString(raw?.title),
+    releasedAt: toRequiredString(raw?.releasedAt),
     source: normalizePatchSource(raw?.source),
-    changes: Array.isArray(raw?.changes) ? raw.changes : [],
-    sections: Array.isArray(raw?.sections) ? raw.sections : undefined
+    changes: Array.isArray(raw?.changes) ? raw.changes.map(normalizePatchChange) : [],
+    sections: Array.isArray(raw?.sections) ? raw.sections.map(normalizePatchSection) : undefined
   };
 }
 
@@ -145,15 +222,15 @@ function normalizePatchListResponse(raw: any): PatchListResponse {
 
 function normalizePatchDetail(raw: any): PatchDetail {
   return {
-    id: String(raw?.id ?? ""),
-    slug: String(raw?.slug ?? ""),
-    title: String(raw?.title ?? ""),
-    publishedAt: String(raw?.publishedAt ?? ""),
-    category: String(raw?.category ?? ""),
+    id: toRequiredString(raw?.id),
+    slug: toRequiredString(raw?.slug),
+    title: toRequiredString(raw?.title),
+    publishedAt: toRequiredString(raw?.publishedAt),
+    category: toRequiredString(raw?.category),
     source: normalizePatchSource(raw?.source),
-    imageUrl: String(raw?.imageUrl ?? raw?.heroImageUrl ?? ""),
-    intro: String(raw?.intro ?? ""),
-    sections: Array.isArray(raw?.sections) ? raw.sections : [],
+    imageUrl: toRequiredString(raw?.imageUrl ?? raw?.heroImageUrl),
+    intro: toRequiredString(raw?.intro),
+    sections: Array.isArray(raw?.sections) ? raw.sections.map(normalizePatchSection) : [],
     releaseTimeline: Array.isArray(raw?.releaseTimeline)
       ? raw.releaseTimeline.map(normalizePatchTimelineBlock)
       : Array.isArray(raw?.timeline)
@@ -162,40 +239,90 @@ function normalizePatchDetail(raw: any): PatchDetail {
   };
 }
 
-function normalizeHeroListResponse(raw: any): HeroListResponse {
+function normalizeHeroSummary(raw: any) {
+  const localized = localizeIconPair(raw?.iconUrl, raw?.iconFallbackUrl);
   return {
-    heroes: Array.isArray(raw?.heroes) ? raw.heroes : Array.isArray(raw?.items) ? raw.items : []
+    slug: toRequiredString(raw?.slug),
+    name: toRequiredString(raw?.name),
+    iconUrl: localized.iconUrl,
+    iconFallbackUrl: localized.iconFallbackUrl,
+    lastChangedAt: toRequiredString(raw?.lastChangedAt)
+  };
+}
+
+function normalizeHeroListResponse(raw: any): HeroListResponse {
+  const heroes = Array.isArray(raw?.heroes) ? raw.heroes : Array.isArray(raw?.items) ? raw.items : [];
+  return {
+    heroes: heroes.map(normalizeHeroSummary)
+  };
+}
+
+function normalizeItemSummary(raw: any) {
+  const localized = localizeIconPair(raw?.iconUrl, raw?.iconFallbackUrl);
+  return {
+    slug: toRequiredString(raw?.slug),
+    name: toRequiredString(raw?.name),
+    iconUrl: localized.iconUrl,
+    iconFallbackUrl: localized.iconFallbackUrl,
+    lastChangedAt: toRequiredString(raw?.lastChangedAt)
   };
 }
 
 function normalizeItemListResponse(raw: any): ItemListResponse {
   return {
-    items: Array.isArray(raw?.items) ? raw.items : []
+    items: Array.isArray(raw?.items) ? raw.items.map(normalizeItemSummary) : []
+  };
+}
+
+function normalizeSpellSummary(raw: any) {
+  const localized = localizeIconPair(raw?.iconUrl, raw?.iconFallbackUrl);
+  return {
+    slug: toRequiredString(raw?.slug),
+    name: toRequiredString(raw?.name),
+    iconUrl: localized.iconUrl,
+    iconFallbackUrl: localized.iconFallbackUrl,
+    lastChangedAt: toRequiredString(raw?.lastChangedAt)
   };
 }
 
 function normalizeSpellListResponse(raw: any): SpellListResponse {
+  const spells = Array.isArray(raw?.spells) ? raw.spells : Array.isArray(raw?.items) ? raw.items : [];
   return {
-    spells: Array.isArray(raw?.spells) ? raw.spells : Array.isArray(raw?.items) ? raw.items : []
+    spells: spells.map(normalizeSpellSummary)
   };
 }
 
 function normalizePatchRef(raw: any) {
   return {
-    slug: String(raw?.slug ?? ""),
-    title: String(raw?.title ?? "")
+    slug: toRequiredString(raw?.slug),
+    title: toRequiredString(raw?.title)
+  };
+}
+
+function normalizeHeroTimelineSkill(raw: any) {
+  const localized = localizeIconPair(raw?.iconUrl, raw?.iconFallbackUrl);
+  return {
+    id: toRequiredString(raw?.id),
+    title: toRequiredString(raw?.title),
+    iconUrl: localized.iconUrl,
+    iconFallbackUrl: localized.iconFallbackUrl,
+    changes: Array.isArray(raw?.changes) ? raw.changes.map(normalizePatchChange) : []
   };
 }
 
 function normalizeHeroChangesResponse(raw: any): HeroChangesResponse {
   const blocks = Array.isArray(raw?.timeline) ? raw.timeline : Array.isArray(raw?.items) ? raw.items : [];
   return {
-    hero: raw?.hero,
+    hero: normalizeHeroSummary(raw?.hero),
     timeline: blocks.map((block: any) => ({
-      ...block,
-      releaseType: String(block?.releaseType ?? block?.kind ?? ""),
-      displayLabel: String(block?.displayLabel ?? block?.label ?? ""),
-      patchRef: normalizePatchRef(block?.patchRef ?? block?.patch)
+      id: toRequiredString(block?.id),
+      releaseType: toRequiredString(block?.releaseType ?? block?.kind),
+      displayLabel: toRequiredString(block?.displayLabel ?? block?.label),
+      releasedAt: toRequiredString(block?.releasedAt),
+      patchRef: normalizePatchRef(block?.patchRef ?? block?.patch),
+      source: normalizePatchSource(block?.source),
+      generalChanges: Array.isArray(block?.generalChanges) ? block.generalChanges.map(normalizePatchChange) : undefined,
+      skills: Array.isArray(block?.skills) ? block.skills.map(normalizeHeroTimelineSkill) : []
     }))
   };
 }
@@ -203,25 +330,43 @@ function normalizeHeroChangesResponse(raw: any): HeroChangesResponse {
 function normalizeItemChangesResponse(raw: any): ItemChangesResponse {
   const blocks = Array.isArray(raw?.timeline) ? raw.timeline : Array.isArray(raw?.items) ? raw.items : [];
   return {
-    item: raw?.item,
+    item: normalizeItemSummary(raw?.item),
     timeline: blocks.map((block: any) => ({
-      ...block,
-      releaseType: String(block?.releaseType ?? block?.kind ?? ""),
-      displayLabel: String(block?.displayLabel ?? block?.label ?? ""),
-      patchRef: normalizePatchRef(block?.patchRef ?? block?.patch)
+      id: toRequiredString(block?.id),
+      releaseType: toRequiredString(block?.releaseType ?? block?.kind),
+      displayLabel: toRequiredString(block?.displayLabel ?? block?.label),
+      releasedAt: toRequiredString(block?.releasedAt),
+      patchRef: normalizePatchRef(block?.patchRef ?? block?.patch),
+      source: normalizePatchSource(block?.source),
+      changes: Array.isArray(block?.changes) ? block.changes.map(normalizePatchChange) : []
     }))
+  };
+}
+
+function normalizeSpellTimelineEntry(raw: any) {
+  const localizedHero = localizeIconPair(raw?.heroIconUrl, raw?.heroIconFallbackUrl);
+  return {
+    id: toRequiredString(raw?.id),
+    heroSlug: toOptionalString(raw?.heroSlug),
+    heroName: toOptionalString(raw?.heroName),
+    heroIconUrl: localizedHero.iconUrl,
+    heroIconFallbackUrl: localizedHero.iconFallbackUrl,
+    changes: Array.isArray(raw?.changes) ? raw.changes.map(normalizePatchChange) : []
   };
 }
 
 function normalizeSpellChangesResponse(raw: any): SpellChangesResponse {
   const blocks = Array.isArray(raw?.timeline) ? raw.timeline : Array.isArray(raw?.items) ? raw.items : [];
   return {
-    spell: raw?.spell,
+    spell: normalizeSpellSummary(raw?.spell),
     timeline: blocks.map((block: any) => ({
-      ...block,
-      releaseType: String(block?.releaseType ?? block?.kind ?? ""),
-      displayLabel: String(block?.displayLabel ?? block?.label ?? ""),
-      patchRef: normalizePatchRef(block?.patchRef ?? block?.patch)
+      id: toRequiredString(block?.id),
+      releaseType: toRequiredString(block?.releaseType ?? block?.kind),
+      displayLabel: toRequiredString(block?.displayLabel ?? block?.label),
+      releasedAt: toRequiredString(block?.releasedAt),
+      patchRef: normalizePatchRef(block?.patchRef ?? block?.patch),
+      source: normalizePatchSource(block?.source),
+      entries: Array.isArray(block?.entries) ? block.entries.map(normalizeSpellTimelineEntry) : []
     }))
   };
 }

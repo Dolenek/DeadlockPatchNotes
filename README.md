@@ -44,7 +44,7 @@ npm run dev
 ```
 
 Frontend runs on `http://localhost:3000`.
-Default API base is `https://deadlock.jakubdolenek.xyz/api`.
+Default API base is `https://deadlockpatchnotes.com/api`.
 To override, set `API_BASE_URL` (for example `API_BASE_URL=http://localhost:8080 npm run dev`).
 If `API_BASE_URL` is set to an invalid URL, web startup fails fast.
 
@@ -121,6 +121,18 @@ Sync hero page media for heroes marked in-game from the assets API (`background_
 
 ```bash
 node scripts/sync_hero_media.mjs
+```
+
+Audit icon asset URLs currently returned by the API and classify which ones are still remote (allowed hosts, local misses, etc):
+
+```bash
+node scripts/audit_api_icons.mjs
+```
+
+Mirror remote API icon URLs to local deduped files and write a URL mapping manifest consumed by the web app (`web/public/assets/mirror/manifest.json`):
+
+```bash
+node scripts/mirror_api_icons.mjs --audit /tmp/deadlock-icon-audit-<timestamp>.json
 ```
 
 ### Local Dev Against Server Data

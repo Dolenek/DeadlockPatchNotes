@@ -16,7 +16,7 @@ export function TopNav() {
             Changelog Forum
           </a>
           <a href="/api/scalar" target="_blank" rel="noreferrer">
-            API Docs
+            PatchNotes API
           </a>
           <a href="https://assets.deadlock-api.com/scalar" target="_blank" rel="noreferrer">
             Assets API
