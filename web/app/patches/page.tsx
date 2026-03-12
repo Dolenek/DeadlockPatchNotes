@@ -23,12 +23,12 @@ export default async function PatchesPage({ searchParams }: PatchesPageProps) {
 
       <section className="shell patch-list-section">
         <div className="patch-grid">
-          {patchList.items.map((patch, index) => (
+          {patchList.patches.map((patch, index) => (
             <PatchCard key={patch.id} patch={patch} index={index} />
           ))}
         </div>
 
-        <Pagination page={patchList.page} totalPages={patchList.totalPages} />
+        <Pagination page={patchList.pagination.page} totalPages={patchList.pagination.totalPages} />
       </section>
     </main>
   );

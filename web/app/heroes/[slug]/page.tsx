@@ -47,16 +47,16 @@ export default async function HeroDetailPage({ params }: HeroDetailPageProps) {
         </section>
 
         <section className="shell hero-timeline-section">
-          {payload.items.map((block) => (
+          {payload.timeline.map((block) => (
             <article key={block.id} className="hero-timeline-block">
               <header className="hero-timeline-header">
                 <div>
-                  <p className="eyebrow">{block.patch.title}</p>
-                  <h2>{formatUpdateLabel(block.kind, block.releasedAt)}</h2>
+                  <p className="eyebrow">{block.patchRef.title}</p>
+                  <h2>{formatUpdateLabel(block.releaseType, block.releasedAt)}</h2>
                 </div>
                 <div className="hero-timeline-meta">
                   <time dateTime={block.releasedAt}>{formatDisplayDate(block.releasedAt)}</time>
-                  <Link href={`/patches/${block.patch.slug}`}>Open Patch</Link>
+                  <Link href={`/patches/${block.patchRef.slug}`}>Open Patch</Link>
                 </div>
               </header>
 

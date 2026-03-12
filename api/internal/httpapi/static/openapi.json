@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Deadlock Patch Notes API",
-    "version": "1.0.0",
-    "description": "HTTP API for patch timelines, heroes, items, and spells used by deadlock.jakubdolenek.xyz.\n\nDate filters (`from`, `to`) accept RFC3339 timestamps or date-only `YYYY-MM-DD` values in UTC."
+    "version": "1.1.0",
+    "description": "HTTP API for patch timelines, heroes, items, and spells used by deadlock.jakubdolenek.xyz."
   },
   "servers": [
     {
@@ -52,9 +52,6 @@
                       "example": "ok"
                     }
                   }
-                },
-                "example": {
-                  "status": "ok"
                 }
               }
             }
@@ -73,8 +70,8 @@
           {
             "name": "page",
             "in": "query",
-            "description": "Page number (default 1). Invalid values fall back to 1.",
             "required": false,
+            "description": "Page number (default 1). Invalid values fall back to 1.",
             "schema": {
               "type": "integer",
               "default": 1,
@@ -84,8 +81,8 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Page size (default 12, max 50). Invalid values fall back to 12.",
             "required": false,
+            "description": "Page size (default 12, max 50). Invalid values fall back to 12.",
             "schema": {
               "type": "integer",
               "default": 12,
@@ -101,37 +98,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PatchListResponse"
-                },
-                "example": {
-                  "items": [
-                    {
-                      "id": "patch-2026-03-06-update",
-                      "slug": "2026-03-06-update",
-                      "title": "03-06-2026 Update",
-                      "publishedAt": "2026-03-06T22:36:00Z",
-                      "category": "Gameplay Update",
-                      "coverImageUrl": "https://assets.deadlock-api.com/v2/images/patches/2026-03-06-update/header",
-                      "sourceUrl": "https://forums.playdeadlock.com/threads/03-06-2026-update.32190/",
-                      "timeline": [
-                        {
-                          "id": "initial",
-                          "kind": "initial",
-                          "title": "Initial Update",
-                          "releasedAt": "2026-03-06T22:36:00Z"
-                        },
-                        {
-                          "id": "hotfix-2026-03-07",
-                          "kind": "hotfix",
-                          "title": "Hotfix 2026-03-07",
-                          "releasedAt": "2026-03-07T18:11:00Z"
-                        }
-                      ]
-                    }
-                  ],
-                  "page": 1,
-                  "limit": 12,
-                  "total": 1,
-                  "totalPages": 1
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -153,8 +129,7 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "example": "2026-03-06-update"
+            }
           }
         ],
         "responses": {
@@ -164,89 +139,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PatchDetail"
-                },
-                "example": {
-                  "id": "patch-2026-03-06-update",
-                  "slug": "2026-03-06-update",
-                  "title": "03-06-2026 Update",
-                  "publishedAt": "2026-03-06T22:36:00Z",
-                  "category": "Gameplay Update",
-                  "source": {
-                    "type": "forum",
-                    "url": "https://forums.playdeadlock.com/threads/03-06-2026-update.32190/"
-                  },
-                  "heroImageUrl": "https://assets.deadlock-api.com/v2/images/patches/2026-03-06-update/header",
-                  "intro": "Balance update with hero, item, and ability changes.",
-                  "sections": [
-                    {
-                      "id": "heroes",
-                      "title": "Heroes",
-                      "kind": "heroes",
-                      "entries": [
-                        {
-                          "id": "abrams",
-                          "entityName": "Abrams",
-                          "entityIconUrl": "https://assets.deadlock-api.com/v2/heroes/abrams/icon",
-                          "changes": [
-                            {
-                              "id": "abrams-1",
-                              "text": "Base health reduced from 650 to 625."
-                            }
-                          ],
-                          "groups": [
-                            {
-                              "id": "shoulder-charge",
-                              "title": "Shoulder Charge",
-                              "changes": [
-                                {
-                                  "id": "abrams-s1",
-                                  "text": "Cooldown increased from 28s to 32s."
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ],
-                  "timeline": [
-                    {
-                      "id": "initial",
-                      "kind": "initial",
-                      "title": "Initial Update",
-                      "releasedAt": "2026-03-06T22:36:00Z",
-                      "source": {
-                        "type": "forum",
-                        "url": "https://forums.playdeadlock.com/threads/03-06-2026-update.32190/"
-                      },
-                      "changes": [
-                        {
-                          "id": "global-1",
-                          "text": "Trooper lane pressure reduced in first 5 minutes."
-                        }
-                      ],
-                      "sections": [
-                        {
-                          "id": "items",
-                          "title": "Items",
-                          "kind": "items",
-                          "entries": [
-                            {
-                              "id": "active-reload",
-                              "entityName": "Active Reload",
-                              "entityIconUrl": "https://assets.deadlock-api.com/v2/items/active-reload/icon",
-                              "changes": [
-                                {
-                                  "id": "item-1",
-                                  "text": "Perfect reload window reduced by 0.1s."
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
                 }
               }
             }
@@ -257,9 +149,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "example": {
-                  "error": "patch not found"
                 }
               }
             }
@@ -270,9 +159,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "example": {
-                  "error": "failed to load patch"
                 }
               }
             }
@@ -294,22 +180,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HeroListResponse"
-                },
-                "example": {
-                  "items": [
-                    {
-                      "slug": "abrams",
-                      "name": "Abrams",
-                      "iconUrl": "https://assets.deadlock-api.com/v2/heroes/abrams/icon",
-                      "lastChangedAt": "2026-03-07T18:11:00Z"
-                    },
-                    {
-                      "slug": "dynamo",
-                      "name": "Dynamo",
-                      "iconUrl": "https://assets.deadlock-api.com/v2/heroes/dynamo/icon",
-                      "lastChangedAt": "2026-03-06T22:36:00Z"
-                    }
-                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -331,38 +211,34 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "example": "abrams"
+            }
           },
           {
             "name": "skill",
             "in": "query",
             "required": false,
-            "description": "Filter by skill name. Use `general` to get only general hero changes.",
             "schema": {
               "type": "string"
             },
-            "example": "Shoulder Charge"
+            "description": "Skill name filter. Use `general` for general-only entries."
           },
           {
             "name": "from",
             "in": "query",
             "required": false,
-            "description": "Inclusive UTC start. Accepts RFC3339 or YYYY-MM-DD.",
             "schema": {
               "type": "string"
             },
-            "example": "2026-03-01"
+            "description": "Inclusive UTC start. Accepts RFC3339 or YYYY-MM-DD."
           },
           {
             "name": "to",
             "in": "query",
             "required": false,
-            "description": "Inclusive UTC end. Accepts RFC3339 or YYYY-MM-DD.",
             "schema": {
               "type": "string"
             },
-            "example": "2026-03-12T23:59:59Z"
+            "description": "Inclusive UTC end. Accepts RFC3339 or YYYY-MM-DD."
           }
         ],
         "responses": {
@@ -372,61 +248,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HeroChangesResponse"
-                },
-                "example": {
-                  "hero": {
-                    "slug": "abrams",
-                    "name": "Abrams",
-                    "iconUrl": "https://assets.deadlock-api.com/v2/heroes/abrams/icon",
-                    "lastChangedAt": "2026-03-07T18:11:00Z"
-                  },
-                  "items": [
-                    {
-                      "id": "2026-03-07-hotfix",
-                      "kind": "hotfix",
-                      "label": "Patch 03-07-2026",
-                      "releasedAt": "2026-03-07T18:11:00Z",
-                      "patch": {
-                        "slug": "2026-03-06-update",
-                        "title": "03-06-2026 Update"
-                      },
-                      "source": {
-                        "type": "forum",
-                        "url": "https://forums.playdeadlock.com/threads/03-06-2026-update.32190/"
-                      },
-                      "generalChanges": [
-                        {
-                          "id": "g-1",
-                          "text": "Base health reduced from 650 to 625."
-                        }
-                      ],
-                      "skills": [
-                        {
-                          "id": "shoulder-charge",
-                          "title": "Shoulder Charge",
-                          "changes": [
-                            {
-                              "id": "s-1",
-                              "text": "Cooldown increased from 28s to 32s."
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid date query",
+            "description": "Invalid query parameter",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "example": {
-                  "error": "invalid from query value"
                 }
               }
             }
@@ -437,9 +268,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "example": {
-                  "error": "hero not found"
                 }
               }
             }
@@ -450,9 +278,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "example": {
-                  "error": "failed to load hero changes"
                 }
               }
             }
@@ -474,22 +299,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ItemListResponse"
-                },
-                "example": {
-                  "items": [
-                    {
-                      "slug": "active-reload",
-                      "name": "Active Reload",
-                      "iconUrl": "https://assets.deadlock-api.com/v2/items/active-reload/icon",
-                      "lastChangedAt": "2026-03-07T18:11:00Z"
-                    },
-                    {
-                      "slug": "swift-striker",
-                      "name": "Swift Striker",
-                      "iconUrl": "https://assets.deadlock-api.com/v2/items/swift-striker/icon",
-                      "lastChangedAt": "2026-03-06T22:36:00Z"
-                    }
-                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -511,28 +330,25 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "example": "active-reload"
+            }
           },
           {
             "name": "from",
             "in": "query",
             "required": false,
-            "description": "Inclusive UTC start. Accepts RFC3339 or YYYY-MM-DD.",
             "schema": {
               "type": "string"
             },
-            "example": "2026-03-01"
+            "description": "Inclusive UTC start. Accepts RFC3339 or YYYY-MM-DD."
           },
           {
             "name": "to",
             "in": "query",
             "required": false,
-            "description": "Inclusive UTC end. Accepts RFC3339 or YYYY-MM-DD.",
             "schema": {
               "type": "string"
             },
-            "example": "2026-03-31"
+            "description": "Inclusive UTC end. Accepts RFC3339 or YYYY-MM-DD."
           }
         ],
         "responses": {
@@ -542,49 +358,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ItemChangesResponse"
-                },
-                "example": {
-                  "item": {
-                    "slug": "active-reload",
-                    "name": "Active Reload",
-                    "iconUrl": "https://assets.deadlock-api.com/v2/items/active-reload/icon",
-                    "lastChangedAt": "2026-03-07T18:11:00Z"
-                  },
-                  "items": [
-                    {
-                      "id": "2026-03-07-hotfix",
-                      "kind": "hotfix",
-                      "label": "Patch 03-07-2026",
-                      "releasedAt": "2026-03-07T18:11:00Z",
-                      "patch": {
-                        "slug": "2026-03-06-update",
-                        "title": "03-06-2026 Update"
-                      },
-                      "source": {
-                        "type": "forum",
-                        "url": "https://forums.playdeadlock.com/threads/03-06-2026-update.32190/"
-                      },
-                      "changes": [
-                        {
-                          "id": "i-1",
-                          "text": "Perfect reload window reduced by 0.1s."
-                        }
-                      ]
-                    }
-                  ]
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid date query",
+            "description": "Invalid query parameter",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "example": {
-                  "error": "invalid from query value"
                 }
               }
             }
@@ -595,9 +378,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "example": {
-                  "error": "item not found"
                 }
               }
             }
@@ -608,9 +388,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "example": {
-                  "error": "failed to load item changes"
                 }
               }
             }
@@ -632,22 +409,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpellListResponse"
-                },
-                "example": {
-                  "items": [
-                    {
-                      "slug": "shoulder-charge",
-                      "name": "Shoulder Charge",
-                      "iconUrl": "https://assets.deadlock-api.com/v2/abilities/abrams-shoulder-charge/icon",
-                      "lastChangedAt": "2026-03-07T18:11:00Z"
-                    },
-                    {
-                      "slug": "sleep-dagger",
-                      "name": "Sleep Dagger",
-                      "iconUrl": "https://assets.deadlock-api.com/v2/abilities/haze-sleep-dagger/icon",
-                      "lastChangedAt": "2026-03-06T22:36:00Z"
-                    }
-                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -669,28 +440,25 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "example": "shoulder-charge"
+            }
           },
           {
             "name": "from",
             "in": "query",
             "required": false,
-            "description": "Inclusive UTC start. Accepts RFC3339 or YYYY-MM-DD.",
             "schema": {
               "type": "string"
             },
-            "example": "2026-03-01"
+            "description": "Inclusive UTC start. Accepts RFC3339 or YYYY-MM-DD."
           },
           {
             "name": "to",
             "in": "query",
             "required": false,
-            "description": "Inclusive UTC end. Accepts RFC3339 or YYYY-MM-DD.",
             "schema": {
               "type": "string"
             },
-            "example": "2026-03-31"
+            "description": "Inclusive UTC end. Accepts RFC3339 or YYYY-MM-DD."
           }
         ],
         "responses": {
@@ -700,57 +468,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpellChangesResponse"
-                },
-                "example": {
-                  "spell": {
-                    "slug": "shoulder-charge",
-                    "name": "Shoulder Charge",
-                    "iconUrl": "https://assets.deadlock-api.com/v2/abilities/abrams-shoulder-charge/icon",
-                    "lastChangedAt": "2026-03-07T18:11:00Z"
-                  },
-                  "items": [
-                    {
-                      "id": "2026-03-07-hotfix",
-                      "kind": "hotfix",
-                      "label": "Patch 03-07-2026",
-                      "releasedAt": "2026-03-07T18:11:00Z",
-                      "patch": {
-                        "slug": "2026-03-06-update",
-                        "title": "03-06-2026 Update"
-                      },
-                      "source": {
-                        "type": "forum",
-                        "url": "https://forums.playdeadlock.com/threads/03-06-2026-update.32190/"
-                      },
-                      "entries": [
-                        {
-                          "id": "entry-abrams",
-                          "heroSlug": "abrams",
-                          "heroName": "Abrams",
-                          "heroIconUrl": "https://assets.deadlock-api.com/v2/heroes/abrams/icon",
-                          "changes": [
-                            {
-                              "id": "sp-1",
-                              "text": "Cooldown increased from 28s to 32s."
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid date query",
+            "description": "Invalid query parameter",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "example": {
-                  "error": "invalid to query value"
                 }
               }
             }
@@ -761,9 +488,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "example": {
-                  "error": "spell not found"
                 }
               }
             }
@@ -774,9 +498,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "example": {
-                  "error": "failed to load spell changes"
                 }
               }
             }
@@ -787,6 +508,24 @@
   },
   "components": {
     "schemas": {
+      "ErrorPayload": {
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          }
+        }
+      },
       "ErrorResponse": {
         "type": "object",
         "required": [
@@ -794,103 +533,7 @@
         ],
         "properties": {
           "error": {
-            "type": "string"
-          }
-        }
-      },
-      "PatchTimelineSummary": {
-        "type": "object",
-        "required": [
-          "id",
-          "kind",
-          "title",
-          "releasedAt"
-        ],
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "kind": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "releasedAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "PatchSummary": {
-        "type": "object",
-        "required": [
-          "id",
-          "slug",
-          "title",
-          "publishedAt",
-          "category",
-          "coverImageUrl",
-          "sourceUrl"
-        ],
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "slug": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "publishedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "category": {
-            "type": "string"
-          },
-          "coverImageUrl": {
-            "type": "string"
-          },
-          "sourceUrl": {
-            "type": "string"
-          },
-          "timeline": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PatchTimelineSummary"
-            }
-          }
-        }
-      },
-      "PatchListResponse": {
-        "type": "object",
-        "required": [
-          "items",
-          "page",
-          "limit",
-          "total",
-          "totalPages"
-        ],
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PatchSummary"
-            }
-          },
-          "page": {
-            "type": "integer"
-          },
-          "limit": {
-            "type": "integer"
-          },
-          "total": {
-            "type": "integer"
-          },
-          "totalPages": {
-            "type": "integer"
+            "$ref": "#/components/schemas/ErrorPayload"
           }
         }
       },
@@ -1020,11 +663,118 @@
           }
         }
       },
+      "PatchTimelineSummary": {
+        "type": "object",
+        "required": [
+          "id",
+          "releaseType",
+          "title",
+          "releasedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "releaseType": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "releasedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PatchSummary": {
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "publishedAt",
+          "category",
+          "imageUrl",
+          "source"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "publishedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "category": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "source": {
+            "$ref": "#/components/schemas/PatchSource"
+          },
+          "releaseTimeline": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PatchTimelineSummary"
+            }
+          }
+        }
+      },
+      "Pagination": {
+        "type": "object",
+        "required": [
+          "page",
+          "pageSize",
+          "totalItems",
+          "totalPages"
+        ],
+        "properties": {
+          "page": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "totalItems": {
+            "type": "integer"
+          },
+          "totalPages": {
+            "type": "integer"
+          }
+        }
+      },
+      "PatchListResponse": {
+        "type": "object",
+        "required": [
+          "patches",
+          "pagination"
+        ],
+        "properties": {
+          "patches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PatchSummary"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
+          }
+        }
+      },
       "PatchTimelineBlock": {
         "type": "object",
         "required": [
           "id",
-          "kind",
+          "releaseType",
           "title",
           "releasedAt",
           "source",
@@ -1034,7 +784,7 @@
           "id": {
             "type": "string"
           },
-          "kind": {
+          "releaseType": {
             "type": "string"
           },
           "title": {
@@ -1070,7 +820,7 @@
           "publishedAt",
           "category",
           "source",
-          "heroImageUrl",
+          "imageUrl",
           "intro",
           "sections"
         ],
@@ -1094,7 +844,7 @@
           "source": {
             "$ref": "#/components/schemas/PatchSource"
           },
-          "heroImageUrl": {
+          "imageUrl": {
             "type": "string"
           },
           "intro": {
@@ -1106,7 +856,7 @@
               "$ref": "#/components/schemas/PatchSection"
             }
           },
-          "timeline": {
+          "releaseTimeline": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/PatchTimelineBlock"
@@ -1143,10 +893,10 @@
       "HeroListResponse": {
         "type": "object",
         "required": [
-          "items"
+          "heroes"
         ],
         "properties": {
-          "items": {
+          "heroes": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/HeroSummary"
@@ -1201,10 +951,10 @@
         "type": "object",
         "required": [
           "id",
-          "kind",
-          "label",
+          "releaseType",
+          "displayLabel",
           "releasedAt",
-          "patch",
+          "patchRef",
           "source",
           "skills"
         ],
@@ -1212,17 +962,17 @@
           "id": {
             "type": "string"
           },
-          "kind": {
+          "releaseType": {
             "type": "string"
           },
-          "label": {
+          "displayLabel": {
             "type": "string"
           },
           "releasedAt": {
             "type": "string",
             "format": "date-time"
           },
-          "patch": {
+          "patchRef": {
             "$ref": "#/components/schemas/TimelinePatchRef"
           },
           "source": {
@@ -1246,13 +996,13 @@
         "type": "object",
         "required": [
           "hero",
-          "items"
+          "timeline"
         ],
         "properties": {
           "hero": {
             "$ref": "#/components/schemas/HeroSummary"
           },
-          "items": {
+          "timeline": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/HeroTimelineBlock"
@@ -1304,10 +1054,10 @@
         "type": "object",
         "required": [
           "id",
-          "kind",
-          "label",
+          "releaseType",
+          "displayLabel",
           "releasedAt",
-          "patch",
+          "patchRef",
           "source",
           "changes"
         ],
@@ -1315,17 +1065,17 @@
           "id": {
             "type": "string"
           },
-          "kind": {
+          "releaseType": {
             "type": "string"
           },
-          "label": {
+          "displayLabel": {
             "type": "string"
           },
           "releasedAt": {
             "type": "string",
             "format": "date-time"
           },
-          "patch": {
+          "patchRef": {
             "$ref": "#/components/schemas/TimelinePatchRef"
           },
           "source": {
@@ -1343,13 +1093,13 @@
         "type": "object",
         "required": [
           "item",
-          "items"
+          "timeline"
         ],
         "properties": {
           "item": {
             "$ref": "#/components/schemas/ItemSummary"
           },
-          "items": {
+          "timeline": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ItemTimelineBlock"
@@ -1386,10 +1136,10 @@
       "SpellListResponse": {
         "type": "object",
         "required": [
-          "items"
+          "spells"
         ],
         "properties": {
-          "items": {
+          "spells": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/SpellSummary"
@@ -1431,10 +1181,10 @@
         "type": "object",
         "required": [
           "id",
-          "kind",
-          "label",
+          "releaseType",
+          "displayLabel",
           "releasedAt",
-          "patch",
+          "patchRef",
           "source",
           "entries"
         ],
@@ -1442,17 +1192,17 @@
           "id": {
             "type": "string"
           },
-          "kind": {
+          "releaseType": {
             "type": "string"
           },
-          "label": {
+          "displayLabel": {
             "type": "string"
           },
           "releasedAt": {
             "type": "string",
             "format": "date-time"
           },
-          "patch": {
+          "patchRef": {
             "$ref": "#/components/schemas/TimelinePatchRef"
           },
           "source": {
@@ -1470,13 +1220,13 @@
         "type": "object",
         "required": [
           "spell",
-          "items"
+          "timeline"
         ],
         "properties": {
           "spell": {
             "$ref": "#/components/schemas/SpellSummary"
           },
-          "items": {
+          "timeline": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/SpellTimelineBlock"

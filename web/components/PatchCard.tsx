@@ -60,10 +60,12 @@ function resolveCardImageURL(rawCoverImageURL: string | undefined, slug: string)
 const CARD_IMAGE_SIZES = "(max-width: 720px) 100vw, (max-width: 1024px) 50vw, 33vw";
 
 export function PatchCard({ patch, index }: PatchCardProps) {
-  const { src: imageUrl, fallback: isFallbackImage } = resolveCardImageURL(patch.coverImageUrl, patch.slug);
+  const { src: imageUrl, fallback: isFallbackImage } = resolveCardImageURL(patch.imageUrl, patch.slug);
   const imageClassName = isFallbackImage ? "patch-card-image patch-card-image--fallback" : "patch-card-image";
   const prioritizeImage = index < 3;
-  const followUpTimeline = (patch.timeline ?? []).filter((block, index) => !(index === 0 && block.kind === "initial"));
+  const followUpTimeline = (patch.releaseTimeline ?? []).filter(
+    (block, index) => !(index === 0 && block.releaseType === "initial")
+  );
 
   return (
     <article className="patch-card">
@@ -99,7 +101,7 @@ export function PatchCard({ patch, index }: PatchCardProps) {
             {followUpTimeline.map((block) => (
               <li key={block.id}>
                 <Link href={`/patches/${patch.slug}#${timelineBlockAnchor(block.id)}`}>
-                  {formatUpdateLabel(block.kind, block.releasedAt)}
+                  {formatUpdateLabel(block.releaseType, block.releasedAt)}
                 </Link>
               </li>
             ))}

@@ -68,50 +68,59 @@ func (a *API) listPatches(w http.ResponseWriter, r *http.Request) {
 		limit = 50
 	}
 
-	payload := a.store.List(page, limit)
+	payload, err := a.store.List(page, limit)
+	if err != nil {
+		writeError(w, r, http.StatusInternalServerError, "internal_error", "failed to list patches")
+		return
+	}
+
 	writeJSON(w, http.StatusOK, payload)
 }
 
 func (a *API) getPatch(w http.ResponseWriter, r *http.Request) {
 	slug := chi.URLParam(r, "slug")
 	if slug == "" {
-		writeError(w, http.StatusBadRequest, "missing slug")
+		writeError(w, r, http.StatusBadRequest, "missing_path_param", "missing slug")
 		return
 	}
 
 	patch, err := a.store.GetBySlug(slug)
 	if err != nil {
 		if errors.Is(err, patches.ErrPatchNotFound) {
-			writeError(w, http.StatusNotFound, "patch not found")
+			writeError(w, r, http.StatusNotFound, "resource_not_found", "patch not found")
 			return
 		}
-		writeError(w, http.StatusInternalServerError, "failed to load patch")
+		writeError(w, r, http.StatusInternalServerError, "internal_error", "failed to load patch")
 		return
 	}
 
 	writeJSON(w, http.StatusOK, patch)
 }
 
-func (a *API) listHeroes(w http.ResponseWriter, _ *http.Request) {
-	payload := a.store.ListHeroes()
+func (a *API) listHeroes(w http.ResponseWriter, r *http.Request) {
+	payload, err := a.store.ListHeroes()
+	if err != nil {
+		writeError(w, r, http.StatusInternalServerError, "internal_error", "failed to list heroes")
+		return
+	}
 	writeJSON(w, http.StatusOK, payload)
 }
 
 func (a *API) getHeroChanges(w http.ResponseWriter, r *http.Request) {
 	heroSlug := strings.TrimSpace(chi.URLParam(r, "heroSlug"))
 	if heroSlug == "" {
-		writeError(w, http.StatusBadRequest, "missing hero slug")
+		writeError(w, r, http.StatusBadRequest, "missing_path_param", "missing hero slug")
 		return
 	}
 
 	from, err := parseTimeQuery(r, "from", true)
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "invalid from query value")
+		writeError(w, r, http.StatusBadRequest, "invalid_query_param", "invalid from query value")
 		return
 	}
 	to, err := parseTimeQuery(r, "to", false)
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "invalid to query value")
+		writeError(w, r, http.StatusBadRequest, "invalid_query_param", "invalid to query value")
 		return
 	}
 
@@ -123,36 +132,40 @@ func (a *API) getHeroChanges(w http.ResponseWriter, r *http.Request) {
 	})
 	if err != nil {
 		if errors.Is(err, patches.ErrHeroNotFound) {
-			writeError(w, http.StatusNotFound, "hero not found")
+			writeError(w, r, http.StatusNotFound, "resource_not_found", "hero not found")
 			return
 		}
-		writeError(w, http.StatusInternalServerError, "failed to load hero changes")
+		writeError(w, r, http.StatusInternalServerError, "internal_error", "failed to load hero changes")
 		return
 	}
 
 	writeJSON(w, http.StatusOK, payload)
 }
 
-func (a *API) listItems(w http.ResponseWriter, _ *http.Request) {
-	payload := a.store.ListItems()
+func (a *API) listItems(w http.ResponseWriter, r *http.Request) {
+	payload, err := a.store.ListItems()
+	if err != nil {
+		writeError(w, r, http.StatusInternalServerError, "internal_error", "failed to list items")
+		return
+	}
 	writeJSON(w, http.StatusOK, payload)
 }
 
 func (a *API) getItemChanges(w http.ResponseWriter, r *http.Request) {
 	itemSlug := strings.TrimSpace(chi.URLParam(r, "itemSlug"))
 	if itemSlug == "" {
-		writeError(w, http.StatusBadRequest, "missing item slug")
+		writeError(w, r, http.StatusBadRequest, "missing_path_param", "missing item slug")
 		return
 	}
 
 	from, err := parseTimeQuery(r, "from", true)
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "invalid from query value")
+		writeError(w, r, http.StatusBadRequest, "invalid_query_param", "invalid from query value")
 		return
 	}
 	to, err := parseTimeQuery(r, "to", false)
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "invalid to query value")
+		writeError(w, r, http.StatusBadRequest, "invalid_query_param", "invalid to query value")
 		return
 	}
 
@@ -163,36 +176,40 @@ func (a *API) getItemChanges(w http.ResponseWriter, r *http.Request) {
 	})
 	if err != nil {
 		if errors.Is(err, patches.ErrItemNotFound) {
-			writeError(w, http.StatusNotFound, "item not found")
+			writeError(w, r, http.StatusNotFound, "resource_not_found", "item not found")
 			return
 		}
-		writeError(w, http.StatusInternalServerError, "failed to load item changes")
+		writeError(w, r, http.StatusInternalServerError, "internal_error", "failed to load item changes")
 		return
 	}
 
 	writeJSON(w, http.StatusOK, payload)
 }
 
-func (a *API) listSpells(w http.ResponseWriter, _ *http.Request) {
-	payload := a.store.ListSpells()
+func (a *API) listSpells(w http.ResponseWriter, r *http.Request) {
+	payload, err := a.store.ListSpells()
+	if err != nil {
+		writeError(w, r, http.StatusInternalServerError, "internal_error", "failed to list spells")
+		return
+	}
 	writeJSON(w, http.StatusOK, payload)
 }
 
 func (a *API) getSpellChanges(w http.ResponseWriter, r *http.Request) {
 	spellSlug := strings.TrimSpace(chi.URLParam(r, "spellSlug"))
 	if spellSlug == "" {
-		writeError(w, http.StatusBadRequest, "missing spell slug")
+		writeError(w, r, http.StatusBadRequest, "missing_path_param", "missing spell slug")
 		return
 	}
 
 	from, err := parseTimeQuery(r, "from", true)
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "invalid from query value")
+		writeError(w, r, http.StatusBadRequest, "invalid_query_param", "invalid from query value")
 		return
 	}
 	to, err := parseTimeQuery(r, "to", false)
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "invalid to query value")
+		writeError(w, r, http.StatusBadRequest, "invalid_query_param", "invalid to query value")
 		return
 	}
 
@@ -203,10 +220,10 @@ func (a *API) getSpellChanges(w http.ResponseWriter, r *http.Request) {
 	})
 	if err != nil {
 		if errors.Is(err, patches.ErrSpellNotFound) {
-			writeError(w, http.StatusNotFound, "spell not found")
+			writeError(w, r, http.StatusNotFound, "resource_not_found", "spell not found")
 			return
 		}
-		writeError(w, http.StatusInternalServerError, "failed to load spell changes")
+		writeError(w, r, http.StatusInternalServerError, "internal_error", "failed to load spell changes")
 		return
 	}
 
@@ -253,8 +270,24 @@ func writeJSON(w http.ResponseWriter, status int, payload any) {
 	_ = json.NewEncoder(w).Encode(payload)
 }
 
-func writeError(w http.ResponseWriter, status int, message string) {
-	writeJSON(w, status, map[string]string{"error": message})
+type errorPayload struct {
+	Code      string `json:"code"`
+	Message   string `json:"message"`
+	RequestID string `json:"requestId,omitempty"`
+}
+
+type errorResponse struct {
+	Error errorPayload `json:"error"`
+}
+
+func writeError(w http.ResponseWriter, r *http.Request, status int, code, message string) {
+	writeJSON(w, status, errorResponse{
+		Error: errorPayload{
+			Code:      code,
+			Message:   message,
+			RequestID: middleware.GetReqID(r.Context()),
+		},
+	})
 }
 
 func corsMiddleware(next http.Handler) http.Handler {

@@ -4,14 +4,17 @@ export type PatchSummary = {
   title: string;
   publishedAt: string;
   category: string;
-  coverImageUrl: string;
-  sourceUrl: string;
-  timeline?: PatchTimelineSummary[];
+  imageUrl: string;
+  source: {
+    type: string;
+    url: string;
+  };
+  releaseTimeline?: PatchTimelineSummary[];
 };
 
 export type PatchTimelineSummary = {
   id: string;
-  kind: string;
+  releaseType: string;
   title: string;
   releasedAt: string;
 };
@@ -48,7 +51,7 @@ export type PatchSection = {
 
 export type PatchTimelineBlock = {
   id: string;
-  kind: string;
+  releaseType: string;
   title: string;
   releasedAt: string;
   source: {
@@ -69,18 +72,20 @@ export type PatchDetail = {
     type: string;
     url: string;
   };
-  heroImageUrl: string;
+  imageUrl: string;
   intro: string;
   sections: PatchSection[];
-  timeline?: PatchTimelineBlock[];
+  releaseTimeline?: PatchTimelineBlock[];
 };
 
 export type PatchListResponse = {
-  items: PatchSummary[];
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
+  patches: PatchSummary[];
+  pagination: {
+    page: number;
+    pageSize: number;
+    totalItems: number;
+    totalPages: number;
+  };
 };
 
 export type HeroSummary = {
@@ -92,7 +97,7 @@ export type HeroSummary = {
 };
 
 export type HeroListResponse = {
-  items: HeroSummary[];
+  heroes: HeroSummary[];
 };
 
 export type HeroTimelineSkill = {
@@ -105,10 +110,10 @@ export type HeroTimelineSkill = {
 
 export type HeroTimelineBlock = {
   id: string;
-  kind: string;
-  label: string;
+  releaseType: string;
+  displayLabel: string;
   releasedAt: string;
-  patch: {
+  patchRef: {
     slug: string;
     title: string;
   };
@@ -122,7 +127,7 @@ export type HeroTimelineBlock = {
 
 export type HeroChangesResponse = {
   hero: HeroSummary;
-  items: HeroTimelineBlock[];
+  timeline: HeroTimelineBlock[];
 };
 
 export type ItemSummary = {
@@ -139,10 +144,10 @@ export type ItemListResponse = {
 
 export type ItemTimelineBlock = {
   id: string;
-  kind: string;
-  label: string;
+  releaseType: string;
+  displayLabel: string;
   releasedAt: string;
-  patch: {
+  patchRef: {
     slug: string;
     title: string;
   };
@@ -155,7 +160,7 @@ export type ItemTimelineBlock = {
 
 export type ItemChangesResponse = {
   item: ItemSummary;
-  items: ItemTimelineBlock[];
+  timeline: ItemTimelineBlock[];
 };
 
 export type SpellSummary = {
@@ -167,7 +172,7 @@ export type SpellSummary = {
 };
 
 export type SpellListResponse = {
-  items: SpellSummary[];
+  spells: SpellSummary[];
 };
 
 export type SpellTimelineEntry = {
@@ -181,10 +186,10 @@ export type SpellTimelineEntry = {
 
 export type SpellTimelineBlock = {
   id: string;
-  kind: string;
-  label: string;
+  releaseType: string;
+  displayLabel: string;
   releasedAt: string;
-  patch: {
+  patchRef: {
     slug: string;
     title: string;
   };
@@ -197,5 +202,5 @@ export type SpellTimelineBlock = {
 
 export type SpellChangesResponse = {
   spell: SpellSummary;
-  items: SpellTimelineBlock[];
+  timeline: SpellTimelineBlock[];
 };

@@ -5,7 +5,7 @@ import { HeroListResponse } from "@/lib/types";
 import { formatCompactDate } from "@/lib/utils";
 
 export default async function HeroesPage() {
-  let payload: HeroListResponse = { items: [] };
+  let payload: HeroListResponse = { heroes: [] };
   try {
     payload = await getHeroes();
   } catch (error) {
@@ -26,7 +26,7 @@ export default async function HeroesPage() {
 
       <section className="shell heroes-list-section">
         <div className="heroes-grid">
-          {payload.items.map((hero) => (
+          {payload.heroes.map((hero) => (
             <article key={hero.slug} className="hero-card">
               <Link href={`/heroes/${hero.slug}`} className="hero-card-link">
                 <FallbackImage

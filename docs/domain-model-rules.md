@@ -6,9 +6,9 @@
 
 - Patch metadata (`id`, `slug`, `title`, `publishedAt`, `category`)
 - Source (`type`, `url`)
-- Hero image and intro text
+- Hero/header image (`imageUrl`) and intro text
 - Top-level sections (`general`, `items`, `heroes`)
-- Timeline blocks (`initial` + `hotfix` sequence)
+- Release timeline blocks (`releaseTimeline`) with `releaseType` values (`initial` + `hotfix` sequence)
 
 Frontend mirrors this shape in `web/lib/types.ts`.
 
@@ -40,7 +40,7 @@ Guaranteed behaviors:
    - non-initial with invalid date -> `Hotfix`
 5. Duplicate blocks (same normalized change-body signature) are dropped.
 6. Hydrated timeline is sorted ascending by release time for canonicalization.
-7. After sort, first block is forced to `kind=initial`.
+7. After sort, first block is forced to `releaseType=initial`.
 8. Empty reconstruction paths emit fallback general content (`Core Gameplay` with one fallback line).
 
 ## Fallback Line Rule
@@ -75,7 +75,7 @@ Skill filtering:
 
 - `skill=general` returns only general entry-level changes.
 - Other `skill` values use normalized exact-title matching against groups.
-- Unknown skill for an existing hero produces empty `items` (not an error).
+- Unknown skill for an existing hero produces empty `timeline` (not an error).
 
 ## Item Timeline Rules
 
@@ -102,10 +102,10 @@ Spell timeline data is inferred from hero timeline data.
 - Internal timeline timestamps are RFC3339 UTC where valid.
 - Invalid/empty `releasedAt` parses as zero-time.
 - Date filters do not exclude zero-time entries.
-- Timeline labels use kind-based UI format:
+- Timeline labels use release-type UI format:
   - `initial` -> `Update MM-DD-YYYY`
   - others -> `Patch MM-DD-YYYY`
   - invalid/zero release date -> `Unknown Date` in label output
 - Hero/item/spell timeline outputs are sorted newest-first (`releasedAt DESC`) with tie-breakers:
-  - `patch.slug DESC`
+  - `patchRef.slug DESC`
   - `id ASC` when same patch slug

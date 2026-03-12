@@ -18,13 +18,13 @@ export default async function PatchDetailPage({ params }: PatchDetailPageProps) 
 
   try {
     const patch = await getPatchBySlug(slug);
-    const timeline = buildTimelineForDisplay(patch.timeline, patch.sections, patch.source, patch.publishedAt);
+    const timeline = buildTimelineForDisplay(patch.releaseTimeline, patch.sections, patch.source, patch.publishedAt);
     const tocGroups = buildTimelineTableOfContents(timeline);
     const heroRailBlocks = buildTimelineHeroRail(timeline);
 
     return (
       <main className="patch-detail-page">
-        <section className="patch-hero" style={{ backgroundImage: `url(${patch.heroImageUrl})` }}>
+        <section className="patch-hero" style={{ backgroundImage: `url(${patch.imageUrl})` }}>
           <div className="patch-hero-overlay">
             <div className="shell patch-hero-content">
               <h1>{patch.title}</h1>
@@ -45,7 +45,7 @@ export default async function PatchDetailPage({ params }: PatchDetailPageProps) 
               <article className="timeline-block" id={timelineBlockAnchor(block.id)} key={block.id}>
                 <header className="timeline-block-header">
                   <div className="timeline-block-heading">
-                    <p className="eyebrow">{formatUpdateLabel(block.kind, block.releasedAt)}</p>
+                    <p className="eyebrow">{formatUpdateLabel(block.releaseType, block.releasedAt)}</p>
                     <h2>{block.title}</h2>
                   </div>
                   <div className="timeline-block-meta">
@@ -93,7 +93,7 @@ function buildTimelineForDisplay(
   return [
     {
       id: "fallback-initial",
-      kind: "initial",
+      releaseType: "initial",
       title: "Initial Update",
       releasedAt: fallbackPublishedAt,
       source: fallbackSource,
@@ -106,7 +106,7 @@ function buildTimelineForDisplay(
 function buildTimelineTableOfContents(timeline: Array<PatchTimelineBlock & { sections: PatchSection[] }>): TableOfContentsGroup[] {
   return timeline.map((block) => ({
     id: timelineBlockAnchor(block.id),
-    label: formatUpdateLabel(block.kind, block.releasedAt),
+    label: formatUpdateLabel(block.releaseType, block.releasedAt),
     sections: block.sections.map((section) => {
       const sectionID = `${block.id}-${section.kind}`;
       return {
@@ -132,7 +132,7 @@ function buildTimelineHeroRail(timeline: TimelineBlockForDisplay[]): PatchHeroes
 
     return {
       id: timelineBlockAnchor(block.id),
-      label: formatUpdateLabel(block.kind, block.releasedAt),
+      label: formatUpdateLabel(block.releaseType, block.releasedAt),
       heroes
     };
   });

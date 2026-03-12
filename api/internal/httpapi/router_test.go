@@ -93,19 +93,19 @@ func TestListPatchesPagination(t *testing.T) {
 		t.Fatalf("expected status 200, got %d", rr.Code)
 	}
 
-	var payload patches.ListResponse
+	var payload patches.PatchListResponse
 	if err := json.Unmarshal(rr.Body.Bytes(), &payload); err != nil {
 		t.Fatalf("decode response: %v", err)
 	}
 
-	if payload.Page != 1 || payload.Limit != 1 {
+	if payload.Pagination.Page != 1 || payload.Pagination.PageSize != 1 {
 		t.Fatalf("unexpected page data: %+v", payload)
 	}
-	if payload.Total < 1 {
-		t.Fatalf("expected total >= 1, got %d", payload.Total)
+	if payload.Pagination.TotalItems < 1 {
+		t.Fatalf("expected total >= 1, got %d", payload.Pagination.TotalItems)
 	}
-	if len(payload.Items) != 1 {
-		t.Fatalf("expected 1 list item, got %d", len(payload.Items))
+	if len(payload.Patches) != 1 {
+		t.Fatalf("expected 1 list item, got %d", len(payload.Patches))
 	}
 }
 
@@ -120,16 +120,16 @@ func TestListPatchesInvalidQueryFallsBack(t *testing.T) {
 		t.Fatalf("expected status 200, got %d", rr.Code)
 	}
 
-	var payload patches.ListResponse
+	var payload patches.PatchListResponse
 	if err := json.Unmarshal(rr.Body.Bytes(), &payload); err != nil {
 		t.Fatalf("decode response: %v", err)
 	}
 
-	if payload.Page != 1 {
-		t.Fatalf("expected fallback page 1, got %d", payload.Page)
+	if payload.Pagination.Page != 1 {
+		t.Fatalf("expected fallback page 1, got %d", payload.Pagination.Page)
 	}
-	if payload.Limit != 12 {
-		t.Fatalf("expected fallback limit 12, got %d", payload.Limit)
+	if payload.Pagination.PageSize != 12 {
+		t.Fatalf("expected fallback limit 12, got %d", payload.Pagination.PageSize)
 	}
 }
 
@@ -221,6 +221,18 @@ func TestGetHeroChangesInvalidDateReturns400(t *testing.T) {
 
 	if rr.Code != http.StatusBadRequest {
 		t.Fatalf("expected status 400, got %d", rr.Code)
+	}
+
+	var payload map[string]any
+	if err := json.Unmarshal(rr.Body.Bytes(), &payload); err != nil {
+		t.Fatalf("decode response: %v", err)
+	}
+	errorPayload, ok := payload["error"].(map[string]any)
+	if !ok {
+		t.Fatalf("expected structured error payload, got %#v", payload["error"])
+	}
+	if errorPayload["code"] != "invalid_query_param" {
+		t.Fatalf("expected invalid_query_param code, got %#v", errorPayload["code"])
 	}
 }
 

@@ -93,6 +93,7 @@ Useful `.env` knobs:
 - `API_HOST_BIND=0.0.0.0` makes API reachable for path-based cloudflared/tunnel routing.
 - Set `API_HOST_BIND=127.0.0.1` to keep API private and access it via SSH tunneling.
 - `API_PORT=18081` controls published API host port (`${API_HOST_BIND}:${API_PORT}`).
+- `API_READ_CACHE_TTL=10m` controls API read snapshot cache freshness window.
 
 Run one ingestion pass:
 

@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"deadlockpatchnotes/api/internal/db"
 	"deadlockpatchnotes/api/internal/httpapi"
@@ -33,11 +34,26 @@ func main() {
 		log.Fatal(err)
 	}
 
-	store := patches.NewPostgresStore(database)
+	cacheTTL := readDurationEnv("API_READ_CACHE_TTL", 10*time.Minute)
+	store := patches.NewPostgresStore(database, cacheTTL)
 	handler := httpapi.NewRouter(store)
 
 	log.Printf("api listening on %s", addr)
 	if err := http.ListenAndServe(addr, handler); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func readDurationEnv(key string, fallback time.Duration) time.Duration {
+	raw := os.Getenv(key)
+	if raw == "" {
+		return fallback
+	}
+
+	value, err := time.ParseDuration(raw)
+	if err != nil || value <= 0 {
+		return fallback
+	}
+
+	return value
 }

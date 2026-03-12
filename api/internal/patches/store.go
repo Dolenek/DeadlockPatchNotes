@@ -42,7 +42,7 @@ func NewStore() *Store {
 	return &Store{items: items, order: order}
 }
 
-func (s *Store) List(page, limit int) ListResponse {
+func (s *Store) List(page, limit int) (PatchListResponse, error) {
 	if limit <= 0 {
 		limit = 12
 	}
@@ -73,13 +73,15 @@ func (s *Store) List(page, limit int) ListResponse {
 		items = append(items, item.summary)
 	}
 
-	return ListResponse{
-		Items:      items,
-		Page:       page,
-		Limit:      limit,
-		Total:      total,
-		TotalPages: totalPages,
-	}
+	return PatchListResponse{
+		Patches: items,
+		Pagination: Pagination{
+			Page:       page,
+			PageSize:   limit,
+			TotalItems: total,
+			TotalPages: totalPages,
+		},
+	}, nil
 }
 
 func (s *Store) GetBySlug(slug string) (PatchDetail, error) {
@@ -90,12 +92,12 @@ func (s *Store) GetBySlug(slug string) (PatchDetail, error) {
 	return hydratePatchDetail(item.detail), nil
 }
 
-func (s *Store) ListHeroes() HeroListResponse {
+func (s *Store) ListHeroes() (HeroListResponse, error) {
 	details := make([]PatchDetail, 0, len(s.order))
 	for _, item := range s.order {
 		details = append(details, item.detail)
 	}
-	return buildHeroList(details)
+	return buildHeroList(details), nil
 }
 
 func (s *Store) GetHeroChanges(query HeroChangesQuery) (HeroChangesResponse, error) {
@@ -106,12 +108,12 @@ func (s *Store) GetHeroChanges(query HeroChangesQuery) (HeroChangesResponse, err
 	return buildHeroChanges(details, query)
 }
 
-func (s *Store) ListItems() ItemListResponse {
+func (s *Store) ListItems() (ItemListResponse, error) {
 	details := make([]PatchDetail, 0, len(s.order))
 	for _, item := range s.order {
 		details = append(details, item.detail)
 	}
-	return buildItemList(details)
+	return buildItemList(details), nil
 }
 
 func (s *Store) GetItemChanges(query ItemChangesQuery) (ItemChangesResponse, error) {
@@ -122,12 +124,12 @@ func (s *Store) GetItemChanges(query ItemChangesQuery) (ItemChangesResponse, err
 	return buildItemChanges(details, query)
 }
 
-func (s *Store) ListSpells() SpellListResponse {
+func (s *Store) ListSpells() (SpellListResponse, error) {
 	details := make([]PatchDetail, 0, len(s.order))
 	for _, item := range s.order {
 		details = append(details, item.detail)
 	}
-	return buildSpellList(details)
+	return buildSpellList(details), nil
 }
 
 func (s *Store) GetSpellChanges(query SpellChangesQuery) (SpellChangesResponse, error) {
@@ -194,7 +196,7 @@ func buildListItem(detail PatchDetail) listItem {
 			PublishedAt:   detail.PublishedAt,
 			Category:      detail.Category,
 			CoverImageURL: detail.HeroImageURL,
-			SourceURL:     detail.Source.URL,
+			Source:        detail.Source,
 			Timeline:      buildSummaryTimeline(detail),
 		},
 		detail:    detail,

@@ -23,8 +23,8 @@ Monorepo structure:
 
 Read path split:
 
-- Patch list reads summary columns directly from `patches` table.
-- Patch detail/entity timelines load `patches.detail_payload` JSON and apply hydration/query builders.
+- Postgres read model builds a TTL-cached snapshot from `patches` rows.
+- Patch list/detail/entity timelines are served from cached snapshot state between refreshes.
 
 Migrations in `api/internal/db/migrations/*.sql` are applied at startup.
 

@@ -17,6 +17,10 @@ DATABASE_URL='postgres://deadlock:deadlock@localhost:5432/deadlock_patchnotes?ss
 
 Default API URL: `http://localhost:8080`.
 
+Optional API env var:
+
+- `API_READ_CACHE_TTL` (Go duration, default `10m`)
+
 ## Run Web
 
 ```bash

@@ -2,12 +2,12 @@ package patches
 
 // Repository abstracts patch storage for HTTP handlers.
 type Repository interface {
-	List(page, limit int) ListResponse
+	List(page, limit int) (PatchListResponse, error)
 	GetBySlug(slug string) (PatchDetail, error)
-	ListHeroes() HeroListResponse
+	ListHeroes() (HeroListResponse, error)
 	GetHeroChanges(query HeroChangesQuery) (HeroChangesResponse, error)
-	ListItems() ItemListResponse
+	ListItems() (ItemListResponse, error)
 	GetItemChanges(query ItemChangesQuery) (ItemChangesResponse, error)
-	ListSpells() SpellListResponse
+	ListSpells() (SpellListResponse, error)
 	GetSpellChanges(query SpellChangesQuery) (SpellChangesResponse, error)
 }

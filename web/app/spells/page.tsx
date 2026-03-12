@@ -5,7 +5,7 @@ import { SpellListResponse } from "@/lib/types";
 import { formatCompactDate } from "@/lib/utils";
 
 export default async function SpellsPage() {
-  let payload: SpellListResponse = { items: [] };
+  let payload: SpellListResponse = { spells: [] };
   try {
     payload = await getSpells();
   } catch (error) {
@@ -26,7 +26,7 @@ export default async function SpellsPage() {
 
       <section className="shell heroes-list-section">
         <div className="heroes-grid">
-          {payload.items.map((spell) => (
+          {payload.spells.map((spell) => (
             <article key={spell.slug} className="hero-card">
               <Link href={`/spells/${spell.slug}`} className="hero-card-link">
                 <FallbackImage
