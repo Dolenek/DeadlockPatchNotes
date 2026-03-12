@@ -15,7 +15,7 @@ export default async function ItemsPage() {
   }
 
   return (
-    <main>
+    <main className="page-like-patches">
       <section className="heroes-masthead">
         <div className="shell">
           <p className="eyebrow">Deadlock Items</p>

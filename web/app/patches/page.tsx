@@ -13,7 +13,7 @@ export default async function PatchesPage({ searchParams }: PatchesPageProps) {
   const patchList = await getPatches(page, 12);
 
   return (
-    <main>
+    <main className="page-like-patches">
       <section className="patch-list-masthead">
         <div className="shell">
           <p className="eyebrow">Deadlock Updates</p>

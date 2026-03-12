@@ -15,7 +15,7 @@ export default async function SpellsPage() {
   }
 
   return (
-    <main>
+    <main className="page-like-patches">
       <section className="heroes-masthead">
         <div className="shell">
           <p className="eyebrow">Deadlock Spells</p>

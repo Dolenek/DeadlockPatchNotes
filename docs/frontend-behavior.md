@@ -32,6 +32,7 @@ Fetch caching:
   - normalizes with `clampPage` (invalid or `<1` -> `1`)
   - calls `getPatches(page, 12)`
   - renders patch card grid + pagination
+  - masthead hero image uses local asset `/Oldgods_header.png`
 - `/patches/[slug]`
   - calls `getPatchBySlug(slug)`
   - API `404` triggers `notFound()`
@@ -68,6 +69,11 @@ Detail-page behavior:
 ### Global Layout + Navigation
 
 - `TopNav` is rendered globally in `app/layout.tsx` for all routes.
+- Global texture stack is rendered behind all routes in layout:
+  - base: `/bg_texture.jpg`
+  - mid layer: `/bg_texture_dark.jpg`
+  - deep layer: `/bg_texture_darkest.jpg`
+  - seams use `scratch_mask_*` overlays between layer transitions
 - Top nav includes:
   - internal links: patches, heroes, spells, items
   - external links: changelog forum, assets API docs, Steam store page
@@ -108,7 +114,11 @@ Route-specific notes:
 - Patch list page (`/patches`): no special `404` handling, errors propagate.
 - Detail pages: `404` -> `notFound()`.
 
-`not-found.tsx` copy is patch-oriented and is reused for all `notFound()` calls.
+`not-found.tsx` is generic and reused for all `notFound()` calls:
+
+- headline: `Oops.`
+- includes centered `/lil_troopers.png` artwork
+- primary action links to `/patches`
 
 ## Utility Semantics
 

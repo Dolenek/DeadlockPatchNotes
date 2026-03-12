@@ -37,12 +37,78 @@ html {
 
 body {
   font-family: "Barlow", sans-serif;
-  background:
-    radial-gradient(1800px 900px at -10% -20%, #304b7e66, transparent 60%),
-    radial-gradient(1400px 900px at 120% 0%, #25739d4d, transparent 62%),
-    linear-gradient(180deg, var(--bg-1), var(--bg-0));
+  background: #04070e;
   color: var(--text-main);
   min-height: 100vh;
+}
+
+.site-root {
+  --texture-base-image: url("/bg_texture.jpg");
+  --texture-light-width: 100vw;
+  --texture-dark-width: 100vw;
+  --texture-darkest-width: 100vw;
+  --texture-light-height: calc(var(--texture-light-width) * 1.2011111111);
+  --texture-dark-height: calc(var(--texture-dark-width) * 1.2011111111);
+  --texture-darkest-height: var(--texture-darkest-width);
+  --texture-dark-top: var(--texture-light-height);
+  --texture-darkest-top: calc(var(--texture-dark-top) + var(--texture-dark-height));
+  --texture-void-top: calc(var(--texture-darkest-top) + var(--texture-darkest-height));
+  position: relative;
+  min-height: 100vh;
+  isolation: isolate;
+}
+
+.site-content {
+  position: relative;
+  z-index: 1;
+}
+
+.site-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.site-background__layer {
+  position: absolute;
+  inset: 0;
+  background-position: center top;
+  background-size: auto;
+  background-repeat: no-repeat;
+}
+
+.site-background__layer--base {
+  background-image: var(--texture-base-image);
+  background-size: var(--texture-light-width) auto;
+}
+
+.site-root:has(main.page-like-patches) {
+  --texture-base-image: url("/bg_texture_dark.jpg");
+}
+
+.site-background__layer--dark {
+  top: var(--texture-dark-top);
+  background-image: url("/bg_texture_dark.jpg");
+  background-size: var(--texture-dark-width) auto;
+  opacity: 0.96;
+}
+
+.site-background__layer--darkest {
+  top: var(--texture-darkest-top);
+  background-image: url("/bg_texture_darkest.jpg");
+  background-size: var(--texture-darkest-width) auto;
+  opacity: 0.97;
+}
+
+.site-background__void {
+  position: absolute;
+  top: var(--texture-void-top);
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: #04070e;
 }
 
 a {

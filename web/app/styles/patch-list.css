@@ -1,5 +1,7 @@
 .patch-list-masthead {
-  padding: clamp(4.5rem, 9vw, 7.5rem) 0 clamp(3rem, 8vw, 5rem);
+  --top-nav-overlap: 64px;
+  margin-top: calc(-1 * var(--top-nav-overlap));
+  padding: calc(clamp(4.5rem, 9vw, 7.5rem) + var(--top-nav-overlap)) 0 clamp(3rem, 8vw, 5rem);
   position: relative;
   overflow: hidden;
 }
@@ -9,10 +11,13 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(95deg, #1b2f52cc, #08192d99),
-    url("https://clan.akamai.steamstatic.com/images/45164767/1a200778c94a048c5b2580a1e1a36071679ff19e.png") center / cover no-repeat;
-  transform: scale(1.08);
-  filter: blur(3px);
+    linear-gradient(180deg, #00000020, #0000008f),
+    url("/Oldgods_header.png") center -10px / cover no-repeat;
+}
+
+.patch-list-masthead::after {
+  content: "";
+  display: none;
 }
 
 .patch-list-masthead .shell {
@@ -34,6 +39,13 @@
   margin: 0;
   line-height: 1.55;
   color: #dce7fa;
+}
+
+@media (max-width: 720px) {
+  .patch-list-masthead {
+    margin-top: 0;
+    padding: clamp(4.5rem, 9vw, 7.5rem) 0 clamp(3rem, 8vw, 5rem);
+  }
 }
 
 .patch-list-section {

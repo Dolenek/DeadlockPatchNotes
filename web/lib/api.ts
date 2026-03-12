@@ -9,7 +9,7 @@ import {
   SpellListResponse
 } from "@/lib/types";
 
-const DEFAULT_API_BASE_URL = "https://api.deadlock.jakubdolenek.xyz";
+const DEFAULT_API_BASE_URL = "https://apideadlock.jakubdolenek.xyz";
 
 function resolveAPIBaseURL() {
   const candidate = (process.env.API_BASE_URL ?? DEFAULT_API_BASE_URL).trim();

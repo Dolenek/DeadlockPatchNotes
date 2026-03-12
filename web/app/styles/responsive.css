@@ -119,4 +119,21 @@
   .entry-change-list li {
     font-size: 1rem;
   }
+
+  .not-found-scene {
+    min-height: clamp(360px, 64vh, 560px);
+  }
+
+  .not-found-scene h1 {
+    top: 30%;
+  }
+
+  .not-found-image {
+    bottom: 3rem;
+    width: min(98vw, 48rem);
+  }
+
+  .not-found-link {
+    bottom: 0.7rem;
+  }
 }
