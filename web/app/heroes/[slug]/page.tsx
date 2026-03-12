@@ -4,7 +4,7 @@ import type { CSSProperties } from "react";
 import { FallbackImage } from "@/components/FallbackImage";
 import { APIError, getHeroChanges } from "@/lib/api";
 import { getHeroMediaBySlug } from "@/lib/hero-media";
-import { formatDisplayDate, formatUpdateLabel } from "@/lib/utils";
+import { buildPatchTimelineHref, formatDisplayDate, formatUpdateLabel, normalizeLookupKey, slugifyLookup } from "@/lib/utils";
 
 type HeroDetailPageProps = {
   params: Promise<{ slug: string }>;
@@ -52,7 +52,14 @@ export default async function HeroDetailPage({ params }: HeroDetailPageProps) {
               <header className="hero-timeline-header">
                 <div>
                   <p className="eyebrow">{block.patchRef.title}</p>
-                  <h2>{formatUpdateLabel(block.releaseType, block.releasedAt)}</h2>
+                  <h2>
+                    <Link
+                      href={buildPatchTimelineHref(block.patchRef.slug, block.id, payload.hero.slug)}
+                      className="hero-timeline-title-link"
+                    >
+                      {formatUpdateLabel(block.releaseType, block.releasedAt)}
+                    </Link>
+                  </h2>
                 </div>
                 <div className="hero-timeline-meta">
                   <time dateTime={block.releasedAt}>{formatDisplayDate(block.releasedAt)}</time>
@@ -71,24 +78,39 @@ export default async function HeroDetailPage({ params }: HeroDetailPageProps) {
                 </section>
               ) : null}
 
-              {block.skills.map((skill) => (
-                <section className="hero-skill-group" key={skill.id}>
-                  <header className="hero-skill-header">
-                    <FallbackImage
-                      src={skill.iconUrl}
-                      fallbackSrc={skill.iconFallbackUrl}
-                      alt={skill.title}
-                      className="hero-skill-image"
-                    />
-                    <h3>{skill.title}</h3>
-                  </header>
-                  <ul>
-                    {skill.changes.map((change) => (
-                      <li key={change.id}>{change.text}</li>
-                    ))}
-                  </ul>
-                </section>
-              ))}
+              {block.skills.map((skill) => {
+                const skillSlug = slugifyLookup(skill.title);
+                const skillNameNormalized = normalizeLookupKey(skill.title);
+                const isMetaSkill = skillNameNormalized === "talents" || skillNameNormalized === "card types";
+                const shouldLinkSkill = !isMetaSkill && skillSlug !== "entry";
+
+                return (
+                  <section className="hero-skill-group" key={skill.id}>
+                    <header className="hero-skill-header">
+                      <FallbackImage
+                        src={skill.iconUrl}
+                        fallbackSrc={skill.iconFallbackUrl}
+                        alt={skill.title}
+                        className="hero-skill-image"
+                      />
+                      <h3>
+                        {shouldLinkSkill ? (
+                          <Link href={`/spells/${skillSlug}`} className="hero-skill-title-link">
+                            {skill.title}
+                          </Link>
+                        ) : (
+                          skill.title
+                        )}
+                      </h3>
+                    </header>
+                    <ul>
+                      {skill.changes.map((change) => (
+                        <li key={change.id}>{change.text}</li>
+                      ))}
+                    </ul>
+                  </section>
+                );
+              })}
             </article>
           ))}
         </section>

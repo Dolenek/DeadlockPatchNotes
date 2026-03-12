@@ -1,6 +1,10 @@
 package patches
 
-import "time"
+import (
+	"encoding/json"
+	"strings"
+	"time"
+)
 
 // PatchSummary is a compact representation used on the list page.
 type PatchSummary struct {
@@ -19,6 +23,25 @@ type PatchTimelineSummary struct {
 	Kind       string `json:"releaseType"`
 	Title      string `json:"title"`
 	ReleasedAt string `json:"releasedAt"`
+}
+
+func (s *PatchTimelineSummary) UnmarshalJSON(data []byte) error {
+	type alias PatchTimelineSummary
+	var payload struct {
+		alias
+		LegacyKind string `json:"kind"`
+	}
+
+	if err := json.Unmarshal(data, &payload); err != nil {
+		return err
+	}
+
+	*s = PatchTimelineSummary(payload.alias)
+	if strings.TrimSpace(s.Kind) == "" {
+		s.Kind = strings.TrimSpace(payload.LegacyKind)
+	}
+
+	return nil
 }
 
 // PatchChange is a single bullet/line under an entry.
@@ -72,6 +95,25 @@ type PatchTimelineBlock struct {
 	Sections   []PatchSection `json:"sections,omitempty"`
 }
 
+func (b *PatchTimelineBlock) UnmarshalJSON(data []byte) error {
+	type alias PatchTimelineBlock
+	var payload struct {
+		alias
+		LegacyKind string `json:"kind"`
+	}
+
+	if err := json.Unmarshal(data, &payload); err != nil {
+		return err
+	}
+
+	*b = PatchTimelineBlock(payload.alias)
+	if strings.TrimSpace(b.Kind) == "" {
+		b.Kind = strings.TrimSpace(payload.LegacyKind)
+	}
+
+	return nil
+}
+
 // PatchDetail powers the patch detail page.
 type PatchDetail struct {
 	ID           string            `json:"id"`
@@ -84,6 +126,29 @@ type PatchDetail struct {
 	Intro        string            `json:"intro"`
 	Sections     []PatchSection    `json:"sections"`
 	Timeline     []PatchTimelineBlock `json:"releaseTimeline,omitempty"`
+}
+
+func (d *PatchDetail) UnmarshalJSON(data []byte) error {
+	type alias PatchDetail
+	var payload struct {
+		alias
+		LegacyHeroImageURL string               `json:"heroImageUrl"`
+		LegacyTimeline     []PatchTimelineBlock `json:"timeline"`
+	}
+
+	if err := json.Unmarshal(data, &payload); err != nil {
+		return err
+	}
+
+	*d = PatchDetail(payload.alias)
+	if strings.TrimSpace(d.HeroImageURL) == "" {
+		d.HeroImageURL = strings.TrimSpace(payload.LegacyHeroImageURL)
+	}
+	if len(d.Timeline) == 0 && len(payload.LegacyTimeline) > 0 {
+		d.Timeline = payload.LegacyTimeline
+	}
+
+	return nil
 }
 
 // listItem stores both summary and detail while preserving a sortable timestamp.

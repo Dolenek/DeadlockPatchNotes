@@ -377,6 +377,22 @@
   color: #f1e4cd;
 }
 
+.patch-entry-title-link,
+.entry-group-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.patch-entry-title-link:hover,
+.patch-entry-title-link:focus-visible,
+.entry-group-title-link:hover,
+.entry-group-title-link:focus-visible {
+  color: #ffe3ac;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.13em;
+}
+
 .entry-summary {
   margin: 0.7rem 0 0;
   color: #d3c2a7;

@@ -4,7 +4,7 @@ import type { CSSProperties } from "react";
 import { FallbackImage } from "@/components/FallbackImage";
 import { APIError, getSpellChanges } from "@/lib/api";
 import { getHeroMediaBySlug } from "@/lib/hero-media";
-import { formatDisplayDate, formatUpdateLabel } from "@/lib/utils";
+import { buildPatchTimelineHref, formatDisplayDate, formatUpdateLabel } from "@/lib/utils";
 
 type SpellDetailPageProps = {
   params: Promise<{ slug: string }>;
@@ -69,7 +69,14 @@ export default async function SpellDetailPage({ params }: SpellDetailPageProps) 
               <header className="hero-timeline-header">
                 <div>
                   <p className="eyebrow">{block.patchRef.title}</p>
-                  <h2>{formatUpdateLabel(block.releaseType, block.releasedAt)}</h2>
+                  <h2>
+                    <Link
+                      href={buildPatchTimelineHref(block.patchRef.slug, block.id, payload.spell.slug)}
+                      className="hero-timeline-title-link"
+                    >
+                      {formatUpdateLabel(block.releaseType, block.releasedAt)}
+                    </Link>
+                  </h2>
                 </div>
                 <div className="hero-timeline-meta">
                   <time dateTime={block.releasedAt}>{formatDisplayDate(block.releasedAt)}</time>
@@ -77,24 +84,36 @@ export default async function SpellDetailPage({ params }: SpellDetailPageProps) 
                 </div>
               </header>
 
-              {block.entries.map((entry) => (
-                <section className="hero-skill-group" key={entry.id}>
-                  <header className="hero-skill-header">
-                    <FallbackImage
-                      src={entry.heroIconUrl}
-                      fallbackSrc={entry.heroIconFallbackUrl}
-                      alt={entry.heroName ?? payload.spell.name}
-                      className="hero-skill-image"
-                    />
-                    <h3>{entry.heroName ?? payload.spell.name}</h3>
-                  </header>
-                  <ul>
-                    {entry.changes.map((change) => (
-                      <li key={change.id}>{change.text}</li>
-                    ))}
-                  </ul>
-                </section>
-              ))}
+              {block.entries.map((entry) => {
+                const heroSlug = String(entry.heroSlug ?? "").trim().toLowerCase();
+
+                return (
+                  <section className="hero-skill-group" key={entry.id}>
+                    <header className="hero-skill-header">
+                      <FallbackImage
+                        src={entry.heroIconUrl}
+                        fallbackSrc={entry.heroIconFallbackUrl}
+                        alt={entry.heroName ?? payload.spell.name}
+                        className="hero-skill-image"
+                      />
+                      <h3>
+                        {heroSlug ? (
+                          <Link href={`/heroes/${heroSlug}`} className="hero-skill-title-link">
+                            {entry.heroName ?? payload.spell.name}
+                          </Link>
+                        ) : (
+                          entry.heroName ?? payload.spell.name
+                        )}
+                      </h3>
+                    </header>
+                    <ul>
+                      {entry.changes.map((change) => (
+                        <li key={change.id}>{change.text}</li>
+                      ))}
+                    </ul>
+                  </section>
+                );
+              })}
             </article>
           ))}
         </section>

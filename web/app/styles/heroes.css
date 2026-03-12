@@ -306,6 +306,22 @@
   font-size: clamp(1.05rem, 2.7vw, 1.4rem);
 }
 
+.hero-timeline-title-link,
+.hero-skill-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.hero-timeline-title-link:hover,
+.hero-timeline-title-link:focus-visible,
+.hero-skill-title-link:hover,
+.hero-skill-title-link:focus-visible {
+  color: #9fdaf2;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.14em;
+}
+
 .hero-timeline-meta {
   display: flex;
   gap: 0.8rem;

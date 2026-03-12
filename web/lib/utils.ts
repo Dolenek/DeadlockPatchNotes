@@ -41,6 +41,45 @@ export function timelineBlockAnchor(blockID: string): string {
   return `timeline-${blockID}`;
 }
 
+export function normalizeLookupKey(value: string): string {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export function slugifyLookup(value: string): string {
+  const slug = value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return slug === "" ? "entry" : slug;
+}
+
+export function extractTimelineSourceBlockID(entityBlockID: string, entitySlug: string): string {
+  const normalizedEntityBlockID = entityBlockID.trim();
+  const normalizedEntitySlug = entitySlug.trim();
+  if (normalizedEntityBlockID === "" || normalizedEntitySlug === "") {
+    return "";
+  }
+  const expectedSuffix = `-${normalizedEntitySlug}`;
+  if (!normalizedEntityBlockID.endsWith(expectedSuffix)) {
+    return "";
+  }
+  return normalizedEntityBlockID.slice(0, -expectedSuffix.length);
+}
+
+export function buildPatchTimelineHref(patchSlug: string, entityBlockID: string, entitySlug: string): string {
+  const sourceBlockID = extractTimelineSourceBlockID(entityBlockID, entitySlug);
+  if (sourceBlockID === "") {
+    return `/patches/${patchSlug}`;
+  }
+  return `/patches/${patchSlug}#${timelineBlockAnchor(sourceBlockID)}`;
+}
+
 export function formatForumDate(isoDate: string): string {
   const date = new Date(isoDate);
   const month = String(date.getUTCMonth() + 1).padStart(2, "0");

@@ -43,6 +43,10 @@ Fetch caching:
   - calls `getPatchBySlug(slug)`
   - API `404` triggers `notFound()`
   - renders timeline blocks + section renderer
+  - patch timeline cross-links:
+    - hero entry names link to `/heroes/[slug]`
+    - item entry names link to `/items/[slug]`
+    - hero ability group names link to `/spells/[slug]` (except `Talents` and `Card Types`)
   - desktop uses 3 rails:
     - left rail: table of contents (`TableOfContents`)
     - center rail: timeline content
@@ -78,6 +82,9 @@ Detail-page behavior:
 - API `404` triggers `notFound()`.
 - Non-404 API errors are rethrown.
 - Timeline rows include link back to corresponding patch detail page.
+- Timeline row titles link to the exact source timeline block in `/patches/[slug]` when block IDs can be mapped; otherwise they fall back to patch root.
+- Hero timeline skill titles link to `/spells/[slug]` (except meta groups `Talents` and `Card Types`).
+- Spell timeline hero names link to `/heroes/[slug]` when hero slug metadata is present.
 
 ## Shared UI and Rendering Rules
 

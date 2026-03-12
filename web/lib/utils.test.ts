@@ -1,11 +1,15 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildPatchTimelineHref,
   clampPage,
+  extractTimelineSourceBlockID,
   formatCompactDate,
   formatDisplayDate,
   formatForumDate,
   formatUpdateLabel,
+  normalizeLookupKey,
   sectionAnchor,
+  slugifyLookup,
   timelineBlockAnchor
 } from "@/lib/utils";
 
@@ -44,6 +48,48 @@ describe("sectionAnchor", () => {
 describe("timelineBlockAnchor", () => {
   it("prefixes timeline block id", () => {
     expect(timelineBlockAnchor("update-2026-03-10")).toBe("timeline-update-2026-03-10");
+  });
+});
+
+describe("normalizeLookupKey", () => {
+  it("normalizes punctuation and spacing", () => {
+    expect(normalizeLookupKey("Card Types")).toBe("card types");
+  });
+});
+
+describe("slugifyLookup", () => {
+  it("slugifies spell titles", () => {
+    expect(slugifyLookup("Siphon Life")).toBe("siphon-life");
+    expect(slugifyLookup("Mo & Krill")).toBe("mo-krill");
+  });
+
+  it("falls back to entry for empty slugs", () => {
+    expect(slugifyLookup("___")).toBe("entry");
+  });
+});
+
+describe("extractTimelineSourceBlockID", () => {
+  it("strips entity slug suffix from block id", () => {
+    expect(extractTimelineSourceBlockID("03-06-2026-update-abrams", "abrams")).toBe("03-06-2026-update");
+    expect(extractTimelineSourceBlockID("03-06-2026-update-lady-geist", "lady-geist")).toBe("03-06-2026-update");
+  });
+
+  it("returns empty when suffix does not match", () => {
+    expect(extractTimelineSourceBlockID("03-06-2026-update", "abrams")).toBe("");
+  });
+});
+
+describe("buildPatchTimelineHref", () => {
+  it("builds anchored patch href when source id is derivable", () => {
+    expect(buildPatchTimelineHref("2026-03-06-update", "03-06-2026-update-abrams", "abrams")).toBe(
+      "/patches/2026-03-06-update#timeline-03-06-2026-update"
+    );
+  });
+
+  it("falls back to patch root when source id is unknown", () => {
+    expect(buildPatchTimelineHref("2026-03-06-update", "03-06-2026-update", "abrams")).toBe(
+      "/patches/2026-03-06-update"
+    );
   });
 });
 

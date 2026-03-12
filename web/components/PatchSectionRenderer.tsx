@@ -1,6 +1,7 @@
+import Link from "next/link";
 import { FallbackImage } from "@/components/FallbackImage";
 import { PatchEntry, PatchEntryGroup, PatchSection } from "@/lib/types";
-import { entryAnchor, sectionAnchor } from "@/lib/utils";
+import { entryAnchor, normalizeLookupKey, sectionAnchor, slugifyLookup } from "@/lib/utils";
 
 type PatchSectionRendererProps = {
   section: PatchSection;
@@ -8,6 +9,7 @@ type PatchSectionRendererProps = {
 
 type EntryHeaderProps = {
   entry: PatchEntry;
+  kind: PatchSection["kind"];
   portraitLayout: boolean;
 };
 
@@ -22,7 +24,35 @@ function getEntryClassName(kind: PatchSection["kind"]) {
   return classes.join(" ");
 }
 
-function EntryHeader({ entry, portraitLayout }: EntryHeaderProps) {
+function entryTimelineHref(kind: PatchSection["kind"], entryName: string): string | null {
+  const entrySlug = slugifyLookup(entryName);
+  if (entrySlug === "entry") {
+    return null;
+  }
+  if (kind === "heroes") {
+    return `/heroes/${entrySlug}`;
+  }
+  if (kind === "items") {
+    return `/items/${entrySlug}`;
+  }
+  return null;
+}
+
+function spellTimelineHref(groupTitle: string): string | null {
+  const normalizedGroupTitle = normalizeLookupKey(groupTitle);
+  if (normalizedGroupTitle === "talents" || normalizedGroupTitle === "card types") {
+    return null;
+  }
+  const groupSlug = slugifyLookup(groupTitle);
+  if (groupSlug === "entry") {
+    return null;
+  }
+  return `/spells/${groupSlug}`;
+}
+
+function EntryHeader({ entry, kind, portraitLayout }: EntryHeaderProps) {
+  const href = entryTimelineHref(kind, entry.entityName);
+
   return (
     <header className="patch-entry-header">
       <FallbackImage
@@ -32,7 +62,15 @@ function EntryHeader({ entry, portraitLayout }: EntryHeaderProps) {
         className={portraitLayout ? "entry-portrait" : "entry-icon"}
       />
       <div className="entry-heading-copy">
-        <h3>{entry.entityName}</h3>
+        <h3>
+          {href ? (
+            <Link href={href} className="patch-entry-title-link">
+              {entry.entityName}
+            </Link>
+          ) : (
+            entry.entityName
+          )}
+        </h3>
       </div>
     </header>
   );
@@ -48,23 +86,35 @@ function ChangeList({ changes }: { changes: PatchEntry["changes"] }) {
   );
 }
 
-function EntryGroups({ groups }: { groups: PatchEntryGroup[] }) {
+function EntryGroups({ groups, kind }: { groups: PatchEntryGroup[]; kind: PatchSection["kind"] }) {
   return (
     <div className="entry-groups">
-      {groups.map((group) => (
-        <section key={group.id} className="entry-group">
-          <header className="entry-group-header">
-            <FallbackImage
-              src={group.iconUrl}
-              fallbackSrc={group.iconFallbackUrl}
-              alt={group.title}
-              className="group-icon"
-            />
-            <h4>{group.title}</h4>
-          </header>
-          <ChangeList changes={group.changes} />
-        </section>
-      ))}
+      {groups.map((group) => {
+        const href = kind === "heroes" ? spellTimelineHref(group.title) : null;
+
+        return (
+          <section key={group.id} className="entry-group">
+            <header className="entry-group-header">
+              <FallbackImage
+                src={group.iconUrl}
+                fallbackSrc={group.iconFallbackUrl}
+                alt={group.title}
+                className="group-icon"
+              />
+              <h4>
+                {href ? (
+                  <Link href={href} className="entry-group-title-link">
+                    {group.title}
+                  </Link>
+                ) : (
+                  group.title
+                )}
+              </h4>
+            </header>
+            <ChangeList changes={group.changes} />
+          </section>
+        );
+      })}
     </div>
   );
 }
@@ -84,7 +134,7 @@ function PatchEntryArticle({
 
   return (
     <article id={entryAnchor(entryAnchorID)} className={getEntryClassName(kind)}>
-      <EntryHeader entry={entry} portraitLayout={portraitLayout} />
+      <EntryHeader entry={entry} kind={kind} portraitLayout={portraitLayout} />
 
       {entry.summary ? <blockquote className="entry-quote">{entry.summary}</blockquote> : null}
 
@@ -94,7 +144,7 @@ function PatchEntryArticle({
         </section>
       ) : null}
 
-      {groups.length ? <EntryGroups groups={groups} /> : null}
+      {groups.length ? <EntryGroups groups={groups} kind={kind} /> : null}
     </article>
   );
 }

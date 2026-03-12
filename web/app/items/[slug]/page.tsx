@@ -4,7 +4,7 @@ import { ItemAbstractPattern } from "@/components/ItemAbstractPattern";
 import { FallbackImage } from "@/components/FallbackImage";
 import { ItemGradientFromImage } from "@/components/ItemGradientFromImage";
 import { APIError, getItemChanges } from "@/lib/api";
-import { formatDisplayDate, formatUpdateLabel } from "@/lib/utils";
+import { buildPatchTimelineHref, formatDisplayDate, formatUpdateLabel } from "@/lib/utils";
 
 type ItemDetailPageProps = {
   params: Promise<{ slug: string }>;
@@ -49,7 +49,14 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
               <header className="hero-timeline-header item-timeline-header">
                 <div>
                   <p className="eyebrow">{formatUpdateLabel(block.releaseType, block.releasedAt)}</p>
-                  <h2>{block.patchRef.title}</h2>
+                  <h2>
+                    <Link
+                      href={buildPatchTimelineHref(block.patchRef.slug, block.id, payload.item.slug)}
+                      className="hero-timeline-title-link"
+                    >
+                      {block.patchRef.title}
+                    </Link>
+                  </h2>
                 </div>
                 <div className="hero-timeline-meta item-timeline-meta">
                   <time dateTime={block.releasedAt}>{formatDisplayDate(block.releasedAt)}</time>
