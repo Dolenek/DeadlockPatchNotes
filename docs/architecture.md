@@ -61,5 +61,5 @@ Frontend API base behavior:
 
 - `docker-compose.yml` runs `db`, `api`, `web`, and one-shot `sync`.
 - PostgreSQL persistence uses named volume `pgdata`.
-- API is loopback-published by default (`127.0.0.1:${API_PORT}`)
+- API bind host/port is configurable via `API_HOST_BIND` and `API_PORT`.
 - Web bind host/port is configurable via `WEB_HOST_BIND` and `WEB_PORT`.

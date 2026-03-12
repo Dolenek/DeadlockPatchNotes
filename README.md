@@ -90,7 +90,9 @@ docker-compose up -d --build db api web
 
 Useful `.env` knobs:
 - `WEB_HOST_BIND=127.0.0.1` keeps web private to the server; set `WEB_HOST_BIND=0.0.0.0` for LAN access.
-- `API_PORT=18081` publishes API only on server loopback (`127.0.0.1:${API_PORT}`) for safe SSH tunneling.
+- `API_HOST_BIND=0.0.0.0` makes API reachable for path-based cloudflared/tunnel routing.
+- Set `API_HOST_BIND=127.0.0.1` to keep API private and access it via SSH tunneling.
+- `API_PORT=18081` controls published API host port (`${API_HOST_BIND}:${API_PORT}`).
 
 Run one ingestion pass:
 

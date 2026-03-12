@@ -106,6 +106,6 @@ Schema notes:
 ### Docker Compose
 
 - `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`
-- `API_PORT`
+- `API_HOST_BIND`, `API_PORT`
 - `WEB_HOST_BIND`, `WEB_PORT`
 - Sync vars listed above

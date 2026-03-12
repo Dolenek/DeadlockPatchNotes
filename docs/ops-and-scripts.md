@@ -11,7 +11,7 @@
 
 Networking and publish defaults:
 
-- API publish: `127.0.0.1:${API_PORT:-18081}:8080`
+- API publish: `${API_HOST_BIND:-0.0.0.0}:${API_PORT:-18081}:8080`
 - Web publish: `${WEB_HOST_BIND:-127.0.0.1}:${WEB_PORT:-3000}:3000`
 
 ## Environment Variables
@@ -21,6 +21,7 @@ Compose `.env`:
 - `POSTGRES_DB`
 - `POSTGRES_USER`
 - `POSTGRES_PASSWORD`
+- `API_HOST_BIND`
 - `API_PORT`
 - `WEB_HOST_BIND`
 - `WEB_PORT`
