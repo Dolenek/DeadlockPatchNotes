@@ -1,6 +1,6 @@
 import { FallbackImage } from "@/components/FallbackImage";
 import { PatchEntry, PatchEntryGroup, PatchSection } from "@/lib/types";
-import { sectionAnchor } from "@/lib/utils";
+import { entryAnchor, sectionAnchor } from "@/lib/utils";
 
 type PatchSectionRendererProps = {
   section: PatchSection;
@@ -69,13 +69,21 @@ function EntryGroups({ groups }: { groups: PatchEntryGroup[] }) {
   );
 }
 
-function PatchEntryArticle({ entry, kind }: { entry: PatchEntry; kind: PatchSection["kind"] }) {
+function PatchEntryArticle({
+  entry,
+  kind,
+  entryAnchorID
+}: {
+  entry: PatchEntry;
+  kind: PatchSection["kind"];
+  entryAnchorID: string;
+}) {
   const portraitLayout = kind === "heroes" || kind === "items";
   const changes = Array.isArray(entry.changes) ? entry.changes : [];
   const groups = Array.isArray(entry.groups) ? entry.groups : [];
 
   return (
-    <article className={getEntryClassName(kind)}>
+    <article id={entryAnchor(entryAnchorID)} className={getEntryClassName(kind)}>
       <EntryHeader entry={entry} portraitLayout={portraitLayout} />
 
       {entry.summary ? <blockquote className="entry-quote">{entry.summary}</blockquote> : null}
@@ -99,9 +107,10 @@ export function PatchSectionRenderer({ section }: PatchSectionRendererProps) {
       </header>
 
       <div className="patch-entry-list">
-        {section.entries.map((entry) => (
-          <PatchEntryArticle key={entry.id} entry={entry} kind={section.kind} />
-        ))}
+        {section.entries.map((entry) => {
+          const entryID = `${section.id}-${entry.id}`;
+          return <PatchEntryArticle key={entryID} entry={entry} kind={section.kind} entryAnchorID={entryID} />;
+        })}
       </div>
     </section>
   );

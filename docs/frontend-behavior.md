@@ -6,7 +6,8 @@
 - Rendering: route pages are server components.
 - Client components currently in tree:
   - `FallbackImage`
-  - `TableOfContents` (implemented but not mounted in routes)
+  - `TableOfContents`
+  - `PatchHeroesRail`
 - Data source: API via `web/lib/api.ts`.
 
 API base URL resolution:
@@ -37,6 +38,15 @@ Fetch caching:
   - calls `getPatchBySlug(slug)`
   - API `404` triggers `notFound()`
   - renders timeline blocks + section renderer
+  - desktop uses 3 rails:
+    - left rail: table of contents (`TableOfContents`)
+    - center rail: timeline content
+    - right rail: hero quick-nav (`PatchHeroesRail`)
+  - right rail behavior:
+    - tracks active timeline block while scrolling
+    - hero icon click jumps to that hero entry in active block
+    - hidden when active block has no hero entries
+    - hidden on tablet/mobile breakpoints
   - fallback behavior:
     - if patch has no timeline, synthesizes one display block
     - if timeline block has no sections, uses top-level patch sections for that block
@@ -99,7 +109,15 @@ Detail-page behavior:
 ### `TableOfContents` (`use client`)
 
 - Collapsible section anchor list component.
-- Exists in component library but is not mounted in current pages.
+- Mounted on patch detail page left rail.
+- Tracks active timeline/section anchors using `IntersectionObserver`.
+
+### `PatchHeroesRail` (`use client`)
+
+- Mounted on patch detail page right rail (desktop only).
+- Tracks active timeline block with `IntersectionObserver`.
+- Displays hero icon links for active block only.
+- Links target hero entry anchors in the patch timeline content.
 
 ## Error Surfaces
 

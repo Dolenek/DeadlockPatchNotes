@@ -1,13 +1,17 @@
+import { PatchHeroesRail } from "@/components/PatchHeroesRail";
 import { notFound } from "next/navigation";
 import { PatchSectionRenderer } from "@/components/PatchSectionRenderer";
 import { TableOfContents, TableOfContentsGroup } from "@/components/TableOfContents";
 import { APIError, getPatchBySlug } from "@/lib/api";
 import { PatchSection, PatchTimelineBlock } from "@/lib/types";
-import { formatDisplayDate, formatUpdateLabel, sectionAnchor, timelineBlockAnchor } from "@/lib/utils";
+import { entryAnchor, formatDisplayDate, formatUpdateLabel, sectionAnchor, timelineBlockAnchor } from "@/lib/utils";
+import type { PatchHeroesRailBlock } from "@/components/PatchHeroesRail";
 
 type PatchDetailPageProps = {
   params: Promise<{ slug: string }>;
 };
+
+type TimelineBlockForDisplay = PatchTimelineBlock & { sections: PatchSection[] };
 
 export default async function PatchDetailPage({ params }: PatchDetailPageProps) {
   const { slug } = await params;
@@ -16,13 +20,13 @@ export default async function PatchDetailPage({ params }: PatchDetailPageProps) 
     const patch = await getPatchBySlug(slug);
     const timeline = buildTimelineForDisplay(patch.timeline, patch.sections, patch.source, patch.publishedAt);
     const tocGroups = buildTimelineTableOfContents(timeline);
+    const heroRailBlocks = buildTimelineHeroRail(timeline);
 
     return (
       <main className="patch-detail-page">
         <section className="patch-hero" style={{ backgroundImage: `url(${patch.heroImageUrl})` }}>
           <div className="patch-hero-overlay">
             <div className="shell patch-hero-content">
-              <p className="eyebrow">{patch.category}</p>
               <h1>{patch.title}</h1>
               <div className="patch-meta">
                 <time dateTime={patch.publishedAt}>{formatDisplayDate(patch.publishedAt)}</time>
@@ -34,7 +38,7 @@ export default async function PatchDetailPage({ params }: PatchDetailPageProps) 
           </div>
         </section>
 
-        <section className="shell patch-detail-content patch-detail-content--timeline">
+        <section className="patch-detail-content patch-detail-content--timeline">
           <TableOfContents groups={tocGroups} />
           <div className="patch-sections-column">
             {timeline.map((block) => (
@@ -60,6 +64,7 @@ export default async function PatchDetailPage({ params }: PatchDetailPageProps) 
               </article>
             ))}
           </div>
+          <PatchHeroesRail blocks={heroRailBlocks} />
         </section>
       </main>
     );
@@ -77,7 +82,7 @@ function buildTimelineForDisplay(
   fallbackSections: PatchSection[],
   fallbackSource: { type: string; url: string },
   fallbackPublishedAt: string
-) {
+): TimelineBlockForDisplay[] {
   if (Array.isArray(timeline) && timeline.length > 0) {
     return timeline.map((block) => ({
       ...block,
@@ -110,4 +115,25 @@ function buildTimelineTableOfContents(timeline: Array<PatchTimelineBlock & { sec
       };
     })
   }));
+}
+
+function buildTimelineHeroRail(timeline: TimelineBlockForDisplay[]): PatchHeroesRailBlock[] {
+  return timeline.map((block) => {
+    const heroSection = block.sections.find((section) => section.kind === "heroes");
+    const sectionID = heroSection ? `${block.id}-${heroSection.kind}` : "";
+    const heroes =
+      heroSection?.entries.map((entry) => ({
+        id: `${block.id}-${entry.id}`,
+        label: entry.entityName,
+        targetId: entryAnchor(`${sectionID}-${entry.id}`),
+        iconUrl: entry.entityIconUrl,
+        iconFallbackUrl: entry.entityIconFallbackUrl
+      })) ?? [];
+
+    return {
+      id: timelineBlockAnchor(block.id),
+      label: formatUpdateLabel(block.kind, block.releasedAt),
+      heroes
+    };
+  });
 }

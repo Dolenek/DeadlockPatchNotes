@@ -4,7 +4,12 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Deadlock Patch Notes",
-  description: "Deadlock patch notes archive with long-form gameplay updates and balance changes."
+  description: "Deadlock patch notes archive with long-form gameplay updates and balance changes.",
+  icons: {
+    icon: "/deadlock_logo.webp",
+    shortcut: "/deadlock_logo.webp",
+    apple: "/deadlock_logo.webp"
+  }
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

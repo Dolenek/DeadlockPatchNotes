@@ -17,11 +17,16 @@
 }
 
 .brand-wordmark {
-  font-family: "Cinzel", serif;
-  font-weight: 800;
-  letter-spacing: 0.06em;
+  display: inline-flex;
+  align-items: center;
   text-decoration: none;
-  font-size: 1.12rem;
+  line-height: 1;
+}
+
+.brand-logo {
+  display: block;
+  height: 30px;
+  width: auto;
 }
 
 .main-links {
@@ -31,6 +36,8 @@
 }
 
 .main-links a {
+  font-family: var(--font-special-body);
+  font-weight: 400;
   text-decoration: none;
   color: var(--text-soft);
   font-size: 0.9rem;
@@ -42,12 +49,13 @@
 }
 
 .play-button {
+  font-family: var(--font-special-body);
   text-decoration: none;
   background: linear-gradient(135deg, #2b9dc6, #2f6bb0);
   color: #f6fcff;
   padding: 0.45rem 0.85rem;
   border-radius: 999px;
-  font-weight: 600;
+  font-weight: 400;
   font-size: 0.85rem;
   letter-spacing: 0.03em;
   white-space: nowrap;

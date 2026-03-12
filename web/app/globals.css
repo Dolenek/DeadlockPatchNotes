@@ -1,8 +1,47 @@
 @import url("https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Cinzel:wght@600;700;800&family=JetBrains+Mono:wght@500&display=swap");
-
 @import "./styles/base.css";
 @import "./styles/nav.css";
 @import "./styles/patch-list.css";
 @import "./styles/patch-detail.css";
 @import "./styles/heroes.css";
 @import "./styles/responsive.css";
+
+@font-face {
+  font-family: "Oracle";
+  src:
+    url("/fonts/VALVEOracle-Thin.woff2") format("woff2"),
+    url("/fonts/VALVEOracle-Thin.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Oracle";
+  src:
+    url("/fonts/VALVEOracle-Medium.woff2") format("woff2"),
+    url("/fonts/VALVEOracle-Medium.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Oracle";
+  src:
+    url("/fonts/VALVEOracle-SemiBold.woff2") format("woff2"),
+    url("/fonts/VALVEOracle-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Pulp";
+  src:
+    url("/fonts/VALVEPulp-Bold.woff2") format("woff2"),
+    url("/fonts/VALVEPulp-Bold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}

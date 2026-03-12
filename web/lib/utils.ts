@@ -33,6 +33,10 @@ export function sectionAnchor(sectionID: string): string {
   return `section-${sectionID}`;
 }
 
+export function entryAnchor(entryID: string): string {
+  return `entry-${entryID}`;
+}
+
 export function timelineBlockAnchor(blockID: string): string {
   return `timeline-${blockID}`;
 }

@@ -8,7 +8,7 @@
 
 .heroes-masthead h1 {
   margin: 0.4rem 0 0.7rem;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-heading);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -238,7 +238,7 @@
 
 .hero-detail-copy h1 {
   margin: 0.35rem 0 0.5rem;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-heading);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }

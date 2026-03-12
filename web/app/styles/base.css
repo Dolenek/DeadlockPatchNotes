@@ -1,4 +1,8 @@
 :root {
+  --font-heading: "Cinzel", "Times New Roman", serif;
+  --font-body: "Barlow", "Segoe UI", Arial, sans-serif;
+  --font-special-heading: "Oracle", "Cinzel", "Times New Roman", serif;
+  --font-special-body: "Pulp", "Barlow", "Segoe UI", Arial, sans-serif;
   --bg-0: #090d15;
   --bg-1: #11182a;
   --bg-2: #17243d;
@@ -36,14 +40,24 @@ html {
 }
 
 body {
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   background: #04070e;
   color: var(--text-main);
   min-height: 100vh;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+}
+
 .site-root {
-  --texture-base-image: url("/bg_texture.jpg");
+  --texture-base-image: url("/bg_texture_darkest.jpg");
   --texture-light-width: 100vw;
   --texture-dark-width: 100vw;
   --texture-darkest-width: 100vw;

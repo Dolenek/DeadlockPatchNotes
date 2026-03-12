@@ -24,11 +24,16 @@
   }
 
   .patch-detail-content {
+    width: min(1200px, 92vw);
     grid-template-columns: 1fr;
   }
 
   .toc {
     position: static;
+  }
+
+  .patch-heroes-rail {
+    display: none;
   }
 }
 

@@ -29,10 +29,14 @@
 
 .patch-list-masthead h1 {
   margin: 0.45rem 0 0.75rem;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-special-heading);
   font-size: clamp(2.2rem, 5.4vw, 4.1rem);
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+
+.patch-list-masthead .eyebrow {
+  font-family: var(--font-special-body);
 }
 
 .patch-list-masthead p {
@@ -127,7 +131,7 @@
 
 .card-meta {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 0.8rem;
   color: var(--text-soft);
   font-size: 0.8rem;
@@ -136,7 +140,7 @@
 
 .patch-card h2 {
   margin: 0;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-heading);
   font-size: 1.04rem;
   text-transform: uppercase;
   line-height: 1.35;

@@ -21,8 +21,8 @@
 }
 
 .patch-hero-content h1 {
-  margin: 0.45rem 0 0.8rem;
-  font-family: "Cinzel", serif;
+  margin: 0 0 0.8rem;
+  font-family: var(--font-heading);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   line-height: 1.16;
@@ -53,14 +53,17 @@
 .patch-detail-content {
   margin-top: 0;
   padding-top: 0;
+  width: min(1680px, 98vw);
+  margin-left: auto;
+  margin-right: auto;
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
+  grid-template-columns: minmax(220px, 280px) minmax(0, 980px) minmax(132px, 176px);
   gap: 1.5rem;
   align-items: start;
 }
 
 .patch-detail-content--timeline {
-  grid-template-columns: 280px minmax(0, 1fr);
+  grid-template-columns: minmax(220px, 280px) minmax(0, 980px) minmax(132px, 176px);
 }
 
 .toc {
@@ -81,7 +84,7 @@
   padding: 0.7rem 0.85rem;
   text-align: left;
   cursor: pointer;
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-body);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -149,6 +152,96 @@
 .patch-sections-column {
   display: grid;
   gap: 1.35rem;
+  width: min(980px, 100%);
+  justify-self: center;
+}
+
+.patch-heroes-rail {
+  position: sticky;
+  top: 84px;
+  align-self: start;
+  max-height: calc(100vh - 96px);
+}
+
+.patch-heroes-rail--empty {
+  display: none;
+}
+
+.heroes-rail-panel {
+  height: 100%;
+  max-height: inherit;
+  display: flex;
+  flex-direction: column;
+  padding: 0.15rem 0 0;
+  overflow: hidden;
+}
+
+.heroes-rail-block-label {
+  margin: 0 0 0.58rem;
+  color: #a9c0e6;
+  font-size: 0.77rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.heroes-rail-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+  width: calc(3.9rem + 0.85rem);
+  justify-items: start;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #3f5f93 #0a1730;
+  padding-right: 0;
+}
+
+.heroes-rail-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.heroes-rail-list::-webkit-scrollbar-track {
+  background: #0a1730;
+  border-radius: 999px;
+}
+
+.heroes-rail-list::-webkit-scrollbar-thumb {
+  background: #3f5f93;
+  border-radius: 999px;
+}
+
+.heroes-rail-list::-webkit-scrollbar-thumb:hover {
+  background: #5c7fb8;
+}
+
+.heroes-rail-link {
+  width: 3.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  border: 0;
+  text-decoration: none;
+}
+
+.heroes-rail-avatar {
+  width: 3.9rem;
+  height: 3.9rem;
+  object-fit: cover;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.heroes-rail-link:hover .heroes-rail-avatar,
+.heroes-rail-link:focus-visible .heroes-rail-avatar {
+  opacity: 0.92;
+  transform: translateY(-1px);
 }
 
 .timeline-block {
@@ -170,7 +263,7 @@
 
 .timeline-block-heading h2 {
   margin: 0.2rem 0 0;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-heading);
   font-size: clamp(1.2rem, 2.8vw, 1.7rem);
   letter-spacing: 0.03em;
 }
@@ -215,7 +308,7 @@
 
 .patch-section h2 {
   margin: 0;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-heading);
   text-transform: uppercase;
   font-size: 1.72rem;
   letter-spacing: 0.06em;
@@ -233,6 +326,7 @@
   box-shadow: inset 0 0 0 1px #ffffff14;
   background: linear-gradient(180deg, #061534f0, #071733f0 60%, #06122af0);
   padding: 1.45rem 1.35rem;
+  scroll-margin-top: 84px;
 }
 
 .patch-entry--hero {
@@ -275,7 +369,7 @@
 
 .patch-entry h3 {
   margin: 0;
-  font-family: "Barlow", sans-serif;
+  font-family: var(--font-heading);
   text-transform: none;
   font-weight: 700;
   font-size: 2rem;
@@ -398,7 +492,7 @@
   top: 34%;
   transform: translate(-50%, -50%);
   margin: 0;
-  font-family: "Cinzel", serif;
+  font-family: var(--font-heading);
   text-transform: uppercase;
   font-size: clamp(3rem, 9vw, 8rem);
   letter-spacing: 0.04em;

@@ -5,7 +5,7 @@ export function TopNav() {
     <header className="top-nav">
       <div className="top-nav-inner shell">
         <Link href="/patches" className="brand-wordmark">
-          Deadlock
+          <img src="/deadlock_logo_white.svg" alt="Deadlock" className="brand-logo" />
         </Link>
         <nav className="main-links" aria-label="Main navigation">
           <Link href="/patches">Patch Notes</Link>
