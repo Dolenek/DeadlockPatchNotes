@@ -9,9 +9,16 @@ type PatchSummary struct {
 	Title         string `json:"title"`
 	PublishedAt   string `json:"publishedAt"`
 	Category      string `json:"category"`
-	Excerpt       string `json:"excerpt"`
 	CoverImageURL string `json:"coverImageUrl"`
 	SourceURL     string `json:"sourceUrl"`
+	Timeline      []PatchTimelineSummary `json:"timeline,omitempty"`
+}
+
+type PatchTimelineSummary struct {
+	ID         string `json:"id"`
+	Kind       string `json:"kind"`
+	Title      string `json:"title"`
+	ReleasedAt string `json:"releasedAt"`
 }
 
 // PatchChange is a single bullet/line under an entry.

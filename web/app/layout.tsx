@@ -26,6 +26,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="site-content">
             <TopNav />
             {children}
+            <footer className="site-footer">
+              <div className="shell">
+                <p className="site-footer__text">Disclaimer: This is not an official product by Valve. It is fan-made.</p>
+              </div>
+            </footer>
           </div>
         </div>
       </body>

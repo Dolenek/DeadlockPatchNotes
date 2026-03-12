@@ -50,9 +50,9 @@ func (s *PostgresStore) List(page, limit int) ListResponse {
 			title,
 			published_at,
 			category,
-			excerpt,
 			hero_image_url,
-			source_url
+			source_url,
+			detail_payload
 		FROM patches
 		ORDER BY updated_at DESC
 		LIMIT $1 OFFSET $2
@@ -67,20 +67,27 @@ func (s *PostgresStore) List(page, limit int) ListResponse {
 		var threadID int64
 		var summary PatchSummary
 		var publishedAt time.Time
+		var rawDetail []byte
 		if err := rows.Scan(
 			&threadID,
 			&summary.Slug,
 			&summary.Title,
 			&publishedAt,
 			&summary.Category,
-			&summary.Excerpt,
 			&summary.CoverImageURL,
 			&summary.SourceURL,
+			&rawDetail,
 		); err != nil {
 			continue
 		}
 		summary.ID = fmt.Sprintf("%d", threadID)
 		summary.PublishedAt = publishedAt.UTC().Format(time.RFC3339)
+		if len(rawDetail) > 0 {
+			var detail PatchDetail
+			if err := json.Unmarshal(rawDetail, &detail); err == nil {
+				summary.Timeline = buildSummaryTimeline(detail)
+			}
+		}
 		items = append(items, summary)
 	}
 

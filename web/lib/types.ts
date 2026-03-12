@@ -4,9 +4,16 @@ export type PatchSummary = {
   title: string;
   publishedAt: string;
   category: string;
-  excerpt: string;
   coverImageUrl: string;
   sourceUrl: string;
+  timeline?: PatchTimelineSummary[];
+};
+
+export type PatchTimelineSummary = {
+  id: string;
+  kind: string;
+  title: string;
+  releasedAt: string;
 };
 
 export type PatchChange = {

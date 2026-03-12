@@ -69,6 +69,15 @@ Response shape:
 }
 ```
 
+`PatchSummary` includes optional `timeline` entries with compact block metadata:
+
+- `id`
+- `kind`
+- `title`
+- `releasedAt`
+
+When present, this timeline list is derived from hydrated patch detail timeline blocks (including synthesized initial block semantics).
+
 Ordering:
 
 - Backed by `patches` table ordered by `updated_at DESC`.

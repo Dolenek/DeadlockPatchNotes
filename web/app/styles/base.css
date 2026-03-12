@@ -154,3 +154,19 @@ a {
     transform: translateY(0);
   }
 }
+
+.site-footer {
+  margin-top: 3rem;
+  padding: 1rem 0;
+  background: #000;
+  border-top: 1px solid #1b2230;
+}
+
+.site-footer__text {
+  margin: 0;
+  text-align: center;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  color: #c9cfdb;
+  text-transform: uppercase;
+}

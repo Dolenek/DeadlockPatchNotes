@@ -63,9 +63,9 @@
 }
 
 .patch-card {
-  border: 1px solid var(--line);
+  border: 1px solid #5b5347;
   border-radius: var(--radius);
-  background: linear-gradient(165deg, #12203bcf, #0e182ac4);
+  background: linear-gradient(165deg, #1a1815f0, #141210f0);
   box-shadow: var(--shadow);
   overflow: hidden;
   transform: translateY(12px);
@@ -89,9 +89,19 @@
 .patch-card-image-wrap {
   margin: 0;
   position: relative;
-  border-bottom: 1px solid #ffffff1a;
+  border-bottom: 1px solid #7f756426;
   aspect-ratio: 16/9;
   overflow: hidden;
+}
+
+.patch-card-image-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, #43433b33, #3c3a3540 58%, #1f1d1a82),
+    radial-gradient(110% 100% at 65% -10%, #d5d8dd22, transparent 62%);
 }
 
 .patch-card-image {
@@ -102,10 +112,8 @@
   transition: transform 260ms ease;
 }
 
-.patch-card-image--empty {
-  background:
-    linear-gradient(160deg, #1a2a47, #0d1728),
-    repeating-linear-gradient(45deg, #ffffff10 0 10px, transparent 10px 20px);
+.patch-card-image--fallback {
+  filter: saturate(0.84) contrast(1.05);
 }
 
 .patch-card:hover .patch-card-image {
@@ -117,25 +125,39 @@
   right: 0;
   bottom: 0;
   font-family: "JetBrains Mono", monospace;
-  background: #0b111ed1;
-  border-top: 1px solid #ffffff38;
-  border-left: 1px solid #ffffff38;
-  color: var(--accent);
+  z-index: 1;
+  background: #161410d9;
+  border-top: 1px solid #8b7a5a55;
+  border-left: 1px solid #8b7a5a55;
+  color: #b98f4a;
   padding: 0.35rem 0.6rem;
   font-size: 0.8rem;
 }
 
 .patch-card-body {
   padding: 0.95rem 1rem 1.1rem;
+  background:
+    linear-gradient(150deg, #2a2722f7, #1d1a16f7 68%, #191613f7),
+    radial-gradient(130% 120% at 10% -5%, #7f684218, transparent 62%);
 }
 
 .card-meta {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: baseline;
   gap: 0.8rem;
-  color: var(--text-soft);
+  color: #b7ac9a;
   font-size: 0.8rem;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0;
+}
+
+.patch-card-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.patch-card-title-link:hover {
+  color: #efe8d9;
 }
 
 .patch-card h2 {
@@ -144,12 +166,31 @@
   font-size: 1.04rem;
   text-transform: uppercase;
   line-height: 1.35;
+  flex: 1;
 }
 
-.patch-card p {
-  margin: 0.55rem 0 0;
-  color: #b8c8e4;
-  line-height: 1.45;
+.card-meta time {
+  white-space: nowrap;
+}
+
+.patch-card-followups {
+  list-style: none;
+  margin: 0.7rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.38rem;
+}
+
+.patch-card-followups a {
+  color: #c5b7a0;
+  text-decoration: none;
+  font-size: 0.84rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.patch-card-followups a:hover {
+  color: #f0e0c3;
 }
 
 .pagination {

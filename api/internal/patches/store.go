@@ -193,22 +193,33 @@ func buildListItem(detail PatchDetail) listItem {
 			Title:         detail.Title,
 			PublishedAt:   detail.PublishedAt,
 			Category:      detail.Category,
-			Excerpt:       buildExcerpt(detail.Intro),
 			CoverImageURL: detail.HeroImageURL,
 			SourceURL:     detail.Source.URL,
+			Timeline:      buildSummaryTimeline(detail),
 		},
 		detail:    detail,
 		published: published,
 	}
 }
 
-func buildExcerpt(intro string) string {
-	trimmed := strings.TrimSpace(intro)
-	if trimmed == "" {
-		return "Deadlock patch update."
+func buildSummaryTimeline(detail PatchDetail) []PatchTimelineSummary {
+	hydrated := hydratePatchDetail(detail)
+	if len(hydrated.Timeline) == 0 {
+		return nil
 	}
-	if len(trimmed) <= 160 {
-		return trimmed
+
+	timeline := make([]PatchTimelineSummary, 0, len(hydrated.Timeline))
+	for _, block := range hydrated.Timeline {
+		if strings.TrimSpace(block.ID) == "" {
+			continue
+		}
+		timeline = append(timeline, PatchTimelineSummary{
+			ID:         block.ID,
+			Kind:       block.Kind,
+			Title:      block.Title,
+			ReleasedAt: block.ReleasedAt,
+		})
 	}
-	return strings.TrimSpace(trimmed[:157]) + "..."
+
+	return timeline
 }

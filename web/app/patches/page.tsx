@@ -23,8 +23,8 @@ export default async function PatchesPage({ searchParams }: PatchesPageProps) {
 
       <section className="shell patch-list-section">
         <div className="patch-grid">
-          {patchList.items.map((patch) => (
-            <PatchCard key={patch.id} patch={patch} />
+          {patchList.items.map((patch, index) => (
+            <PatchCard key={patch.id} patch={patch} index={index} />
           ))}
         </div>
 

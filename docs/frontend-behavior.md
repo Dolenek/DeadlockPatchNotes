@@ -32,7 +32,11 @@ Fetch caching:
   - reads `page` query
   - normalizes with `clampPage` (invalid or `<1` -> `1`)
   - calls `getPatches(page, 12)`
+  - does not fetch per-card patch detail payloads
   - renders patch card grid + pagination
+  - each card shows title/date on one row
+  - card body renders follow-up timeline links (when present) that jump to timeline block anchors in `/patches/[slug]`
+  - card images use Next image optimization with responsive `sizes`
   - masthead hero image uses local asset `/Oldgods_header.png`
 - `/patches/[slug]`
   - calls `getPatchBySlug(slug)`
