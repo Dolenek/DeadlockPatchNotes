@@ -69,7 +69,7 @@ export default async function SpellsPage() {
         </div>
       </section>
 
-      <section className="shell heroes-list-section">
+      <section className="shell heroes-list-section heroes-list-section--spells">
         <div className="heroes-grid">
           {payload.spells.map((spell) => (
             <article key={spell.slug} className="hero-card">

@@ -61,7 +61,7 @@ export default async function ItemsPage() {
     <main className="page-like-patches">
       <JsonLd data={schema} />
 
-      <section className="heroes-masthead">
+      <section className="heroes-masthead heroes-masthead--items-page">
         <div className="shell">
           <p className="eyebrow">Deadlock Items</p>
           <h1>Items</h1>
@@ -69,7 +69,7 @@ export default async function ItemsPage() {
         </div>
       </section>
 
-      <section className="shell heroes-list-section">
+      <section className="shell heroes-list-section heroes-list-section--items">
         <div className="heroes-grid">
           {payload.items.map((item) => (
             <article key={item.slug} className="hero-card">

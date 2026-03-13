@@ -48,6 +48,10 @@
   color: var(--text-main);
 }
 
+.main-links-right-anchor {
+  margin-left: auto;
+}
+
 .play-button {
   font-family: var(--font-special-body);
   text-decoration: none;

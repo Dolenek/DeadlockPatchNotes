@@ -3,7 +3,7 @@
   "info": {
     "title": "Deadlock Patch Notes API",
     "version": "1.1.0",
-    "description": "HTTP API for patch timelines, heroes, items, and spells used by deadlockpatchnotes.com."
+    "description": "HTTP API for patch timelines, heroes, items, and spells used by deadlockpatchnotes.com.\n\n**Disclaimer**\n\n*deadlockpatchnotes.com is not endorsed by Valve and does not reflect the views or opinions of Valve or anyone officially involved in producing or managing Valve properties. Valve and all associated properties are trademarks or registered trademarks of Valve Corporation*"
   },
   "servers": [
     {

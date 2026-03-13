@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { JsonLd } from "@/components/JsonLd";
-import { PatchCard } from "@/components/PatchCard";
 import { APIError, getPatches } from "@/lib/api";
 import { PatchListResponse } from "@/lib/types";
+import { formatDisplayDate, formatUpdateLabel } from "@/lib/utils";
 import {
   SEO_DEFAULT_DESCRIPTION,
   SEO_SITE_NAME,
@@ -50,19 +51,50 @@ export const metadata: Metadata = {
   },
 };
 
+const HUB_IMAGE_SIZES = "(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 25vw";
+const LAST_UPDATE_IMAGE_FALLBACK = "/random-card-images/new_ss_01.jpg";
+
+function resolveLatestPatchImage(rawImageURL: string | undefined) {
+  const normalized = rawImageURL?.trim() ?? "";
+  if (normalized === "") {
+    return LAST_UPDATE_IMAGE_FALLBACK;
+  }
+
+  if (normalized.startsWith("/")) {
+    return normalized;
+  }
+
+  try {
+    const parsed = new URL(normalized);
+    if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+      return parsed.toString();
+    }
+  } catch {
+    // fall back to local image when API data is malformed
+  }
+
+  return LAST_UPDATE_IMAGE_FALLBACK;
+}
+
 export default async function HomePage() {
   let patchList: PatchListResponse = {
     patches: [],
-    pagination: { page: 1, pageSize: 6, totalItems: 0, totalPages: 1 },
+    pagination: { page: 1, pageSize: 1, totalItems: 0, totalPages: 1 },
   };
 
   try {
-    patchList = await getPatches(1, 6);
+    patchList = await getPatches(1, 1);
   } catch (error) {
     if (!(error instanceof APIError) || error.status !== 404) {
       throw error;
     }
   }
+
+  const latestPatch = patchList.patches[0];
+  const latestPatchImage = resolveLatestPatchImage(latestPatch?.imageUrl);
+  const followUpTimeline = (latestPatch?.releaseTimeline ?? []).filter(
+    (timelineBlock, index) => !(index === 0 && timelineBlock.releaseType === "initial")
+  );
 
   const websiteURL = buildAbsoluteURL("/");
   const patchesURL = buildAbsoluteURL("/patches");
@@ -92,37 +124,119 @@ export default async function HomePage() {
     <main className="page-like-patches">
       <JsonLd data={schema} />
 
-      <section className="patch-list-masthead">
+      <section className="patch-list-masthead patch-list-masthead--home">
         <div className="shell">
           <p className="eyebrow">Community Archive</p>
-          <h1>Deadlock Patch Notes</h1>
+          <h1>
+            Deadlock <span className="home-title-nowrap">Patch Notes</span>
+          </h1>
           <p>
             Browse complete Deadlock update history with timeline-level patch notes, hero adjustments, item balance changes,
             and spell updates.
           </p>
-          <div className="home-section-links" role="navigation" aria-label="Browse sections">
-            <Link href="/patches">Patch Notes Archive</Link>
-            <Link href="/heroes">Hero Timelines</Link>
-            <Link href="/items">Item Timelines</Link>
-            <Link href="/spells">Spell Timelines</Link>
+
+          <div className="home-hub-grid" role="navigation" aria-label="Browse sections">
+            <article className="home-hub-card home-hub-card--last-update">
+              {latestPatch ? (
+                <Link href={`/patches/${latestPatch.slug}`} className="home-hub-card-link">
+                  <div className="home-hub-card-media">
+                    <Image
+                      src={latestPatchImage}
+                      alt={`${latestPatch.title} cover image`}
+                      fill
+                      sizes={HUB_IMAGE_SIZES}
+                      quality={68}
+                      className="home-hub-card-image"
+                      priority
+                    />
+                  </div>
+                  <div className="home-hub-last-content">
+                    <p className="home-hub-label">Last Update</p>
+                    <div className="home-hub-last-row">
+                      <h2>{latestPatch.title}</h2>
+                      <time dateTime={latestPatch.publishedAt}>{formatDisplayDate(latestPatch.publishedAt)}</time>
+                    </div>
+                    {followUpTimeline.length > 0 ? (
+                      <ul className="home-hub-last-followups">
+                        {followUpTimeline.map((timelineBlock) => (
+                          <li key={timelineBlock.id}>{formatUpdateLabel(timelineBlock.releaseType, timelineBlock.releasedAt)}</li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </div>
+                </Link>
+              ) : (
+                <Link href="/patches" className="home-hub-card-link home-hub-card-link--fallback">
+                  <div className="home-hub-last-content">
+                    <p className="home-hub-label">Last Update</p>
+                    <div className="home-hub-last-row">
+                      <h2>Update Unavailable</h2>
+                    </div>
+                    <p className="home-hub-empty">
+                      Latest patch data is temporarily unavailable. Open the patch archive to retry.
+                    </p>
+                  </div>
+                </Link>
+              )}
+            </article>
+
+            <article className="home-hub-card home-hub-card--feature home-hub-card--heroes">
+              <Link href="/heroes" className="home-hub-card-link">
+                <div className="home-hub-card-media">
+                  <Image
+                    src="/header_heroes.png"
+                    alt="Heroes update history"
+                    fill
+                    sizes={HUB_IMAGE_SIZES}
+                    quality={74}
+                    className="home-hub-card-image"
+                  />
+                </div>
+                <div className="home-hub-feature-copy">
+                  <p className="home-hub-label">Explore</p>
+                  <h2>Hero Change History</h2>
+                </div>
+              </Link>
+            </article>
+
+            <article className="home-hub-card home-hub-card--feature home-hub-card--items">
+              <Link href="/items" className="home-hub-card-link">
+                <div className="home-hub-card-media">
+                  <Image
+                    src="/Items.png"
+                    alt="Item update history"
+                    fill
+                    sizes={HUB_IMAGE_SIZES}
+                    quality={74}
+                    className="home-hub-card-image"
+                  />
+                </div>
+                <div className="home-hub-feature-copy">
+                  <p className="home-hub-label">Explore</p>
+                  <h2>Item Change History</h2>
+                </div>
+              </Link>
+            </article>
+
+            <article className="home-hub-card home-hub-card--feature home-hub-card--spells">
+              <Link href="/spells" className="home-hub-card-link">
+                <div className="home-hub-card-media">
+                  <Image
+                    src="/rem_helper.png"
+                    alt="Spell update history"
+                    fill
+                    sizes={HUB_IMAGE_SIZES}
+                    quality={74}
+                    className="home-hub-card-image"
+                  />
+                </div>
+                <div className="home-hub-feature-copy">
+                  <p className="home-hub-label">Explore</p>
+                  <h2>Spell Change History</h2>
+                </div>
+              </Link>
+            </article>
           </div>
-        </div>
-      </section>
-
-      <section className="shell patch-list-section">
-        <div className="home-section-head">
-          <h2>Latest Updates</h2>
-          <Link href="/patches" className="home-view-all">
-            View full archive
-          </Link>
-        </div>
-
-        <div className="patch-grid">
-          {patchList.patches.length > 0 ? (
-            patchList.patches.map((patch, index) => <PatchCard key={patch.id} patch={patch} index={index} />)
-          ) : (
-            <p>Latest updates are temporarily unavailable. Open the full archive to retry.</p>
-          )}
         </div>
       </section>
     </main>

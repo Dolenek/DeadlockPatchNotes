@@ -125,16 +125,14 @@ export default async function PatchDetailPage({ params }: PatchDetailPageProps) 
       <main className="patch-detail-page">
         <JsonLd data={patchSchema} />
 
-        <section className="patch-hero" style={{ backgroundImage: `url(${patch.imageUrl})` }}>
-          <div className="patch-hero-overlay">
-            <div className="shell patch-hero-content">
-              <h1>{patch.title}</h1>
-              <div className="patch-meta">
-                <time dateTime={patch.publishedAt}>{formatDisplayDate(patch.publishedAt)}</time>
-                <a href={patch.source.url} target="_blank" rel="noreferrer">
-                  Open Original
-                </a>
-              </div>
+        <section className="patch-hero">
+          <div className="shell patch-hero-content">
+            <h1>{patch.title}</h1>
+            <div className="patch-meta">
+              <time dateTime={patch.publishedAt}>{formatDisplayDate(patch.publishedAt)}</time>
+              <a href={patch.source.url} target="_blank" rel="noreferrer">
+                Open Original
+              </a>
             </div>
           </div>
         </section>

@@ -4,29 +4,26 @@
 
 .patch-hero {
   position: relative;
-  background-position: center;
-  background-size: cover;
-  border-bottom: 0;
+  border-bottom: 1px solid #21304852;
+  background: transparent;
 }
 
 .patch-hero-overlay {
-  background:
-    linear-gradient(180deg, #13110de0, #100e0bf5 50%, #0d0c0afc 100%),
-    radial-gradient(1300px 480px at 48% -8%, #8d6f4340, transparent 76%);
+  background: transparent;
 }
 
 .patch-hero-content {
-  padding: clamp(4.2rem, 8vw, 6.6rem) 0 clamp(2.4rem, 5vw, 3.1rem);
+  padding: clamp(1.8rem, 4.6vw, 3rem) 0 clamp(1rem, 2.6vw, 1.5rem);
   animation: rise-in 650ms ease both;
 }
 
 .patch-hero-content h1 {
-  margin: 0 0 0.8rem;
+  margin: 0 0 0.55rem;
   font-family: var(--font-heading);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   line-height: 1.16;
-  font-size: clamp(2rem, 5vw, 3.55rem);
+  font-size: clamp(1.8rem, 4.4vw, 2.9rem);
   max-width: 20ch;
 }
 
@@ -160,7 +157,7 @@
   position: sticky;
   top: 84px;
   align-self: start;
-  max-height: calc(100vh - 96px);
+  max-height: calc(100vh - 255px);
 }
 
 .patch-heroes-rail--empty {
