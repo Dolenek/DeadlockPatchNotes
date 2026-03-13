@@ -48,6 +48,9 @@ Default API base is `https://deadlockpatchnotes.com/api`.
 To override, set `API_BASE_URL` (for example `API_BASE_URL=http://localhost:8080 npm run dev`).
 If `API_BASE_URL` is set to an invalid URL, web startup fails fast.
 
+SEO-related web env vars:
+- `SITE_URL` (default `https://www.deadlockpatchnotes.com`) controls canonical URL and sitemap host.
+
 ### Sync patch notes into DB
 
 ```bash
@@ -79,6 +82,10 @@ This launches API and web in separate Windows shells and opens `http://localhost
 - `GET /api/v1/spells/{spellSlug}/changes?from=<date|rfc3339>&to=<date|rfc3339>`
 - `GET /api/v1/items`
 - `GET /api/v1/items/{itemSlug}/changes?from=<date|rfc3339>&to=<date|rfc3339>`
+
+Web SEO endpoints:
+- `GET /robots.txt`
+- `GET /sitemap.xml`
 
 ## Docker Deployment
 

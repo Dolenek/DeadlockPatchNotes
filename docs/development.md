@@ -39,6 +39,10 @@ API_BASE_URL=http://localhost:8080 npm run dev
 
 `API_BASE_URL` accepts both host-only and `/api`-suffixed values for the production domain.
 
+SEO env vars for web:
+
+- `SITE_URL` (default `https://www.deadlockpatchnotes.com`) controls canonical URL + sitemap host.
+
 ## Run Patch Sync
 
 ```bash

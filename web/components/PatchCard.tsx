@@ -73,7 +73,7 @@ export function PatchCard({ patch, index }: PatchCardProps) {
         <div className="patch-card-image-wrap">
           <Image
             src={imageUrl}
-            alt=""
+            alt={`${patch.title} cover image`}
             fill
             sizes={CARD_IMAGE_SIZES}
             quality={68}

@@ -21,6 +21,12 @@ API base URL resolution:
 - Normalizes exact `/api` suffix so both `https://deadlockpatchnotes.com` and `https://deadlockpatchnotes.com/api` are valid inputs.
 - Invalid non-empty `API_BASE_URL` throws `Invalid API_BASE_URL: ...`.
 
+SEO URL resolution:
+
+- Uses `SITE_URL` env when set.
+- Falls back to `https://www.deadlockpatchnotes.com` when env is missing/blank.
+- Invalid non-empty `SITE_URL` throws `Invalid SITE_URL: ...`.
+
 Fetch caching:
 
 - All API fetches use `next: { revalidate: 30 }`.
@@ -29,7 +35,10 @@ Fetch caching:
 
 ### Root
 
-- `/` redirects to `/patches`.
+- `/` is an indexable landing page.
+  - fetches latest patch cards via `getPatches(1, 6)`
+  - links to patch archive and entity timelines
+  - emits `WebSite` + `CollectionPage` JSON-LD
 
 ### Patch Pages
 
@@ -37,6 +46,10 @@ Fetch caching:
   - reads `page` query
   - normalizes with `clampPage` (invalid or `<1` -> `1`)
   - calls `getPatches(page, 12)`
+  - metadata behavior:
+    - page 1: canonical `/patches`, indexable
+    - page > 1: canonical self (`/patches?page=N`), `noindex,follow`
+  - emits `CollectionPage` JSON-LD
   - does not fetch per-card patch detail payloads
   - renders patch card grid + pagination
   - each card shows title/date on one row
@@ -46,6 +59,7 @@ Fetch caching:
 - `/patches/[slug]`
   - calls `getPatchBySlug(slug)`
   - API `404` triggers `notFound()`
+  - emits article metadata (canonical, OpenGraph, Twitter) and `Article` JSON-LD
   - renders timeline blocks + section renderer
   - patch timeline cross-links:
     - hero entry names link to `/heroes/[slug]`
@@ -69,6 +83,7 @@ Fetch caching:
 - `/heroes` -> `getHeroes()`
 - `/items` -> `getItems()`
 - `/spells` -> `getSpells()`
+- all emit index metadata and `ItemList` JSON-LD
 
 Index-page API behavior:
 
@@ -80,6 +95,7 @@ Index-page API behavior:
 - `/heroes/[slug]` -> `getHeroChanges(slug)`
 - `/items/[slug]` -> `getItemChanges(slug)`
 - `/spells/[slug]` -> `getSpellChanges(slug)`
+- all emit detail metadata and entity-focused `WebPage` JSON-LD
 
 Detail-page behavior:
 
@@ -95,14 +111,28 @@ Detail-page behavior:
 ### Global Layout + Navigation
 
 - `TopNav` is rendered globally in `app/layout.tsx` for all routes.
+- global metadata defaults are defined in `app/layout.tsx` (`metadataBase`, title template, robots, OpenGraph, Twitter).
 - Global texture stack is rendered behind all routes in layout:
   - base: `/bg_texture.jpg`
   - mid layer: `/bg_texture_dark.jpg`
   - deep layer: `/bg_texture_darkest.jpg`
   - seams use `scratch_mask_*` overlays between layer transitions
 - Top nav includes:
+  - brand link points to `/`
   - internal links: patches, heroes, spells, items
   - docs/links: changelog forum, PatchNotes API (`/api/scalar`), assets API docs, Steam store page
+
+### SEO Utility Routes
+
+- `GET /robots.txt`
+  - allows crawl on content routes
+  - disallows `/api`, `/api/`, `/image-proxy`
+  - includes sitemap pointer
+- `GET /sitemap.xml`
+  - includes core content pages (`/`, `/patches`, `/heroes`, `/items`, `/spells`)
+  - includes dynamic detail URLs from patches/heroes/items/spells APIs
+  - intentionally excludes paginated `/patches?page=N` URLs
+  - revalidated using the shared API fetch cache window (`30s`)
 
 ### Image Proxy Route
 
@@ -158,6 +188,7 @@ Route-specific notes:
 - headline: `Oops.`
 - includes centered `/lil_troopers.png` artwork
 - primary action links to `/patches`
+- metadata sets `noindex,nofollow`
 
 ## Utility Semantics
 

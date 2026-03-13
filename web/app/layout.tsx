@@ -1,15 +1,66 @@
 import type { Metadata } from "next";
 import { TopNav } from "@/components/TopNav";
+import {
+  SEO_DEFAULT_DESCRIPTION,
+  SEO_METADATA_BASE_URL,
+  SEO_SITE_NAME,
+  buildAbsoluteURL,
+  resolveSocialImageURL,
+} from "@/lib/seo";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Deadlock Patch Notes",
-  description: "Deadlock patch notes archive with long-form gameplay updates and balance changes.",
+  metadataBase: SEO_METADATA_BASE_URL,
+  title: {
+    default: SEO_SITE_NAME,
+    template: `%s | ${SEO_SITE_NAME}`,
+  },
+  description: SEO_DEFAULT_DESCRIPTION,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: buildAbsoluteURL("/"),
+    title: SEO_SITE_NAME,
+    description: SEO_DEFAULT_DESCRIPTION,
+    siteName: SEO_SITE_NAME,
+    locale: "en_US",
+    images: [
+      {
+        url: resolveSocialImageURL(),
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SEO_SITE_NAME,
+    description: SEO_DEFAULT_DESCRIPTION,
+    images: [resolveSocialImageURL()],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+    },
+  },
+  keywords: [
+    "deadlock patch notes",
+    "deadlock updates",
+    "deadlock hero changes",
+    "deadlock spell changes",
+    "deadlock item changes",
+  ],
   icons: {
     icon: "/deadlock_logo.webp",
     shortcut: "/deadlock_logo.webp",
-    apple: "/deadlock_logo.webp"
-  }
+    apple: "/deadlock_logo.webp",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

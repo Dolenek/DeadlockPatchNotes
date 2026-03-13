@@ -1,8 +1,39 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+import { JsonLd } from "@/components/JsonLd";
 import { FallbackImage } from "@/components/FallbackImage";
 import { APIError, getItems } from "@/lib/api";
 import { ItemListResponse } from "@/lib/types";
 import { formatCompactDate } from "@/lib/utils";
+import { SEO_SITE_NAME, buildAbsoluteURL, resolveSocialImageURL, truncateDescription } from "@/lib/seo";
+
+const ITEMS_TITLE = "Deadlock Item Change History";
+const ITEMS_DESCRIPTION = truncateDescription(
+  "Track Deadlock item balance updates over time with full timeline links back to each patch note."
+);
+
+export const metadata: Metadata = {
+  title: ITEMS_TITLE,
+  description: ITEMS_DESCRIPTION,
+  alternates: {
+    canonical: "/items",
+  },
+  keywords: ["deadlock items", "deadlock item patch notes", "deadlock item changes"],
+  openGraph: {
+    type: "website",
+    url: buildAbsoluteURL("/items"),
+    title: ITEMS_TITLE,
+    description: ITEMS_DESCRIPTION,
+    siteName: SEO_SITE_NAME,
+    images: [{ url: resolveSocialImageURL("/Oldgods_header.png") }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: ITEMS_TITLE,
+    description: ITEMS_DESCRIPTION,
+    images: [resolveSocialImageURL("/Oldgods_header.png")],
+  },
+};
 
 export default async function ItemsPage() {
   let payload: ItemListResponse = { items: [] };
@@ -14,8 +45,22 @@ export default async function ItemsPage() {
     }
   }
 
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Deadlock Items",
+    itemListElement: payload.items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      url: buildAbsoluteURL(`/items/${item.slug}`),
+    })),
+  };
+
   return (
     <main className="page-like-patches">
+      <JsonLd data={schema} />
+
       <section className="heroes-masthead">
         <div className="shell">
           <p className="eyebrow">Deadlock Items</p>

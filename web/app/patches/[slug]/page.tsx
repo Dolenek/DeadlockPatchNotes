@@ -1,9 +1,19 @@
+import type { Metadata } from "next";
+import { cache } from "react";
 import { PatchHeroesRail } from "@/components/PatchHeroesRail";
+import { JsonLd } from "@/components/JsonLd";
 import { notFound } from "next/navigation";
 import { PatchSectionRenderer } from "@/components/PatchSectionRenderer";
 import { TableOfContents, TableOfContentsGroup } from "@/components/TableOfContents";
 import { APIError, getPatchBySlug } from "@/lib/api";
-import { PatchSection, PatchTimelineBlock } from "@/lib/types";
+import { PatchDetail, PatchSection, PatchTimelineBlock } from "@/lib/types";
+import {
+  SEO_SITE_NAME,
+  buildAbsoluteURL,
+  resolveSocialImageURL,
+  toISODate,
+  truncateDescription,
+} from "@/lib/seo";
 import { entryAnchor, formatDisplayDate, formatUpdateLabel, sectionAnchor, timelineBlockAnchor } from "@/lib/utils";
 import type { PatchHeroesRailBlock } from "@/components/PatchHeroesRail";
 
@@ -13,17 +23,108 @@ type PatchDetailPageProps = {
 
 type TimelineBlockForDisplay = PatchTimelineBlock & { sections: PatchSection[] };
 
+const getPatch = cache(async (slug: string) => getPatchBySlug(slug));
+
+function buildPatchDescription(patch: PatchDetail) {
+  if (patch.intro.trim() !== "") {
+    return truncateDescription(patch.intro);
+  }
+  return truncateDescription(`Read the full Deadlock patch timeline and balance changes for ${patch.title}.`);
+}
+
+function resolvePatchModifiedAt(patch: PatchDetail) {
+  const timeline = patch.releaseTimeline ?? [];
+  const latestTimelineDate = timeline.reduce<string | undefined>((latest, block) => {
+    if (!latest) {
+      return block.releasedAt;
+    }
+    return block.releasedAt > latest ? block.releasedAt : latest;
+  }, undefined);
+
+  return toISODate(latestTimelineDate ?? patch.publishedAt);
+}
+
+export async function generateMetadata({ params }: PatchDetailPageProps): Promise<Metadata> {
+  const { slug } = await params;
+
+  try {
+    const patch = await getPatch(slug);
+    const title = patch.title;
+    const description = buildPatchDescription(patch);
+    const canonicalPath = `/patches/${patch.slug}`;
+    const publishedTime = toISODate(patch.publishedAt);
+    const modifiedTime = resolvePatchModifiedAt(patch);
+    const imageURL = resolveSocialImageURL(patch.imageUrl);
+
+    return {
+      title,
+      description,
+      alternates: {
+        canonical: canonicalPath,
+      },
+      keywords: ["deadlock patch notes", "deadlock update", patch.title.toLowerCase()],
+      openGraph: {
+        type: "article",
+        url: buildAbsoluteURL(canonicalPath),
+        title,
+        description,
+        siteName: SEO_SITE_NAME,
+        images: [{ url: imageURL }],
+        publishedTime,
+        modifiedTime,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: [imageURL],
+      },
+    };
+  } catch (error) {
+    if (error instanceof APIError && error.status === 404) {
+      return {
+        title: "Patch Not Found",
+        robots: { index: false, follow: false },
+      };
+    }
+    throw error;
+  }
+}
+
 export default async function PatchDetailPage({ params }: PatchDetailPageProps) {
   const { slug } = await params;
 
   try {
-    const patch = await getPatchBySlug(slug);
+    const patch = await getPatch(slug);
     const timeline = buildTimelineForDisplay(patch.releaseTimeline, patch.sections, patch.source, patch.publishedAt);
     const tocGroups = buildTimelineTableOfContents(timeline);
     const heroRailBlocks = buildTimelineHeroRail(timeline);
+    const patchURL = buildAbsoluteURL(`/patches/${patch.slug}`);
+    const patchSchema = {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: patch.title,
+      description: buildPatchDescription(patch),
+      datePublished: toISODate(patch.publishedAt),
+      dateModified: resolvePatchModifiedAt(patch),
+      image: [resolveSocialImageURL(patch.imageUrl)],
+      author: {
+        "@type": "Organization",
+        name: "Valve",
+      },
+      publisher: {
+        "@type": "Organization",
+        name: SEO_SITE_NAME,
+        url: buildAbsoluteURL("/"),
+      },
+      mainEntityOfPage: patchURL,
+      url: patchURL,
+    };
 
     return (
       <main className="patch-detail-page">
+        <JsonLd data={patchSchema} />
+
         <section className="patch-hero" style={{ backgroundImage: `url(${patch.imageUrl})` }}>
           <div className="patch-hero-overlay">
             <div className="shell patch-hero-content">
