@@ -66,6 +66,14 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://assets-bucket.deadlock-api.com" crossOrigin="" />
+        <link rel="preconnect" href="https://assets.deadlock-api.com" crossOrigin="" />
+        <link rel="preconnect" href="https://clan.akamai.steamstatic.com" crossOrigin="" />
+        <link rel="dns-prefetch" href="//assets-bucket.deadlock-api.com" />
+        <link rel="dns-prefetch" href="//assets.deadlock-api.com" />
+        <link rel="dns-prefetch" href="//clan.akamai.steamstatic.com" />
+      </head>
       <body>
         <div className="site-root">
           <div className="site-background" aria-hidden>

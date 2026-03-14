@@ -25,7 +25,10 @@ const nextConfig: NextConfig = {
         hostname: "assets.deadlock-api.com"
       }
     ],
-    formats: ["image/avif", "image/webp"],
+    formats: ["image/webp"],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1536, 1920],
+    imageSizes: [48, 64, 74, 96, 128, 160],
+    qualities: [54, 56, 58, 60, 68, 74, 75],
     minimumCacheTTL: 86400
   }
 };

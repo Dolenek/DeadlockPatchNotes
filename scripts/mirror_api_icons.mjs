@@ -95,6 +95,29 @@ function sha1(value) {
   return crypto.createHash("sha1").update(value).digest("hex");
 }
 
+function shortHash(value, length = 12) {
+  return sha1(value).slice(0, length);
+}
+
+function toFileSlug(value, maxLength = 72) {
+  const normalized = String(value ?? "")
+    .toLowerCase()
+    .replace(/[%_]+/g, "-")
+    .replace(/[^a-z0-9-]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+
+  if (!normalized) {
+    return "";
+  }
+
+  return normalized.slice(0, maxLength).replace(/-+$/g, "");
+}
+
+function isHexOnly(value) {
+  return /^[a-f0-9]{12,}$/i.test(value);
+}
+
 function extensionFromURL(url) {
   try {
     const parsed = new URL(url);
@@ -119,6 +142,48 @@ function extensionFromContentType(contentType) {
 
 function toRelativeDiskPath(localPath) {
   return localPath.replace(/^\/+/, "");
+}
+
+function baseNameFromURL(url) {
+  try {
+    const parsed = new URL(url);
+    const rawName = path.basename(parsed.pathname, path.extname(parsed.pathname));
+    return toFileSlug(decodeURIComponent(rawName));
+  } catch {
+    return "";
+  }
+}
+
+function firstSourceToken(source) {
+  const directMatch = source.match(/\b(?:patches|heroes|items|spells)\.(?:detail|list)\(([^)]+)\)/);
+  if (directMatch?.[1]) {
+    return toFileSlug(directMatch[1]);
+  }
+
+  const fallbackMatch = source.match(/\(([^)]+)\)/);
+  if (fallbackMatch?.[1]) {
+    return toFileSlug(fallbackMatch[1]);
+  }
+
+  return "";
+}
+
+function buildNameHint(url, auditRow) {
+  const fromURL = baseNameFromURL(url);
+  if (fromURL && !isHexOnly(fromURL)) {
+    return fromURL;
+  }
+
+  const sources = Array.isArray(auditRow?.sources) ? auditRow.sources : [];
+  for (const source of sources) {
+    const token = firstSourceToken(String(source ?? ""));
+    if (!token || isHexOnly(token) || token.startsWith("post-")) {
+      continue;
+    }
+    return token;
+  }
+
+  return fromURL || "asset";
 }
 
 async function fetchBufferWithRetry(url, attempts = 4) {
@@ -180,10 +245,51 @@ async function mapWithConcurrency(items, concurrency, worker) {
   await Promise.all(runners);
 }
 
-function buildLocalPath(url, contentType) {
+function buildLocalPath(url, contentType, nameHint = "") {
   const ext = extensionFromURL(url) || extensionFromContentType(contentType) || ".bin";
-  const token = sha1(url);
-  return `/assets/mirror/icons/${token}${ext}`;
+  const slug = toFileSlug(nameHint) || "asset";
+  return `/assets/mirror/icons/${slug}-${shortHash(url)}${ext}`;
+}
+
+async function collectFilesRecursive(dirPath) {
+  const entries = await fs.readdir(dirPath, { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    const fullPath = path.join(dirPath, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...(await collectFilesRecursive(fullPath)));
+      continue;
+    }
+    if (entry.isFile()) {
+      files.push(fullPath);
+    }
+  }
+
+  return files;
+}
+
+async function pruneUnusedMirrorFiles(webPublicDir, usedLocalPaths) {
+  const iconsDir = path.join(webPublicDir, "assets", "mirror", "icons");
+  if (!syncFS.existsSync(iconsDir)) {
+    return 0;
+  }
+
+  const usedDiskPaths = new Set(
+    [...usedLocalPaths].map((localPath) => path.join(webPublicDir, toRelativeDiskPath(localPath))),
+  );
+  const allDiskFiles = await collectFilesRecursive(iconsDir);
+  let removed = 0;
+
+  for (const diskPath of allDiskFiles) {
+    if (usedDiskPaths.has(diskPath)) {
+      continue;
+    }
+    await fs.rm(diskPath, { force: true });
+    removed += 1;
+  }
+
+  return removed;
 }
 
 async function loadJSON(filePath) {
@@ -198,6 +304,9 @@ async function main() {
 
   const targetRows = auditRows.filter((row) => row?.kind === "remote" && row?.allowedHost === true);
   const targetURLs = [...new Set(targetRows.map((row) => String(row?.url ?? "").trim()).filter(Boolean))];
+  const targetRowByURL = new Map(
+    targetRows.map((row) => [String(row?.url ?? "").trim(), row]),
+  );
 
   const existingByURL = new Map();
   if (syncFS.existsSync(options.manifestPath)) {
@@ -216,12 +325,25 @@ async function main() {
   const failures = [];
   let downloadedCount = 0;
   let skippedExisting = 0;
+  let renamedExisting = 0;
 
   await mapWithConcurrency(targetURLs, options.concurrency, async (url) => {
+    const row = targetRowByURL.get(url);
+    const nameHint = buildNameHint(url, row);
     const existingLocalPath = existingByURL.get(url);
     if (existingLocalPath) {
       const existingDiskPath = path.join(options.webPublicDir, toRelativeDiskPath(existingLocalPath));
       if (syncFS.existsSync(existingDiskPath)) {
+        const desiredLocalPath = buildLocalPath(url, extensionFromURL(existingLocalPath), nameHint);
+        if (desiredLocalPath !== existingLocalPath) {
+          const desiredDiskPath = path.join(options.webPublicDir, toRelativeDiskPath(desiredLocalPath));
+          await fs.mkdir(path.dirname(desiredDiskPath), { recursive: true });
+          await fs.copyFile(existingDiskPath, desiredDiskPath);
+          resolvedByURL.set(url, desiredLocalPath);
+          renamedExisting += 1;
+          process.stdout.write(`renamed ${desiredLocalPath}\n`);
+          return;
+        }
         resolvedByURL.set(url, existingLocalPath);
         skippedExisting += 1;
         return;
@@ -230,7 +352,7 @@ async function main() {
 
     try {
       const { bytes, contentType } = await fetchBufferWithRetry(url);
-      const localPath = buildLocalPath(url, contentType);
+      const localPath = buildLocalPath(url, contentType, nameHint);
       const outputPath = path.join(options.webPublicDir, toRelativeDiskPath(localPath));
       await fs.mkdir(path.dirname(outputPath), { recursive: true });
       await fs.writeFile(outputPath, bytes);
@@ -258,6 +380,11 @@ async function main() {
     .map(([url, localPath]) => ({ url, localPath }))
     .sort((left, right) => left.url.localeCompare(right.url));
 
+  const removedStaleFiles = await pruneUnusedMirrorFiles(
+    options.webPublicDir,
+    new Set(assets.map((entry) => entry.localPath)),
+  );
+
   const manifest = {
     generatedAt: new Date().toISOString(),
     sourceApiBase: String(auditReport?.apiBaseURL ?? ""),
@@ -273,6 +400,8 @@ async function main() {
   process.stdout.write(`target remote urls: ${targetURLs.length}\n`);
   process.stdout.write(`downloaded: ${downloadedCount}\n`);
   process.stdout.write(`reused existing: ${skippedExisting}\n`);
+  process.stdout.write(`renamed existing: ${renamedExisting}\n`);
+  process.stdout.write(`removed stale files: ${removedStaleFiles}\n`);
   process.stdout.write(`failures: ${failures.length}\n`);
 }
 

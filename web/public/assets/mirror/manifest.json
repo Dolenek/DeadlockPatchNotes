@@ -1,0 +1,1384 @@
+{
+  "generatedAt": "2026-03-14T20:14:54.862Z",
+  "sourceApiBase": "https://deadlockpatchnotes.com",
+  "assetCount": 344,
+  "assets": [
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/archer/archer_charged_shot.png",
+      "localPath": "/assets/mirror/icons/archer-charged-shot-cce123bde7ef.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/archer/archer_guided_arrow.png",
+      "localPath": "/assets/mirror/icons/archer-guided-arrow-25e9d97c5370.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/archer/archer_power_jump.png",
+      "localPath": "/assets/mirror/icons/archer-power-jump-ad97b8ae1f77.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/archer/imobolize_trap.png",
+      "localPath": "/assets/mirror/icons/imobolize-trap-ecbff026c255.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/astro/holliday_bounce_pad.png",
+      "localPath": "/assets/mirror/icons/holliday-bounce-pad-106b65fd74bf.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/astro/holliday_crackshot.png",
+      "localPath": "/assets/mirror/icons/holliday-crackshot-6449d7fe302b.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/astro/holliday_powder_keg.png",
+      "localPath": "/assets/mirror/icons/holliday-powder-keg-90b904d87db7.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/astro/holliday_spirit_lasso.png",
+      "localPath": "/assets/mirror/icons/holliday-spirit-lasso-557597f06ba0.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bebop/bebop_hook.png",
+      "localPath": "/assets/mirror/icons/bebop-hook-3dbf6fadfbda.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bebop/bebop_hyper_beam.png",
+      "localPath": "/assets/mirror/icons/bebop-hyper-beam-c0a432c420e0.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bebop/bebop_sticky_bomb.png",
+      "localPath": "/assets/mirror/icons/bebop-sticky-bomb-6204f4e41927.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bebop/bebop_uppercut.png",
+      "localPath": "/assets/mirror/icons/bebop-uppercut-0d379aae1643.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bookworm/bookworm_blindinglight.png",
+      "localPath": "/assets/mirror/icons/bookworm-blindinglight-0f83e7502fe5.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bookworm/bookworm_charge.png",
+      "localPath": "/assets/mirror/icons/bookworm-charge-065b2639636d.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bookworm/bookworm_defendandfight.png",
+      "localPath": "/assets/mirror/icons/bookworm-defendandfight-c76daa47a5d7.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bookworm/bookworm_dragon.png",
+      "localPath": "/assets/mirror/icons/bookworm-dragon-28ee82a389af.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bull_beef.png",
+      "localPath": "/assets/mirror/icons/bull-beef-0c4d476140df.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bull_charge.png",
+      "localPath": "/assets/mirror/icons/bull-charge-9426e90d79f1.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bull_drain.png",
+      "localPath": "/assets/mirror/icons/bull-drain-0ffa18146bd9.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/bull_jump.png",
+      "localPath": "/assets/mirror/icons/bull-jump-74595417d752.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/chrono/chrono_swap.png",
+      "localPath": "/assets/mirror/icons/chrono-swap-ce7154621bc3.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/chrono/chrono_time_bomb.png",
+      "localPath": "/assets/mirror/icons/chrono-time-bomb-509bc3d82b56.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/chrono/chrono_time_wall.png",
+      "localPath": "/assets/mirror/icons/chrono-time-wall-8946bd9a22c6.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/drifter/darkness.png",
+      "localPath": "/assets/mirror/icons/darkness-e7a52535e0e5.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/drifter/drifter_claw.png",
+      "localPath": "/assets/mirror/icons/drifter-claw-f93539e596c9.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/drifter/drifter_stalkersmark.png",
+      "localPath": "/assets/mirror/icons/drifter-stalkersmark-6371438963b9.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/drifter/drifter_thehunger.png",
+      "localPath": "/assets/mirror/icons/drifter-thehunger-56211ffa170f.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/duo/duo_attack.png",
+      "localPath": "/assets/mirror/icons/duo-attack-47d312d83da6.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/engineer_fissure_2.png",
+      "localPath": "/assets/mirror/icons/engineer-fissure-2-e5d5e44fabba.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/engineer_resupply.png",
+      "localPath": "/assets/mirror/icons/engineer-resupply-5df69e71bb9a.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/engineer_rockets.png",
+      "localPath": "/assets/mirror/icons/engineer-rockets-87bd5201b553.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/engineer_turret.png",
+      "localPath": "/assets/mirror/icons/engineer-turret-51691a7638ad.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/familiar/familiar_helpers.png",
+      "localPath": "/assets/mirror/icons/familiar-helpers-595e2ef8b6c9.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/familiar/familiar_pillow.png",
+      "localPath": "/assets/mirror/icons/familiar-pillow-9ddcb3afc573.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/familiar/familiar_sleep.png",
+      "localPath": "/assets/mirror/icons/familiar-sleep-39a1952c0dd3.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/familiar/familiar_tag_along.png",
+      "localPath": "/assets/mirror/icons/familiar-tag-along-b8ed99cf1a52.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/fencer/fencer_lungingstab.png",
+      "localPath": "/assets/mirror/icons/fencer-lungingstab-f417bbbf5f2d.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/fencer/fencer_riposte.png",
+      "localPath": "/assets/mirror/icons/fencer-riposte-e6e1279f9ffa.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/fencer/fencer_ult.png",
+      "localPath": "/assets/mirror/icons/fencer-ult-ee410b966b51.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/frank/frank_aura_of_suffering.png",
+      "localPath": "/assets/mirror/icons/frank-aura-of-suffering-c35835a22946.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/frank/frank_jump_start.png",
+      "localPath": "/assets/mirror/icons/frank-jump-start-a968a42f227e.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/frank/frank_pain_battery.png",
+      "localPath": "/assets/mirror/icons/frank-pain-battery-772ec1bc8def.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/frank/frank_shocking_reanimation.png",
+      "localPath": "/assets/mirror/icons/frank-shocking-reanimation-9fc305822b2d.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/giga_ball.png",
+      "localPath": "/assets/mirror/icons/giga-ball-8915eae12112.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/giga_chain.png",
+      "localPath": "/assets/mirror/icons/giga-chain-386548adc8a2.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/giga_static.png",
+      "localPath": "/assets/mirror/icons/giga-static-e2dacca880ad.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/giga_storm.png",
+      "localPath": "/assets/mirror/icons/giga-storm-c829cadef95a.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/grappler/grappler_combo.png",
+      "localPath": "/assets/mirror/icons/grappler-combo-898157b22a77.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/grappler/grappler_regen.png",
+      "localPath": "/assets/mirror/icons/grappler-regen-03af7a3617dd.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/grappler/grappler_spin.png",
+      "localPath": "/assets/mirror/icons/grappler-spin-49d9624cc7f5.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/grappler/grappler_throw_sand.png",
+      "localPath": "/assets/mirror/icons/grappler-throw-sand-ccfd19743906.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/haze/haze_bullet_flurry.png",
+      "localPath": "/assets/mirror/icons/haze-bullet-flurry-ee62dcb3c04c.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/haze/haze_fixation.png",
+      "localPath": "/assets/mirror/icons/haze-fixation-9ea381c23131.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/haze/haze_sleep_dagger.png",
+      "localPath": "/assets/mirror/icons/haze-sleep-dagger-183fb101bb2f.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/haze/haze_smoke_bomb.png",
+      "localPath": "/assets/mirror/icons/haze-smoke-bomb-842447f1c031.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/hornet/hornet_assassinate.png",
+      "localPath": "/assets/mirror/icons/hornet-assassinate-9741133e408f.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/hornet/hornet_crow.png",
+      "localPath": "/assets/mirror/icons/hornet-crow-b591239d3333.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/hornet/vindicta_flight.png",
+      "localPath": "/assets/mirror/icons/vindicta-flight-c166b49a7f87.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/hornet/vindicta_stake.png",
+      "localPath": "/assets/mirror/icons/vindicta-stake-56840479bf97.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/inferno_bomb.png",
+      "localPath": "/assets/mirror/icons/inferno-bomb-6a4aaa7f3ef8.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/inferno_dash.png",
+      "localPath": "/assets/mirror/icons/inferno-dash-37a51baa7cbe.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/inferno_deflect.png",
+      "localPath": "/assets/mirror/icons/inferno-deflect-e7b9eabd0b3e.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/inferno_molotov.png",
+      "localPath": "/assets/mirror/icons/inferno-molotov-6aed0f10deee.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/kelvin/freezing_grenade.png",
+      "localPath": "/assets/mirror/icons/freezing-grenade-72bdecd7a256.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/kelvin/frozen_shelter.png",
+      "localPath": "/assets/mirror/icons/frozen-shelter-89e8ad17b2d7.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/kelvin/ice_beam.png",
+      "localPath": "/assets/mirror/icons/ice-beam-c32c660f47ff.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/kelvin/ice_path.png",
+      "localPath": "/assets/mirror/icons/ice-path-cd9c43e19002.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/lash/lash_counter_lash.png",
+      "localPath": "/assets/mirror/icons/lash-counter-lash-c2e3e97917eb.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/lash/lash_death_slam.png",
+      "localPath": "/assets/mirror/icons/lash-death-slam-73ad4fd37b22.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/lash/lash_flog.png",
+      "localPath": "/assets/mirror/icons/lash-flog-862821182763.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/lash/lash_lash.png",
+      "localPath": "/assets/mirror/icons/lash-lash-e28ae2af3a52.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/magician/magician_animalcurse.png",
+      "localPath": "/assets/mirror/icons/magician-animalcurse-399fd61fdf3f.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/magician/magician_cloneturret.png",
+      "localPath": "/assets/mirror/icons/magician-cloneturret-0dda163d07d4.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/magician/magician_copyult.png",
+      "localPath": "/assets/mirror/icons/magician-copyult-eb2869bb6268.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/magician/magician_magicbolt.png",
+      "localPath": "/assets/mirror/icons/magician-magicbolt-8fb51dcb9fe6.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/mirage/mirage_fire_beetles.png",
+      "localPath": "/assets/mirror/icons/mirage-fire-beetles-5a684ffc2214.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/mirage/mirage_sand_phantom.png",
+      "localPath": "/assets/mirror/icons/mirage-sand-phantom-92908c40d85b.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/mirage/mirage_teleport.png",
+      "localPath": "/assets/mirror/icons/mirage-teleport-b2b3c2d5be76.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/mirage/mirage_tornado.png",
+      "localPath": "/assets/mirror/icons/mirage-tornado-114c988529a1.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/nano/nano_catform.png",
+      "localPath": "/assets/mirror/icons/nano-catform-4e5f8d7fe5fe.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/nano/nano_clustergrenade.png",
+      "localPath": "/assets/mirror/icons/nano-clustergrenade-bdebccc33268.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/nano/nano_dash.png",
+      "localPath": "/assets/mirror/icons/nano-dash-769f40e5daa4.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/nano/nano_shadow_pulse.png",
+      "localPath": "/assets/mirror/icons/nano-shadow-pulse-2273eceac89c.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/necro/necro_gravestone.png",
+      "localPath": "/assets/mirror/icons/necro-gravestone-def592a3f1a0.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/necro/necro_hands.png",
+      "localPath": "/assets/mirror/icons/necro-hands-b6ace69a6067.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/necro/necro_skull.png",
+      "localPath": "/assets/mirror/icons/necro-skull-7d6f464eda13.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/priest/priest_crossbow.png",
+      "localPath": "/assets/mirror/icons/priest-crossbow-413908e1c387.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/priest/priest_grenade.png",
+      "localPath": "/assets/mirror/icons/priest-grenade-59a6632bcf56.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/priest/priest_shotgun.png",
+      "localPath": "/assets/mirror/icons/priest-shotgun-58d319c47cb0.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/priest/priest_trap.png",
+      "localPath": "/assets/mirror/icons/priest-trap-022929c2f461.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/punkgoat/goat_blasted.png",
+      "localPath": "/assets/mirror/icons/goat-blasted-f0fdcf920ca1.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/punkgoat/goat_chaingang.png",
+      "localPath": "/assets/mirror/icons/goat-chaingang-b4fd473f0f6b.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/punkgoat/goat_risingram.png",
+      "localPath": "/assets/mirror/icons/goat-risingram-1b850462533c.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/punkgoat/goat_sigilslam.png",
+      "localPath": "/assets/mirror/icons/goat-sigilslam-bd2981f9722f.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/shiv/shiv_bloodletting.png",
+      "localPath": "/assets/mirror/icons/shiv-bloodletting-7288a8c076fe.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/shiv/shiv_flash.png",
+      "localPath": "/assets/mirror/icons/shiv-flash-290c58b4b411.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/shiv/shiv_killing_blow.png",
+      "localPath": "/assets/mirror/icons/shiv-killing-blow-6764a1dfee94.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/shiv/shiv_toss.png",
+      "localPath": "/assets/mirror/icons/shiv-toss-886a8256a3aa.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/slork/slork_invis.png",
+      "localPath": "/assets/mirror/icons/slork-invis-adc50abcc6be.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/spectre/blood_bomb.png",
+      "localPath": "/assets/mirror/icons/blood-bomb-1cfe612ec001.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/spectre/blood_exchange.png",
+      "localPath": "/assets/mirror/icons/blood-exchange-9d86d854d7c2.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/spectre/geist_dagger.png",
+      "localPath": "/assets/mirror/icons/geist-dagger-30036ad8eda0.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/spectre/life_drain.png",
+      "localPath": "/assets/mirror/icons/life-drain-893eeaad0b53.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/sumo/sumo_pork_bun.png",
+      "localPath": "/assets/mirror/icons/sumo-pork-bun-49a83d18efad.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/sumo/sumo_quantum.png",
+      "localPath": "/assets/mirror/icons/sumo-quantum-d9aed3a2fa92.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/sumo/sumo_stomp.png",
+      "localPath": "/assets/mirror/icons/sumo-stomp-5b83c8e18548.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/sumo/sumo_vacuum.png",
+      "localPath": "/assets/mirror/icons/sumo-vacuum-f1cd73e2ca86.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/synth/synth_affliction.png",
+      "localPath": "/assets/mirror/icons/synth-affliction-7763b44cc684.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/synth/synth_barrage.png",
+      "localPath": "/assets/mirror/icons/synth-barrage-df6a63251ca7.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/synth/synth_plasma_flux.png",
+      "localPath": "/assets/mirror/icons/synth-plasma-flux-7e649e649903.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/synth/synth_pulse.png",
+      "localPath": "/assets/mirror/icons/synth-pulse-d62f27d4fdd2.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/tengu/tengu_lightning_crash.png",
+      "localPath": "/assets/mirror/icons/tengu-lightning-crash-2ff10385fe9b.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/tengu/tengu_stone_form.png",
+      "localPath": "/assets/mirror/icons/tengu-stone-form-fdd7b90b1357.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/tengu/tengu_storm_flask.png",
+      "localPath": "/assets/mirror/icons/tengu-storm-flask-7a0ec281b26a.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/tengu/tengu_tether.png",
+      "localPath": "/assets/mirror/icons/tengu-tether-e360fb0e39f4.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/unicorn/unicorn_flare.png",
+      "localPath": "/assets/mirror/icons/unicorn-flare-ce74d1dd3443.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/unicorn/unicorn_luminousflux.png",
+      "localPath": "/assets/mirror/icons/unicorn-luminousflux-9a4a97874f60.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/unicorn/unicorn_orb.png",
+      "localPath": "/assets/mirror/icons/unicorn-orb-1e5050be1784.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/unicorn/unicorn_shield.png",
+      "localPath": "/assets/mirror/icons/unicorn-shield-1146a26c8da2.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/vampirebat/vampirebat_love_bites.png",
+      "localPath": "/assets/mirror/icons/vampirebat-love-bites-42037994cda7.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/vampirebat/vampirebat_nox_nostra.png",
+      "localPath": "/assets/mirror/icons/vampirebat-nox-nostra-18ae481b4cd1.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/vampirebat/vampirebat_rake.png",
+      "localPath": "/assets/mirror/icons/vampirebat-rake-650314dbdc05.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/vampirebat/vampirebat_sanguine_retreat.png",
+      "localPath": "/assets/mirror/icons/vampirebat-sanguine-retreat-b894f8270b65.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/viper/viper_debuffdagger.png",
+      "localPath": "/assets/mirror/icons/viper-debuffdagger-d545a8732eb2.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/viper/viper_petrifybola.png",
+      "localPath": "/assets/mirror/icons/viper-petrifybola-29601479b5bc.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/viper/viper_snakedash.png",
+      "localPath": "/assets/mirror/icons/viper-snakedash-35b985fb1973.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/viper/viper_venom.png",
+      "localPath": "/assets/mirror/icons/viper-venom-b67f17479763.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/viscous/viscous_goo_ball.png",
+      "localPath": "/assets/mirror/icons/viscous-goo-ball-5c354da6c27c.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/viscous/viscous_goo_punch.png",
+      "localPath": "/assets/mirror/icons/viscous-goo-punch-52986cb1182a.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/viscous/viscous_goo_sphere.png",
+      "localPath": "/assets/mirror/icons/viscous-goo-sphere-fd3570fc4a5d.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/viscous/viscous_restorative_goo.png",
+      "localPath": "/assets/mirror/icons/viscous-restorative-goo-721d1f532938.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/warden/warden_crowd_control.png",
+      "localPath": "/assets/mirror/icons/warden-crowd-control-078ebd7f3fe6.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/warden/warden_high_alert.png",
+      "localPath": "/assets/mirror/icons/warden-high-alert-3fa29d8ad33d.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/warden/warden_lock_down.png",
+      "localPath": "/assets/mirror/icons/warden-lock-down-b5845f1eeeb3.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/warden/warden_riot_protocol.png",
+      "localPath": "/assets/mirror/icons/warden-riot-protocol-9f71890a06c0.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/werewolf/werewolf_bola.png",
+      "localPath": "/assets/mirror/icons/werewolf-bola-03569d5b256d.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/werewolf/werewolf_jumpback.png",
+      "localPath": "/assets/mirror/icons/werewolf-jumpback-d8429d48b200.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/werewolf/werewolf_lycancurse.png",
+      "localPath": "/assets/mirror/icons/werewolf-lycancurse-0d351b7137de.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/werewolf/werewolf_slamfire.png",
+      "localPath": "/assets/mirror/icons/werewolf-slamfire-4eed02c365fe.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/wraith_aura.png",
+      "localPath": "/assets/mirror/icons/wraith-aura-3bce7ef6e6b7.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/wraith_card_trick.png",
+      "localPath": "/assets/mirror/icons/wraith-card-trick-7bea4fe99474.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/wraith_lift.png",
+      "localPath": "/assets/mirror/icons/wraith-lift-241281f0d603.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/wraith_teleport.png",
+      "localPath": "/assets/mirror/icons/wraith-teleport-21e895a22563.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/yamato/yamato_blinding_steel.png",
+      "localPath": "/assets/mirror/icons/yamato-blinding-steel-d5d976f1d458.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/yamato/yamato_crimson_slash.png",
+      "localPath": "/assets/mirror/icons/yamato-crimson-slash-ba24580e4ef4.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/yamato/yamato_flying_strike.png",
+      "localPath": "/assets/mirror/icons/yamato-flying-strike-cb4a54dfefcd.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/abilities/yamato/yamato_power_slash.png",
+      "localPath": "/assets/mirror/icons/yamato-power-slash-bf8ff0df9543.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/archer_sm.png",
+      "localPath": "/assets/mirror/icons/archer-sm-83fdf0914dd9.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/astro_sm.png",
+      "localPath": "/assets/mirror/icons/astro-sm-3375674ab89d.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/bebop_sm.png",
+      "localPath": "/assets/mirror/icons/bebop-sm-1bb39e835e87.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/bookworm_sm.png",
+      "localPath": "/assets/mirror/icons/bookworm-sm-1f1cb51b070f.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/bull_sm.png",
+      "localPath": "/assets/mirror/icons/bull-sm-2b34f2a6c99f.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/chrono_sm.png",
+      "localPath": "/assets/mirror/icons/chrono-sm-dd512944cc03.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/digger_sm.png",
+      "localPath": "/assets/mirror/icons/digger-sm-0bf906935fcc.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/doorman_sm.png",
+      "localPath": "/assets/mirror/icons/doorman-sm-64b7f4ee540c.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/drifter_sm.png",
+      "localPath": "/assets/mirror/icons/drifter-sm-ce624a399bde.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/engineer_sm.png",
+      "localPath": "/assets/mirror/icons/engineer-sm-783692a5681c.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/familiar_sm.png",
+      "localPath": "/assets/mirror/icons/familiar-sm-198201f32923.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/fencer_sm.png",
+      "localPath": "/assets/mirror/icons/fencer-sm-35f78b42bd04.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/frank_sm.png",
+      "localPath": "/assets/mirror/icons/frank-sm-230753ce3945.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/gigawatt_sm.png",
+      "localPath": "/assets/mirror/icons/gigawatt-sm-c2afcc9a4ad1.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/haze_sm.png",
+      "localPath": "/assets/mirror/icons/haze-sm-fd045b7b05b2.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/hornet_sm.png",
+      "localPath": "/assets/mirror/icons/hornet-sm-bc84125120b0.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/inferno_sm.png",
+      "localPath": "/assets/mirror/icons/inferno-sm-12192a7f1135.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/kali_sm.png",
+      "localPath": "/assets/mirror/icons/kali-sm-a386594829dc.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/kelvin_sm.png",
+      "localPath": "/assets/mirror/icons/kelvin-sm-63ea718a66b5.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/lash_sm.png",
+      "localPath": "/assets/mirror/icons/lash-sm-d5497f1da908.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/magician_sm.png",
+      "localPath": "/assets/mirror/icons/magician-sm-f94871e3d55a.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/mirage_sm.png",
+      "localPath": "/assets/mirror/icons/mirage-sm-dce91a5db3d3.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/nano_sm.png",
+      "localPath": "/assets/mirror/icons/nano-sm-2f279776a1cd.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/necro_sm.png",
+      "localPath": "/assets/mirror/icons/necro-sm-c5086ea62db8.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/priest_sm.png",
+      "localPath": "/assets/mirror/icons/priest-sm-b941de518ad0.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/punkgoat_sm.png",
+      "localPath": "/assets/mirror/icons/punkgoat-sm-830935b0b47b.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/shiv_sm.png",
+      "localPath": "/assets/mirror/icons/shiv-sm-ad29de90a2f7.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/spectre_sm.png",
+      "localPath": "/assets/mirror/icons/spectre-sm-280e9ddd4474.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/sumo_sm.png",
+      "localPath": "/assets/mirror/icons/sumo-sm-2830bb1b51ad.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/synth_sm.png",
+      "localPath": "/assets/mirror/icons/synth-sm-7056362f6a10.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/tengu_sm.png",
+      "localPath": "/assets/mirror/icons/tengu-sm-0f2c441ac7a7.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/unicorn_sm.png",
+      "localPath": "/assets/mirror/icons/unicorn-sm-412a22933b02.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/vampirebat_sm.png",
+      "localPath": "/assets/mirror/icons/vampirebat-sm-41d03ce315c1.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/viscous_sm.png",
+      "localPath": "/assets/mirror/icons/viscous-sm-66acc1792e7e.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/warden_sm.png",
+      "localPath": "/assets/mirror/icons/warden-sm-02048cc804bf.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/werewolf_sm.png",
+      "localPath": "/assets/mirror/icons/werewolf-sm-3b05e8ebdd07.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/wraith_sm.png",
+      "localPath": "/assets/mirror/icons/wraith-sm-73ba9992b903.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/heroes/yamato_sm.png",
+      "localPath": "/assets/mirror/icons/yamato-sm-d7d345261a41.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/brawl/prism_blast.png",
+      "localPath": "/assets/mirror/icons/prism-blast-82bc6587c357.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/arcane_surge.png",
+      "localPath": "/assets/mirror/icons/arcane-surge-f973b19c627d.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/arctic_blast.png",
+      "localPath": "/assets/mirror/icons/arctic-blast-ee2895f723a9.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/boundless_spirit.png",
+      "localPath": "/assets/mirror/icons/boundless-spirit-84c51acbfd44.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/bullet_resist_shredder.png",
+      "localPath": "/assets/mirror/icons/bullet-resist-shredder-d28105287947.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/cold_front.png",
+      "localPath": "/assets/mirror/icons/cold-front-98aa142de4cf.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/curse.png",
+      "localPath": "/assets/mirror/icons/curse-20586c2c7708.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/decay.png",
+      "localPath": "/assets/mirror/icons/decay-dc321a9816d1.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/disarming_hex.png",
+      "localPath": "/assets/mirror/icons/disarming-hex-fb1a21060403.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/duration_extender.png",
+      "localPath": "/assets/mirror/icons/duration-extender-b3d541928aec.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/echo_shard.png",
+      "localPath": "/assets/mirror/icons/echo-shard-5728b9ca0290.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/escalating_exposure.png",
+      "localPath": "/assets/mirror/icons/escalating-exposure-31b277187484.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/ethereal_shift.png",
+      "localPath": "/assets/mirror/icons/ethereal-shift-736e895b80eb.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/extra_charge.png",
+      "localPath": "/assets/mirror/icons/extra-charge-4eb8150c94be.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/extra_spirit.png",
+      "localPath": "/assets/mirror/icons/extra-spirit-ce566858bf50.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/focus_lens.png",
+      "localPath": "/assets/mirror/icons/focus-lens-514f280173f1.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/goose_egg.png",
+      "localPath": "/assets/mirror/icons/goose-egg-0b7680fc9e7b.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/greater_expansion.png",
+      "localPath": "/assets/mirror/icons/greater-expansion-8529fb88e715.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/improved_cooldown.png",
+      "localPath": "/assets/mirror/icons/improved-cooldown-db970d6450ef.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/improved_spirit.png",
+      "localPath": "/assets/mirror/icons/improved-spirit-4e8c1583c763.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/knockdown.png",
+      "localPath": "/assets/mirror/icons/knockdown-2e22dbdc16c4.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/lightning_scroll.png",
+      "localPath": "/assets/mirror/icons/lightning-scroll-55bb986e4c8e.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/magic_carpet.png",
+      "localPath": "/assets/mirror/icons/magic-carpet-569fbae3a3e6.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/mercurial_magnum.png",
+      "localPath": "/assets/mirror/icons/mercurial-magnum-752ff9f2b5cb.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/mystic_burst.png",
+      "localPath": "/assets/mirror/icons/mystic-burst-7e0c340776c0.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/mystic_regen.png",
+      "localPath": "/assets/mirror/icons/mystic-regen-e1eb3c9b1535.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/mystic_reverb.png",
+      "localPath": "/assets/mirror/icons/mystic-reverb-377e0233e84c.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/mystic_slow.png",
+      "localPath": "/assets/mirror/icons/mystic-slow-67b7bbfd0d9c.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/mystic_vulnerability.png",
+      "localPath": "/assets/mirror/icons/mystic-vulnerability-a65093d60016.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/quicksilver_reload.png",
+      "localPath": "/assets/mirror/icons/quicksilver-reload-eee88f60f162.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/radiant_regeneration.png",
+      "localPath": "/assets/mirror/icons/radiant-regeneration-5ce949740293.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/rapid_recharge.png",
+      "localPath": "/assets/mirror/icons/rapid-recharge-0c13d7ee76dc.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/refresher.png",
+      "localPath": "/assets/mirror/icons/refresher-a91d7b0ba75f.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/rusted_barrel.png",
+      "localPath": "/assets/mirror/icons/rusted-barrel-c7a881a950dd.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/scourge.png",
+      "localPath": "/assets/mirror/icons/scourge-b3fdedde6a21.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/silence_glyph.png",
+      "localPath": "/assets/mirror/icons/silence-glyph-869e2ee9b2db.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/slowing_hex.png",
+      "localPath": "/assets/mirror/icons/slowing-hex-f2957d689d41.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/spirit_burn.png",
+      "localPath": "/assets/mirror/icons/spirit-burn-88acb84adafb.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/spirit_sap.png",
+      "localPath": "/assets/mirror/icons/spirit-sap-fcbeaa6932ba.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/spirit_snatch.png",
+      "localPath": "/assets/mirror/icons/spirit-snatch-46c431398c44.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/spirit_strike.png",
+      "localPath": "/assets/mirror/icons/spirit-strike-c5994899751c.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/superior_cooldown.png",
+      "localPath": "/assets/mirror/icons/superior-cooldown-216689e935f4.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/superior_duration.png",
+      "localPath": "/assets/mirror/icons/superior-duration-fde21dd9b3df.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/suppressor.png",
+      "localPath": "/assets/mirror/icons/suppressor-824dd7433f70.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/surge_of_power.png",
+      "localPath": "/assets/mirror/icons/surge-of-power-eb6891d2ac4c.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/tankbuster.png",
+      "localPath": "/assets/mirror/icons/tankbuster-c64cfad0440f.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/torment_pulse.png",
+      "localPath": "/assets/mirror/icons/torment-pulse-05ee92983f5a.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/transcendent_cooldown.png",
+      "localPath": "/assets/mirror/icons/transcendent-cooldown-39c10e76f0ed.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/spirit/vortex_web.png",
+      "localPath": "/assets/mirror/icons/vortex-web-dcca6282ca9c.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/bullet_lifesteal.png",
+      "localPath": "/assets/mirror/icons/bullet-lifesteal-227f66c55f16.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/bullet_resilience.png",
+      "localPath": "/assets/mirror/icons/bullet-resilience-81bad28c497a.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/cheat_death.png",
+      "localPath": "/assets/mirror/icons/cheat-death-383beeb5c745.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/colossus.png",
+      "localPath": "/assets/mirror/icons/colossus-5f81d388ccd6.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/counterspell.png",
+      "localPath": "/assets/mirror/icons/counterspell-c71f02e18e55.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/debuff_reducer.png",
+      "localPath": "/assets/mirror/icons/debuff-reducer-b594f4631274.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/debuff_remover.png",
+      "localPath": "/assets/mirror/icons/debuff-remover-e170b821d15a.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/divine_barrier.png",
+      "localPath": "/assets/mirror/icons/divine-barrier-eb2b1520ce6b.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/diviners_kevlar.png",
+      "localPath": "/assets/mirror/icons/diviners-kevlar-ac76e2e86a72.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/enchanters_emblem.png",
+      "localPath": "/assets/mirror/icons/enchanters-emblem-4ea04eadbe97.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/enduring_speed.png",
+      "localPath": "/assets/mirror/icons/enduring-speed-11e16c42c09d.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/extra_health.png",
+      "localPath": "/assets/mirror/icons/extra-health-f0dda8891e4a.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/extra_regen.png",
+      "localPath": "/assets/mirror/icons/extra-regen-6a1f2f5ad56d.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/extra_stamina.png",
+      "localPath": "/assets/mirror/icons/extra-stamina-908f8ebae6ad.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/fortitude.png",
+      "localPath": "/assets/mirror/icons/fortitude-77aa9e043b06.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/fury_trance.png",
+      "localPath": "/assets/mirror/icons/fury-trance-5191c1ebc2b7.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/guardian_ward.png",
+      "localPath": "/assets/mirror/icons/guardian-ward-e293fc56e713.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/healbane.png",
+      "localPath": "/assets/mirror/icons/healbane-713c50984cdf.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/healing_booster.png",
+      "localPath": "/assets/mirror/icons/healing-booster-ad73094b5d13.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/healing_nova.png",
+      "localPath": "/assets/mirror/icons/healing-nova-9594a641f7cb.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/healing_rite.png",
+      "localPath": "/assets/mirror/icons/healing-rite-be8a457b7a2d.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/healing_tempo.png",
+      "localPath": "/assets/mirror/icons/healing-tempo-0d15c9ae5577.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/infuser.png",
+      "localPath": "/assets/mirror/icons/infuser-82fdd94114de.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/inhibitor.png",
+      "localPath": "/assets/mirror/icons/inhibitor-11200902cbb2.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/juggernaut.png",
+      "localPath": "/assets/mirror/icons/juggernaut-b697918c3301.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/leech.png",
+      "localPath": "/assets/mirror/icons/leech-deed0f4aa101.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/lifestrike.png",
+      "localPath": "/assets/mirror/icons/lifestrike-1e442b17e943.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/majestic_leap.png",
+      "localPath": "/assets/mirror/icons/majestic-leap-b48c6e336192.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/melee_lifesteal.png",
+      "localPath": "/assets/mirror/icons/melee-lifesteal-aa06cfbd2863.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/metal_skin.png",
+      "localPath": "/assets/mirror/icons/metal-skin-a6d1a623d402.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/phantom_strike.png",
+      "localPath": "/assets/mirror/icons/phantom-strike-82e0add07c42.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/reactive_barrier.png",
+      "localPath": "/assets/mirror/icons/reactive-barrier-6f960c622046.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/rebuttal.png",
+      "localPath": "/assets/mirror/icons/rebuttal-804972c4ae0c.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/rescue_beam.png",
+      "localPath": "/assets/mirror/icons/rescue-beam-b65598b0c4e1.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/restorative_locket.png",
+      "localPath": "/assets/mirror/icons/restorative-locket-6f5c1aed008a.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/return_fire.png",
+      "localPath": "/assets/mirror/icons/return-fire-f5a8801c9999.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/siphon_bullets.png",
+      "localPath": "/assets/mirror/icons/siphon-bullets-96791c4c2194.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/spellbreaker.png",
+      "localPath": "/assets/mirror/icons/spellbreaker-6a19213e1d8d.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/spirit_lifesteal.png",
+      "localPath": "/assets/mirror/icons/spirit-lifesteal-68d4a493e744.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/spirit_resilience.png",
+      "localPath": "/assets/mirror/icons/spirit-resilience-7684cc70f866.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/spirit_shielding.png",
+      "localPath": "/assets/mirror/icons/spirit-shielding-d35039596a66.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/sprint_boots.png",
+      "localPath": "/assets/mirror/icons/sprint-boots-3fab35fe9dbb.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/stamina_mastery.png",
+      "localPath": "/assets/mirror/icons/stamina-mastery-569b9c49fb08.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/trophy_collector.png",
+      "localPath": "/assets/mirror/icons/trophy-collector-9754c999d39f.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/unstoppable.png",
+      "localPath": "/assets/mirror/icons/unstoppable-f34365ec60fd.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/vampiric_burst.png",
+      "localPath": "/assets/mirror/icons/vampiric-burst-ae3d7017e0e8.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/veil_walker.png",
+      "localPath": "/assets/mirror/icons/veil-walker-ee6300d762d2.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/warp_stone.png",
+      "localPath": "/assets/mirror/icons/warp-stone-6e707803c2c2.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/weapon_shielding.png",
+      "localPath": "/assets/mirror/icons/weapon-shielding-108155e391cf.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/vitality/witchmail.png",
+      "localPath": "/assets/mirror/icons/witchmail-a1c9f90a1e8a.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/active_reload.png",
+      "localPath": "/assets/mirror/icons/active-reload-55ad9b395bed.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/alchemical_fire.png",
+      "localPath": "/assets/mirror/icons/alchemical-fire-ff593908f5fe.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/alchemical_seal.png",
+      "localPath": "/assets/mirror/icons/alchemical-seal-9cced33927cd.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/armor_piercing_rounds.png",
+      "localPath": "/assets/mirror/icons/armor-piercing-rounds-332e33998b9d.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/backstabber.png",
+      "localPath": "/assets/mirror/icons/backstabber-d82b39383515.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/basic_magazine.png",
+      "localPath": "/assets/mirror/icons/basic-magazine-3b016f54bc41.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/berserker.png",
+      "localPath": "/assets/mirror/icons/berserker-cf1effa9c7b7.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/blood_tribute.png",
+      "localPath": "/assets/mirror/icons/blood-tribute-9caa4653fb12.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/burst_fire.png",
+      "localPath": "/assets/mirror/icons/burst-fire-abfa1902408a.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/capacitor.png",
+      "localPath": "/assets/mirror/icons/capacitor-e4a8008bf49d.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/close_quarters.png",
+      "localPath": "/assets/mirror/icons/close-quarters-a1fe19f29d82.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/crippling_headshot.png",
+      "localPath": "/assets/mirror/icons/crippling-headshot-d0a68b341272.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/crushing_fists.png",
+      "localPath": "/assets/mirror/icons/crushing-fists-8b61381e5289.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/cultist_sacrifice.png",
+      "localPath": "/assets/mirror/icons/cultist-sacrifice-7e48ac32ff0d.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/escalating_resilience.png",
+      "localPath": "/assets/mirror/icons/escalating-resilience-4559856d18f5.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/express_shot.png",
+      "localPath": "/assets/mirror/icons/express-shot-45484c9398e3.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/fleetfoot.png",
+      "localPath": "/assets/mirror/icons/fleetfoot-7751044cbe46.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/frenzy.png",
+      "localPath": "/assets/mirror/icons/frenzy-9c6ecce7099e.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/glass_cannon.png",
+      "localPath": "/assets/mirror/icons/glass-cannon-82589b603204.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/headhunter.png",
+      "localPath": "/assets/mirror/icons/headhunter-f4a154b9eabd.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/headshot_booster.png",
+      "localPath": "/assets/mirror/icons/headshot-booster-889ee3b86c25.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/heroic_aura.png",
+      "localPath": "/assets/mirror/icons/heroic-aura-6e92a6259b56.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/high_velocity_rounds.png",
+      "localPath": "/assets/mirror/icons/high-velocity-rounds-28f05e9b2d50.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/hollow_point.png",
+      "localPath": "/assets/mirror/icons/hollow-point-82ba9f70bc40.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/hunters_aura.png",
+      "localPath": "/assets/mirror/icons/hunters-aura-d1b2e5c931ca.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/intensifying_magazine.png",
+      "localPath": "/assets/mirror/icons/intensifying-magazine-e077a580eef0.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/kinetic_dash.png",
+      "localPath": "/assets/mirror/icons/kinetic-dash-699a98a7476c.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/long_range.png",
+      "localPath": "/assets/mirror/icons/long-range-2d461371ee3c.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/lucky_shot.png",
+      "localPath": "/assets/mirror/icons/lucky-shot-e5c098aa1df8.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/melee_charge.png",
+      "localPath": "/assets/mirror/icons/melee-charge-96e2ba5447a5.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/monster_rounds.png",
+      "localPath": "/assets/mirror/icons/monster-rounds-1086739e0364.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/mystic_shot.png",
+      "localPath": "/assets/mirror/icons/mystic-shot-59c6f5b8fe05.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/opening_rounds.png",
+      "localPath": "/assets/mirror/icons/opening-rounds-11918949efed.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/point_blank.png",
+      "localPath": "/assets/mirror/icons/point-blank-cea205b9e905.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/rapid_rounds.png",
+      "localPath": "/assets/mirror/icons/rapid-rounds-bb1d9fa63dc4.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/restorative_shot.png",
+      "localPath": "/assets/mirror/icons/restorative-shot-0c751effdda4.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/ricochet.png",
+      "localPath": "/assets/mirror/icons/ricochet-8d12ec30c627.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/shadow_weave.png",
+      "localPath": "/assets/mirror/icons/shadow-weave-21cee6541eab.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/sharp_shooter.png",
+      "localPath": "/assets/mirror/icons/sharp-shooter-4da47e84743a.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/silencer.png",
+      "localPath": "/assets/mirror/icons/silencer-f3246fddfbf1.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/slowing_bullets.png",
+      "localPath": "/assets/mirror/icons/slowing-bullets-70e30cc195e1.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/spell_slinger.png",
+      "localPath": "/assets/mirror/icons/spell-slinger-21f40e225b53.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/spellslinger_headshots.png",
+      "localPath": "/assets/mirror/icons/spellslinger-headshots-503491deaf6b.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/spirit_shredder_bullets.png",
+      "localPath": "/assets/mirror/icons/spirit-shredder-bullets-2c3cb59781ed.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/spiritual_overflow.png",
+      "localPath": "/assets/mirror/icons/spiritual-overflow-72424c08821d.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/split_shot.png",
+      "localPath": "/assets/mirror/icons/split-shot-907ae699da99.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/swift_striker.png",
+      "localPath": "/assets/mirror/icons/swift-striker-0e5f33140dcc.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/tesla_bullets.png",
+      "localPath": "/assets/mirror/icons/tesla-bullets-746bc9ebe6af.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/titanic_magazine.png",
+      "localPath": "/assets/mirror/icons/titanic-magazine-b3ae5489109c.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/toxic_bullets.png",
+      "localPath": "/assets/mirror/icons/toxic-bullets-ca7ef02b23b2.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/weakening_headshot.png",
+      "localPath": "/assets/mirror/icons/weakening-headshot-67e5bfa5db8a.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/items/weapon/weighted_shots.png",
+      "localPath": "/assets/mirror/icons/weighted-shots-ca4b13d03e27.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/upgrades/mods_armor/resilience.png",
+      "localPath": "/assets/mirror/icons/resilience-49386d339b07.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/upgrades/mods_tech/rebirth.png",
+      "localPath": "/assets/mirror/icons/rebirth-f07c100bb4f8.png"
+    },
+    {
+      "url": "https://assets-bucket.deadlock-api.com/assets-api-res/images/upgrades/mods_weapon/ammo_scavenger.png",
+      "localPath": "/assets/mirror/icons/ammo-scavenger-cdd4f2f989e7.png"
+    },
+    {
+      "url": "https://clan.akamai.steamstatic.com/images/45164767/0908b05b0e83747ca99a9337d401daf3a662f85d.png",
+      "localPath": "/assets/mirror/icons/05-08-2025-update-747df2bf255e.png"
+    },
+    {
+      "url": "https://clan.akamai.steamstatic.com/images/45164767/1a200778c94a048c5b2580a1e1a36071679ff19e.png",
+      "localPath": "/assets/mirror/icons/03-06-2026-update-0c06cd69ca3a.png"
+    },
+    {
+      "url": "https://clan.akamai.steamstatic.com/images/45164767/256d6479251714acd1fa90b30b60a48b40e6352c.png",
+      "localPath": "/assets/mirror/icons/08-18-2025-update-43b55239e04b.png"
+    },
+    {
+      "url": "https://clan.akamai.steamstatic.com/images/45164767/27bbee6ce3031dc70be354316a8f3290c3e5c20a.png",
+      "localPath": "/assets/mirror/icons/02-25-2025-update-ed95bbcf1758.png"
+    },
+    {
+      "url": "https://clan.akamai.steamstatic.com/images/45164767/ea36227a63abc7cbf7f83bbf3fbcb4a839f2c583.png",
+      "localPath": "/assets/mirror/icons/01-17-2025-update-083005da0d8d.png"
+    }
+  ],
+  "failed": []
+}

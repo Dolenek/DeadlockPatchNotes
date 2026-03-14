@@ -1,5 +1,6 @@
 import { Pagination } from "@/components/Pagination";
 import type { Metadata } from "next";
+import { DecorativeImageLayers } from "@/components/DecorativeImageLayers";
 import { JsonLd } from "@/components/JsonLd";
 import { PatchCard } from "@/components/PatchCard";
 import { getPatches } from "@/lib/api";
@@ -75,6 +76,17 @@ export default async function PatchesPage({ searchParams }: PatchesPageProps) {
       <JsonLd data={schema} />
 
       <section className="patch-list-masthead">
+        <DecorativeImageLayers
+          className="patch-list-masthead-media"
+          layers={[
+            {
+              src: "/Oldgods_header.png",
+              className: "patch-list-masthead-media__layer patch-list-masthead-media__layer--oldgods",
+              quality: 56,
+              priority: true,
+            },
+          ]}
+        />
         <div className="shell">
           <p className="eyebrow">Deadlock Updates</p>
           <h1>Patch Notes</h1>

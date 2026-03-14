@@ -100,6 +100,10 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
               fallbackSrc={payload.item.iconFallbackUrl}
               alt={payload.item.name}
               className="hero-detail-image item-detail-image"
+              loading="eager"
+              fetchPriority="high"
+              width={168}
+              height={168}
             />
             <div className="hero-detail-copy item-detail-copy">
               <p className="eyebrow">Item Timeline</p>

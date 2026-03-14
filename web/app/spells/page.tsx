@@ -71,7 +71,7 @@ export default async function SpellsPage() {
 
       <section className="shell heroes-list-section heroes-list-section--spells">
         <div className="heroes-grid">
-          {payload.spells.map((spell) => (
+          {payload.spells.map((spell, index) => (
             <article key={spell.slug} className="hero-card">
               <Link href={`/spells/${spell.slug}`} className="hero-card-link">
                 <FallbackImage
@@ -79,6 +79,10 @@ export default async function SpellsPage() {
                   fallbackSrc={spell.iconFallbackUrl}
                   alt={spell.name}
                   className="hero-card-image"
+                  loading={index < 6 ? "eager" : "lazy"}
+                  fetchPriority={index < 3 ? "high" : "auto"}
+                  width={96}
+                  height={96}
                 />
                 <div className="hero-card-copy">
                   <h2>{spell.name}</h2>

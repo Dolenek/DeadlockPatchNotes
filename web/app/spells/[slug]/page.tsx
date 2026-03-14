@@ -128,6 +128,10 @@ export default async function SpellDetailPage({ params }: SpellDetailPageProps) 
               fallbackSrc={payload.spell.iconFallbackUrl}
               alt={payload.spell.name}
               className="hero-detail-image"
+              loading="eager"
+              fetchPriority="high"
+              width={168}
+              height={168}
             />
             <div className="hero-detail-copy">
               <p className="eyebrow">Spell Timeline</p>

@@ -7,9 +7,24 @@ type FallbackImageProps = {
   fallbackSrc?: string;
   alt: string;
   className?: string;
+  loading?: "lazy" | "eager";
+  decoding?: "async" | "auto" | "sync";
+  fetchPriority?: "high" | "low" | "auto";
+  width?: number;
+  height?: number;
 };
 
-export function FallbackImage({ src, fallbackSrc, alt, className }: FallbackImageProps) {
+export function FallbackImage({
+  src,
+  fallbackSrc,
+  alt,
+  className,
+  loading = "lazy",
+  decoding = "async",
+  fetchPriority = "auto",
+  width,
+  height,
+}: FallbackImageProps) {
   const [currentSrc, setCurrentSrc] = useState<string | undefined>(src);
 
   useEffect(() => {
@@ -25,7 +40,11 @@ export function FallbackImage({ src, fallbackSrc, alt, className }: FallbackImag
       src={currentSrc ?? fallbackSrc}
       alt={alt}
       className={className}
-      loading="lazy"
+      loading={loading}
+      decoding={decoding}
+      fetchPriority={fetchPriority}
+      width={width}
+      height={height}
       onError={() => {
         if (fallbackSrc && currentSrc !== fallbackSrc) {
           setCurrentSrc(fallbackSrc);

@@ -113,6 +113,19 @@ function localizeIconPair(primaryRaw: any, fallbackRaw: any): { iconUrl?: string
   return { iconUrl: primary, iconFallbackUrl: fallback };
 }
 
+function localizeImageURL(raw: any): string {
+  const value = toRequiredString(raw).trim();
+  if (value === "") {
+    return "";
+  }
+  if (value.startsWith("/")) {
+    return value;
+  }
+
+  const mapped = resolveMirroredAssetURL(value);
+  return mapped ?? value;
+}
+
 function normalizeTimelineSummary(raw: any) {
   return {
     id: toRequiredString(raw?.id),
@@ -179,7 +192,7 @@ function normalizePatchSummary(raw: any) {
     title: toRequiredString(raw?.title),
     publishedAt: toRequiredString(raw?.publishedAt),
     category: toRequiredString(raw?.category),
-    imageUrl: toRequiredString(raw?.imageUrl ?? raw?.coverImageUrl),
+    imageUrl: localizeImageURL(raw?.imageUrl ?? raw?.coverImageUrl),
     source: raw?.source ? normalizePatchSource(raw.source) : normalizePatchSource({ type: "forum", url: raw?.sourceUrl ?? "" }),
     releaseTimeline: Array.isArray(raw?.releaseTimeline)
       ? raw.releaseTimeline.map(normalizeTimelineSummary)
@@ -228,7 +241,7 @@ function normalizePatchDetail(raw: any): PatchDetail {
     publishedAt: toRequiredString(raw?.publishedAt),
     category: toRequiredString(raw?.category),
     source: normalizePatchSource(raw?.source),
-    imageUrl: toRequiredString(raw?.imageUrl ?? raw?.heroImageUrl),
+    imageUrl: localizeImageURL(raw?.imageUrl ?? raw?.heroImageUrl),
     intro: toRequiredString(raw?.intro),
     sections: Array.isArray(raw?.sections) ? raw.sections.map(normalizePatchSection) : [],
     releaseTimeline: Array.isArray(raw?.releaseTimeline)

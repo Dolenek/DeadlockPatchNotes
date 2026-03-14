@@ -150,6 +150,10 @@ Purpose:
 Behavior details:
 
 - Scans list + detail endpoints for patches/heroes/items/spells.
+- Allowed remote hosts for mirror classification include:
+  - `assets-bucket.deadlock-api.com`
+  - `assets.deadlock-api.com`
+  - `clan.akamai.steamstatic.com`
 - Writes JSON and CSV reports (defaults to `/tmp/deadlock-icon-audit-<timestamp>.{json,csv}`).
 - Accepts API base URL override and detail fetch concurrency.
 
@@ -163,7 +167,7 @@ Purpose:
 Behavior details:
 
 - Input is required via `--audit <path>` using output from `audit_api_icons.mjs`.
-- Stores assets under `web/public/assets/mirror/icons/<sha1>.<ext>`.
+- Stores assets under `web/public/assets/mirror/icons/<descriptive-name>-<short-hash>.<ext>`.
 - Writes/updates `web/public/assets/mirror/manifest.json` with `url -> localPath` mappings.
 - Keeps failed URLs in manifest `failed` metadata and logs warnings.
 

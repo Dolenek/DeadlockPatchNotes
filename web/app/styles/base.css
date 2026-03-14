@@ -146,6 +146,17 @@ a {
   border: 0;
 }
 
+.decorative-image-layers {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.decorative-image-layer {
+  object-fit: cover;
+}
+
 .eyebrow {
   margin: 0;
   text-transform: uppercase;

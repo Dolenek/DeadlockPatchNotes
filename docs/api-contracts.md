@@ -64,8 +64,10 @@ Date-only behavior:
 Query:
 
 - `hero` optional hero slug
-  - when present, computes days from that hero's latest recorded change
-  - when absent, computes days from latest patch `publishedAt`
+- `onlyUpdate` optional boolean
+  - when `hero` is present and `onlyUpdate=true`, uses hero latest recorded change only
+  - default with `hero` present uses whichever is more recent: hero latest change vs latest patch `publishedAt`
+  - when `hero` is absent, baseline is latest patch `publishedAt`
 
 Success response:
 

@@ -1,23 +1,60 @@
 .heroes-masthead {
   padding: clamp(4.2rem, 9vw, 6.9rem) 0 2.4rem;
   border-bottom: 0;
-  background:
-    radial-gradient(900px 400px at 20% -10%, #2d53883d, transparent 70%),
-    linear-gradient(180deg, #090f1e, #070d18);
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #090f1e, #070d18);
+}
+
+.heroes-masthead::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(900px 400px at 20% -10%, #2d53883d, transparent 70%);
 }
 
 .heroes-masthead--heroes-page {
+  background: linear-gradient(180deg, #090f1e, #070d18);
+}
+
+.heroes-masthead--heroes-page::before {
   background:
     linear-gradient(180deg, #0a1122a8, #09101dc7 60%, #070d18e6),
-    radial-gradient(120% 120% at 78% -12%, #e88c5e26, transparent 60%),
-    url("/header_heroes_page.jpg") center 18% / cover no-repeat;
+    radial-gradient(120% 120% at 78% -12%, #e88c5e26, transparent 60%);
 }
 
 .heroes-masthead--items-page {
+  background: linear-gradient(180deg, #090f1e, #070d18);
+}
+
+.heroes-masthead--items-page::before {
   background:
     linear-gradient(180deg, #151922a8, #131822cb 60%, #0f131ce8),
-    radial-gradient(120% 120% at 80% -12%, #f6c95f2e, transparent 60%),
-    url("/Items.png") center 25% / cover no-repeat;
+    radial-gradient(120% 120% at 80% -12%, #f6c95f2e, transparent 60%);
+}
+
+.heroes-masthead-media {
+  z-index: 0;
+}
+
+.heroes-masthead-media__layer--heroes,
+.heroes-masthead-media__layer--items {
+  object-fit: cover;
+}
+
+.heroes-masthead-media__layer--heroes {
+  object-position: center 18%;
+}
+
+.heroes-masthead-media__layer--items {
+  object-position: center 25%;
+}
+
+.heroes-masthead .shell {
+  position: relative;
+  z-index: 2;
 }
 
 .heroes-masthead h1 {

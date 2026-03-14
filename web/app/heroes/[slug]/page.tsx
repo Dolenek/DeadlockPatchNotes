@@ -99,6 +99,10 @@ export default async function HeroDetailPage({ params }: HeroDetailPageProps) {
               fallbackSrc={payload.hero.iconFallbackUrl}
               alt={payload.hero.name}
               className="hero-detail-image"
+              loading="eager"
+              fetchPriority="high"
+              width={168}
+              height={168}
             />
             <div className="hero-detail-copy hero-detail-copy--hero-page">
               {heroMedia?.nameImageUrl ? (

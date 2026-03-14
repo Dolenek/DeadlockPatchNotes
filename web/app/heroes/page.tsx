@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { DecorativeImageLayers } from "@/components/DecorativeImageLayers";
 import { JsonLd } from "@/components/JsonLd";
 import { FallbackImage } from "@/components/FallbackImage";
 import { APIError, getHeroes } from "@/lib/api";
@@ -62,6 +63,17 @@ export default async function HeroesPage() {
       <JsonLd data={schema} />
 
       <section className="heroes-masthead heroes-masthead--heroes-page">
+        <DecorativeImageLayers
+          className="heroes-masthead-media"
+          layers={[
+            {
+              src: "/header_heroes_page.jpg",
+              className: "heroes-masthead-media__layer heroes-masthead-media__layer--heroes",
+              quality: 56,
+              priority: true,
+            },
+          ]}
+        />
         <div className="shell">
           <p className="eyebrow">Deadlock Heroes</p>
           <h1>Heroes</h1>
@@ -71,7 +83,7 @@ export default async function HeroesPage() {
 
       <section className="shell heroes-list-section heroes-list-section--heroes">
         <div className="heroes-grid">
-          {payload.heroes.map((hero) => (
+          {payload.heroes.map((hero, index) => (
             <article key={hero.slug} className="hero-card">
               <Link href={`/heroes/${hero.slug}`} className="hero-card-link">
                 <FallbackImage
@@ -79,6 +91,10 @@ export default async function HeroesPage() {
                   fallbackSrc={hero.iconFallbackUrl}
                   alt={hero.name}
                   className="hero-card-image"
+                  loading={index < 6 ? "eager" : "lazy"}
+                  fetchPriority={index < 3 ? "high" : "auto"}
+                  width={96}
+                  height={96}
                 />
                 <div className="hero-card-copy">
                   <h2>{hero.name}</h2>

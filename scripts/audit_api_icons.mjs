@@ -13,6 +13,7 @@ const RETRYABLE_STATUS = new Set([408, 425, 429, 500, 502, 503, 504]);
 const ALLOWED_REMOTE_HOSTS = new Set([
   "assets-bucket.deadlock-api.com",
   "assets.deadlock-api.com",
+  "clan.akamai.steamstatic.com",
 ]);
 
 const __filename = fileURLToPath(import.meta.url);

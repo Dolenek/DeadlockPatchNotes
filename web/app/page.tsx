@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { DecorativeImageLayers } from "@/components/DecorativeImageLayers";
 import { JsonLd } from "@/components/JsonLd";
 import { APIError, getPatches } from "@/lib/api";
 import { PatchListResponse } from "@/lib/types";
@@ -125,6 +126,23 @@ export default async function HomePage() {
       <JsonLd data={schema} />
 
       <section className="patch-list-masthead patch-list-masthead--home">
+        <DecorativeImageLayers
+          className="patch-list-masthead-media patch-list-masthead-media--home"
+          layers={[
+            {
+              src: "/lanes.jpg",
+              className: "patch-list-masthead-media__layer patch-list-masthead-media__layer--lanes",
+              quality: 58,
+              priority: true,
+            },
+            {
+              src: "/patrons_header.png",
+              className: "patch-list-masthead-media__layer patch-list-masthead-media__layer--patrons",
+              quality: 56,
+              priority: true,
+            },
+          ]}
+        />
         <div className="shell">
           <p className="eyebrow">Community Archive</p>
           <h1>
