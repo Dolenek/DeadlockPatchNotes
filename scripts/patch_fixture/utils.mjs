@@ -1,15 +1,5 @@
 import crypto from "node:crypto";
-
-const HERO_ABILITY_ALIAS = new Map([
-  [
-    "bebop",
-    new Map([
-      ["hook", "grapple arm"],
-      ["hyperbeam", "hyper beam"],
-      ["uppercut", "exploding uppercut"],
-    ]),
-  ],
-]);
+import { applyAbilityAlias } from "./parser_rules.mjs";
 
 export function norm(value) {
   return String(value || "")
@@ -41,29 +31,6 @@ export function stripAbilityPrefix(text, abilityName) {
 
 export function normalizeHeroLine(raw) {
   return raw.replace(/^Should Charge\b/i, "Shoulder Charge");
-}
-
-function heroNormKey(name) {
-  const key = norm(name);
-  return key.startsWith("the ") ? key.slice(4) : key;
-}
-
-function applyAbilityAlias(normalizedText, heroName) {
-  const aliases = HERO_ABILITY_ALIAS.get(heroNormKey(heroName));
-  if (!aliases) {
-    return normalizedText;
-  }
-
-  for (const [alias, canonical] of aliases.entries()) {
-    if (normalizedText === alias) {
-      return canonical;
-    }
-    if (normalizedText.startsWith(`${alias} `)) {
-      return `${canonical}${normalizedText.slice(alias.length)}`;
-    }
-  }
-
-  return normalizedText;
 }
 
 export function abilityMatch(text, abilities, heroName = "") {

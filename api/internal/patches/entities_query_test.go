@@ -271,3 +271,64 @@ func TestBuildSpellChanges_MergesNameCollisionsAcrossHeroes(t *testing.T) {
 		t.Fatalf("expected merged entries from 2 heroes, got %d", len(payload.Items[0].Entries))
 	}
 }
+
+func TestBuildSpellChanges_IndexesDoormanFollowupAbilityLines(t *testing.T) {
+	details := []PatchDetail{
+		{
+			Slug:  "u1",
+			Title: "U1",
+			Sections: []PatchSection{
+				{
+					ID:    "heroes",
+					Title: "Heroes",
+					Kind:  "heroes",
+					Entries: []PatchEntry{
+						{
+							ID:                    "the-doorman",
+							EntityName:            "The Doorman",
+							EntityIconFallbackURL: "https://example.test/doorman.png",
+							Groups: []PatchEntryGroup{
+								{ID: "call-bell", Title: "Call Bell"},
+								{ID: "doorway", Title: "Doorway"},
+								{ID: "luggage-cart", Title: "Luggage Cart"},
+								{ID: "hotel-guest", Title: "Hotel Guest"},
+							},
+						},
+					},
+				},
+			},
+			Timeline: []PatchTimelineBlock{
+				{
+					ID:         "b1",
+					Kind:       "initial",
+					ReleasedAt: "2026-03-06T12:00:00Z",
+					Changes: []PatchChange{
+						{ID: "1", Text: "[Heroes]"},
+						{ID: "2", Text: "Doorman"},
+						{ID: "3", Text: "Gun now pierces through targets at 50% reduced damage"},
+						{ID: "4", Text: "Call Bell time between charges increased from 4s to 6s"},
+						{ID: "5", Text: "Doorway now has a timer icon above the ability"},
+						{ID: "6", Text: "Luggage Cart is now 20% larger (20% wider hitbox as well)"},
+						{ID: "7", Text: "Hotel Guest cast range increased from 6m to 7m"},
+					},
+				},
+			},
+		},
+	}
+
+	for _, spellSlug := range []string{"call-bell", "doorway", "luggage-cart", "hotel-guest"} {
+		payload, err := buildSpellChanges(details, SpellChangesQuery{SpellSlug: spellSlug})
+		if err != nil {
+			t.Fatalf("unexpected error for %s: %v", spellSlug, err)
+		}
+		if len(payload.Items) != 1 {
+			t.Fatalf("expected 1 timeline block for %s, got %d", spellSlug, len(payload.Items))
+		}
+		if len(payload.Items[0].Entries) != 1 {
+			t.Fatalf("expected 1 Doorman entry for %s, got %d", spellSlug, len(payload.Items[0].Entries))
+		}
+		if payload.Items[0].Entries[0].HeroName != "Doorman" {
+			t.Fatalf("expected Doorman hero name for %s, got %q", spellSlug, payload.Items[0].Entries[0].HeroName)
+		}
+	}
+}

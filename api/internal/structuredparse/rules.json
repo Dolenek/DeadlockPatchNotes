@@ -1,0 +1,18 @@
+{
+  "heroAliases": {
+    "doorman": "the doorman",
+    "vindcita": "vindicta"
+  },
+  "heroCanonicalNames": {
+    "doorman": "Doorman",
+    "the doorman": "Doorman"
+  },
+  "heroAbilityAliases": {
+    "bebop": {
+      "grapple arm": ["hook"],
+      "hyper beam": ["hyperbeam"],
+      "exploding uppercut": ["uppercut"]
+    }
+  },
+  "cardTypeNames": ["spades", "diamond", "hearts", "clubs", "joker"]
+}

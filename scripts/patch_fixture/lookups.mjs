@@ -1,16 +1,12 @@
+import { CARD_TYPE_NAMES as PARSER_CARD_TYPE_NAMES, canonicalHeroDisplayName, resolveHeroAlias } from "./parser_rules.mjs";
 import { norm, slugify } from "./utils.mjs";
-
-const HERO_ALIAS = new Map([
-  ["doorman", "The Doorman"],
-  ["vindcita", "Vindicta"],
-]);
 
 const ITEM_ALIAS = new Map([
   // Legacy/renamed item names that still appear in patch text.
   ["backstabber", "stalker"],
 ]);
 
-export const CARD_TYPE_NAMES = new Set(["spades", "diamond", "hearts", "clubs", "joker"]);
+export const CARD_TYPE_NAMES = PARSER_CARD_TYPE_NAMES;
 
 export function heroLookupFromAssets(heroList) {
   const byNormalized = new Map();
@@ -21,12 +17,8 @@ export function heroLookupFromAssets(heroList) {
 
   return {
     resolve(prefix) {
-      const key = norm(prefix);
-      const aliased = HERO_ALIAS.get(key);
-      if (aliased) {
-        return byNormalized.get(norm(aliased)) || null;
-      }
-      return byNormalized.get(key) || null;
+      const key = resolveHeroAlias(prefix);
+      return byNormalized.get(norm(key)) || byNormalized.get(norm(prefix)) || null;
     },
   };
 }
@@ -97,10 +89,9 @@ export function ensureGroup(heroState, key, title, iconInfo, iconFallback) {
 }
 
 export function resolveHeroDisplayName(prefix, resolvedHero) {
-  const prefixKey = norm(prefix);
-  const resolvedKey = norm(resolvedHero?.name);
-  if (prefixKey === "doorman" || prefixKey === "the doorman" || resolvedKey === "doorman" || resolvedKey === "the doorman") {
-    return "Doorman";
+  const displayName = canonicalHeroDisplayName(prefix);
+  if (displayName && norm(displayName) === norm(resolvedHero?.name)) {
+    return displayName;
   }
-  return resolvedHero.name;
+  return canonicalHeroDisplayName(resolvedHero?.name);
 }

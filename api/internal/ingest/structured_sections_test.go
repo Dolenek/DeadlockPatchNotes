@@ -197,6 +197,45 @@ func TestBuildStructuredSections_ResolvesDoormanAbilitiesWithOrWithoutArticle(t 
 	}
 }
 
+func TestBuildStructuredSections_KeepsDoormanFollowupAbilityLinesOutOfGeneral(t *testing.T) {
+	catalog := testAssetCatalog()
+	blocks := []timelineCandidate{
+		{
+			Key: "post-1-steam-1",
+			BodyText: `[ Heroes ]
+- Doorman
+- Gun now pierces through targets at 50% reduced damage
+- Call Bell time between charges increased from 4s to 6s
+- Doorway now has a timer icon above the ability
+- Luggage Cart is now 20% larger (20% wider hitbox as well)
+- Hotel Guest cast range increased from 6m to 7m`,
+		},
+	}
+
+	sections := buildStructuredSections(blocks, catalog)
+	heroes := sectionByKind(sections, "heroes")
+	if heroes == nil {
+		t.Fatal("expected heroes section")
+	}
+
+	doorman := heroByName(heroes.Entries, "Doorman")
+	if doorman == nil {
+		t.Fatal("expected Doorman entry")
+	}
+	if len(doorman.Changes) != 1 {
+		t.Fatalf("expected 1 Doorman general change, got %d", len(doorman.Changes))
+	}
+	if doorman.Changes[0].Text != "Gun now pierces through targets at 50% reduced damage" {
+		t.Fatalf("unexpected Doorman general change: %+v", doorman.Changes)
+	}
+
+	for _, title := range []string{"Call Bell", "Doorway", "Luggage Cart", "Hotel Guest"} {
+		if groupByTitle(*doorman, title) == nil {
+			t.Fatalf("expected %s group for Doorman", title)
+		}
+	}
+}
+
 func TestBuildStructuredSections_VindcitaAliasDoesNotCreateStandaloneEntry(t *testing.T) {
 	catalog := testAssetCatalog()
 	blocks := []timelineCandidate{
@@ -289,8 +328,10 @@ func testAssetCatalog() *AssetCatalog {
 			"wraith": {
 				{Name: "Card Trick", NormName: "card trick", Image: "https://example.test/card_trick.png"},
 			},
-			"the doorman": {
+			"doorman": {
 				{Name: "Call Bell", NormName: "call bell", Image: "https://example.test/call_bell.png"},
+				{Name: "Doorway", NormName: "doorway", Image: "https://example.test/doorway.png"},
+				{Name: "Luggage Cart", NormName: "luggage cart", Image: "https://example.test/luggage_cart.png"},
 				{Name: "Hotel Guest", NormName: "hotel guest", Image: "https://example.test/hotel_guest.png"},
 			},
 			"vindicta": {

@@ -278,6 +278,70 @@ func TestHydratePatchDetail_CanonicalizesDoormanNameAcrossArticleVariants(t *tes
 	}
 }
 
+func TestHydratePatchDetail_KeepsDoormanFollowupAbilityLinesOutOfGeneral(t *testing.T) {
+	detail := PatchDetail{
+		Slug:        "test-update",
+		PublishedAt: "2026-03-06T12:00:00Z",
+		Sections: []PatchSection{
+			{
+				ID:    "heroes",
+				Title: "Heroes",
+				Kind:  "heroes",
+				Entries: []PatchEntry{
+					{
+						ID:         "the-doorman",
+						EntityName: "The Doorman",
+						Groups: []PatchEntryGroup{
+							{ID: "call-bell", Title: "Call Bell"},
+							{ID: "doorway", Title: "Doorway"},
+							{ID: "luggage-cart", Title: "Luggage Cart"},
+							{ID: "hotel-guest", Title: "Hotel Guest"},
+						},
+					},
+				},
+			},
+		},
+		Timeline: []PatchTimelineBlock{
+			{
+				ID:         "block-1",
+				Kind:       "initial",
+				ReleasedAt: "2026-03-06T12:00:00Z",
+				Changes: []PatchChange{
+					{ID: "1", Text: "[Heroes]"},
+					{ID: "2", Text: "Doorman"},
+					{ID: "3", Text: "Gun now pierces through targets at 50% reduced damage"},
+					{ID: "4", Text: "Call Bell time between charges increased from 4s to 6s"},
+					{ID: "5", Text: "Doorway now has a timer icon above the ability"},
+					{ID: "6", Text: "Luggage Cart is now 20% larger (20% wider hitbox as well)"},
+					{ID: "7", Text: "Hotel Guest cast range increased from 6m to 7m"},
+				},
+			},
+		},
+	}
+
+	hydrated := hydratePatchDetail(detail)
+	heroes := timelineSectionByKind(hydrated.Timeline[0].Sections, "heroes")
+	if heroes == nil {
+		t.Fatal("expected heroes section")
+	}
+	doorman := timelineEntryByName(heroes.Entries, "Doorman")
+	if doorman == nil {
+		t.Fatal("expected Doorman entry")
+	}
+	if len(doorman.Changes) != 1 {
+		t.Fatalf("expected 1 Doorman general change, got %d", len(doorman.Changes))
+	}
+	if doorman.Changes[0].Text != "Gun now pierces through targets at 50% reduced damage" {
+		t.Fatalf("unexpected Doorman general change: %+v", doorman.Changes)
+	}
+
+	for _, title := range []string{"Call Bell", "Doorway", "Luggage Cart", "Hotel Guest"} {
+		if timelineGroupByTitle(*doorman, title) == nil {
+			t.Fatalf("expected %s group under Doorman", title)
+		}
+	}
+}
+
 func timelineSectionByKind(sections []PatchSection, kind string) *PatchSection {
 	for i := range sections {
 		if sections[i].Kind == kind {

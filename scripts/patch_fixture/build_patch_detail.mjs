@@ -192,7 +192,13 @@ async function buildHeroEntries(heroesSection, heroesLookup, assetsRegistry, fet
         continue;
       }
 
-      currentSpecialGroup = applyHeroPlainFollowupChange(heroStateMap.get(currentHero), line, currentSpecialGroup);
+      currentSpecialGroup = applyHeroPlainFollowupChange(
+        heroStateMap.get(currentHero),
+        line,
+        currentSpecialGroup,
+        heroAbilitiesByName.get(currentHero) || [],
+        assetsRegistry,
+      );
       continue;
     }
 
@@ -335,7 +341,7 @@ function applyHeroFollowupChange(heroState, parsed, currentSpecialGroup, abiliti
   return currentSpecialGroup;
 }
 
-function applyHeroPlainFollowupChange(heroState, line, currentSpecialGroup) {
+function applyHeroPlainFollowupChange(heroState, line, currentSpecialGroup, abilities, assetsRegistry) {
   const value = extractHeroHeading(line);
   if (!value) {
     return currentSpecialGroup;
@@ -344,6 +350,24 @@ function applyHeroPlainFollowupChange(heroState, line, currentSpecialGroup) {
   if (norm(value) === "card types") {
     ensureGroup(heroState, "card-types", "Card Types", null, null);
     return "Card Types";
+  }
+
+  const normalizedText = normalizeHeroLine(value);
+  const matchedAbility = abilityMatch(normalizedText, abilities, heroState.entityName);
+  if (matchedAbility) {
+    const abilityIcon = registerAbilityIcon(assetsRegistry, heroState.entityName, matchedAbility);
+    const group = ensureGroup(
+      heroState,
+      `ability-${slugify(matchedAbility.name)}`,
+      matchedAbility.name,
+      abilityIcon,
+      matchedAbility.image,
+    );
+    group.changes.push({
+      id: `${group.id}-${group.changes.length + 1}`,
+      text: stripAbilityPrefix(normalizedText, matchedAbility.name),
+    });
+    return currentSpecialGroup;
   }
 
   heroState.changes.push({

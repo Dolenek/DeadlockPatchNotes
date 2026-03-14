@@ -9,9 +9,6 @@ import (
 )
 
 var (
-	structuredSectionHeaderRegex = regexp.MustCompile(`(?i)^\[\s*(general|items|heroes)\s*\]$`)
-	structuredPrefixedLineRegex  = regexp.MustCompile(`^([^:]{1,64}):\s*(.*)$`)
-	structuredDateHeadingRegex   = regexp.MustCompile(`(?i)^\d{2}-\d{2}-\d{4}\s+patch:\s*$`)
 	structuredNonAlphaNumRegex   = regexp.MustCompile(`[^a-z0-9]+`)
 	structuredSpaceRegex         = regexp.MustCompile(`\s+`)
 )
@@ -33,14 +30,6 @@ type abilityTemplate struct {
 	normName        string
 	iconURL         string
 	iconFallbackURL string
-}
-
-type timelineHeroState struct {
-	entry       *PatchEntry
-	abilities   []abilityTemplate
-	groupsByKey map[string]*PatchEntryGroup
-	groupOrder  []string
-	currentSpecialGroup string
 }
 
 func hydratePatchDetail(detail PatchDetail) PatchDetail {
