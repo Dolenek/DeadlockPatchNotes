@@ -73,12 +73,35 @@ func TestOpenAPISpec(t *testing.T) {
 	if payload["openapi"] != "3.1.0" {
 		t.Fatalf("expected openapi 3.1.0, got %v", payload["openapi"])
 	}
+	servers, ok := payload["servers"].([]any)
+	if !ok || len(servers) == 0 {
+		t.Fatal("expected servers array in openapi response")
+	}
+	firstServer, ok := servers[0].(map[string]any)
+	if !ok {
+		t.Fatalf("expected first server object, got %#v", servers[0])
+	}
+	if firstServer["url"] != "https://www.deadlockpatchnotes.com/api" {
+		t.Fatalf("expected production server url on www host, got %#v", firstServer["url"])
+	}
 	paths, ok := payload["paths"].(map[string]any)
 	if !ok {
 		t.Fatal("expected paths object in openapi response")
 	}
 	if _, exists := paths["/v1/patches"]; !exists {
 		t.Fatal("expected /v1/patches path in openapi response")
+	}
+	if _, exists := paths["/v1/days-since-last-update"]; !exists {
+		t.Fatal("expected /v1/days-since-last-update path in openapi response")
+	}
+	if _, exists := paths["/v1/patches/rss.xml"]; !exists {
+		t.Fatal("expected /v1/patches/rss.xml path in openapi response")
+	}
+	if _, exists := paths["/v1/heroes/{heroSlug}/rss.xml"]; !exists {
+		t.Fatal("expected /v1/heroes/{heroSlug}/rss.xml path in openapi response")
+	}
+	if _, exists := paths["/v1/heroes/{heroSlug}/days-without-update/rss.xml"]; !exists {
+		t.Fatal("expected /v1/heroes/{heroSlug}/days-without-update/rss.xml path in openapi response")
 	}
 }
 

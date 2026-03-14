@@ -16,15 +16,16 @@ Monorepo structure:
 - API surface:
   - `/api/healthz`
   - `/api/scalar`, `/api/openapi.json`
-  - `/api/v1/patches`, `/api/v1/patches/{slug}`
-  - `/api/v1/heroes`, `/api/v1/heroes/{heroSlug}/changes`
+  - `/api/v1/days-since-last-update`
+  - `/api/v1/patches`, `/api/v1/patches/{slug}`, `/api/v1/patches/rss.xml`
+  - `/api/v1/heroes`, `/api/v1/heroes/{heroSlug}/changes`, `/api/v1/heroes/{heroSlug}/rss.xml`, `/api/v1/heroes/{heroSlug}/days-without-update/rss.xml`
   - `/api/v1/items`, `/api/v1/items/{itemSlug}/changes`
   - `/api/v1/spells`, `/api/v1/spells/{spellSlug}/changes`
 
 Read path split:
 
 - Postgres read model builds a TTL-cached snapshot from `patches` rows.
-- Patch list/detail/entity timelines are served from cached snapshot state between refreshes.
+- Patch list/detail/entity timelines and RSS feeds are served from cached snapshot state between refreshes.
 
 Migrations in `api/internal/db/migrations/*.sql` are applied at startup.
 

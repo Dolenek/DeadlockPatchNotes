@@ -2,12 +2,12 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Deadlock Patch Notes API",
-    "version": "1.1.0",
+    "version": "1.3.0",
     "description": "HTTP API for patch timelines, heroes, items, and spells used by deadlockpatchnotes.com.\n\n**Disclaimer**\n\n*deadlockpatchnotes.com is not endorsed by Valve and does not reflect the views or opinions of Valve or anyone officially involved in producing or managing Valve properties. Valve and all associated properties are trademarks or registered trademarks of Valve Corporation*"
   },
   "servers": [
     {
-      "url": "https://deadlockpatchnotes.com/api",
+      "url": "https://www.deadlockpatchnotes.com/api",
       "description": "Production"
     }
   ],
@@ -52,6 +52,58 @@
                       "example": "ok"
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/days-since-last-update": {
+      "get": {
+        "tags": [
+          "Meta"
+        ],
+        "summary": "Get days since last update",
+        "operationId": "getDaysSinceLastUpdate",
+        "parameters": [
+          {
+            "name": "hero",
+            "in": "query",
+            "required": false,
+            "description": "Optional hero slug. When omitted, the latest patch timestamp is used.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Plain-text response in format `Days since last update: X`",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Hero or patch baseline not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -166,6 +218,37 @@
         }
       }
     },
+    "/v1/patches/rss.xml": {
+      "get": {
+        "tags": [
+          "Patches"
+        ],
+        "summary": "Get patch RSS feed",
+        "operationId": "getPatchFeedRSS",
+        "responses": {
+          "200": {
+            "description": "RSS feed for latest patches",
+            "content": {
+              "application/rss+xml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/heroes": {
       "get": {
         "tags": [
@@ -258,6 +341,108 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Hero not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/heroes/{heroSlug}/rss.xml": {
+      "get": {
+        "tags": [
+          "Heroes"
+        ],
+        "summary": "Get hero patch RSS feed",
+        "operationId": "getHeroFeedRSS",
+        "parameters": [
+          {
+            "name": "heroSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Per-hero RSS feed with patch-level hero updates",
+            "content": {
+              "application/rss+xml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Hero not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/heroes/{heroSlug}/days-without-update/rss.xml": {
+      "get": {
+        "tags": [
+          "Heroes"
+        ],
+        "summary": "Get hero days-without-update RSS feed",
+        "operationId": "getHeroDaysWithoutUpdateRSS",
+        "parameters": [
+          {
+            "name": "heroSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Per-hero live streak RSS feed",
+            "content": {
+              "application/rss+xml": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }

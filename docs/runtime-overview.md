@@ -25,7 +25,7 @@ Deadlock Patch Notes ingests official Deadlock changelog content, stores normali
 
 ### API Server (`api/cmd/server`)
 
-1. Reads `DATABASE_URL`, optional `API_ADDR` (default `:8080`), and optional `API_READ_CACHE_TTL` (default `10m`).
+1. Reads `DATABASE_URL`, optional `API_ADDR` (default `:8080`), optional `API_READ_CACHE_TTL` (default `10m`), and optional `SITE_URL` (for canonical RSS item links).
 2. Opens PostgreSQL via `db.OpenPostgres`.
 3. Applies embedded migrations from `api/internal/db/migrations`.
 4. Constructs `patches.NewPostgresStore`.
@@ -69,7 +69,7 @@ Run semantics:
   - run counters/status in `sync_runs`
 7. Read path:
   - API builds a cached in-memory snapshot from `patches.detail_payload` and summary columns
-  - list/detail/timeline endpoints serve from the snapshot until TTL expiry
+  - list/detail/timeline + RSS endpoints serve from the snapshot until TTL expiry
   - frontend fetches API responses and renders SSR output
 
 ## Persistence Model
@@ -93,6 +93,7 @@ Schema notes:
 - `DATABASE_URL` (required)
 - `API_ADDR` (server only; default `:8080`)
 - `API_READ_CACHE_TTL` (server only; Go duration, default `10m`)
+- `SITE_URL` (server + web; optional canonical site URL used for SEO and RSS item links)
 - `PATCH_FORUM_URL` (sync only; default changelog URL)
 - `PATCH_SYNC_MAX_PAGES` (sync only; default `20`, invalid/non-positive -> default)
 - `PATCH_SYNC_TIMEOUT_SECONDS` (sync only; default `30`, invalid/non-positive -> default)
@@ -103,10 +104,14 @@ Schema notes:
   - default: `https://deadlockpatchnotes.com/api`
   - exact `/api` suffix is normalized, so host-only and `/api`-suffixed values are accepted
   - invalid non-empty value throws during API client initialization
+- `SITE_URL`
+  - default: `https://www.deadlockpatchnotes.com`
+  - controls canonical host used for metadata/sitemap and API RSS item links
 
 ### Docker Compose
 
 - `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`
 - `API_HOST_BIND`, `API_PORT`
 - `WEB_HOST_BIND`, `WEB_PORT`
+- `SITE_URL`
 - Sync vars listed above

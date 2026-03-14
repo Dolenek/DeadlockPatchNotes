@@ -31,10 +31,14 @@ func NewRouter(store patches.Repository) http.Handler {
 	r.Get("/api/openapi.json", api.openapiSpec)
 
 	r.Route("/api/v1", func(v1 chi.Router) {
+		v1.Get("/days-since-last-update", api.daysSinceLastUpdate)
 		v1.Get("/patches", api.listPatches)
+		v1.Get("/patches/rss.xml", api.patchFeedRSS)
 		v1.Get("/patches/{slug}", api.getPatch)
 		v1.Get("/heroes", api.listHeroes)
 		v1.Get("/heroes/{heroSlug}/changes", api.getHeroChanges)
+		v1.Get("/heroes/{heroSlug}/rss.xml", api.heroFeedRSS)
+		v1.Get("/heroes/{heroSlug}/days-without-update/rss.xml", api.heroDaysWithoutUpdateRSS)
 		v1.Get("/items", api.listItems)
 		v1.Get("/items/{itemSlug}/changes", api.getItemChanges)
 		v1.Get("/spells", api.listSpells)

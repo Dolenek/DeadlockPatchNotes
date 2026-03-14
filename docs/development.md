@@ -20,6 +20,7 @@ Default API URL: `http://localhost:8080`.
 Optional API env var:
 
 - `API_READ_CACHE_TTL` (Go duration, default `10m`)
+- `SITE_URL` (optional canonical web host used for RSS item links; fallback is request host)
 
 ## Run Web
 
@@ -41,7 +42,7 @@ API_BASE_URL=http://localhost:8080 npm run dev
 
 SEO env vars for web:
 
-- `SITE_URL` (default `https://www.deadlockpatchnotes.com`) controls canonical URL + sitemap host.
+- `SITE_URL` (default `https://www.deadlockpatchnotes.com`) controls canonical URL + sitemap host and API RSS item-link host.
 
 ## Run Patch Sync
 
