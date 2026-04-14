@@ -1,5 +1,7 @@
 .heroes-masthead {
-  padding: clamp(4.2rem, 9vw, 6.9rem) 0 2.4rem;
+  --top-nav-overlap: 64px;
+  margin-top: calc(-1 * var(--top-nav-overlap));
+  padding: calc(clamp(4.2rem, 9vw, 6.9rem) + var(--top-nav-overlap)) 0 2.4rem;
   border-bottom: 0;
   position: relative;
   overflow: hidden;
@@ -217,6 +219,8 @@
 }
 
 .hero-detail-page--hero {
+  --top-nav-overlap: 64px;
+  margin-top: calc(-1 * var(--top-nav-overlap));
   background:
     linear-gradient(180deg, #1f2227b5, #1f2227b5),
     var(--hero-background-image, linear-gradient(180deg, #1d2229a1, #181c228f));
@@ -345,6 +349,8 @@
 }
 
 .spell-detail-page {
+  --top-nav-overlap: 64px;
+  margin-top: calc(-1 * var(--top-nav-overlap));
   background:
     linear-gradient(180deg, #1f2227b2, #1f2227b2),
     var(--spell-background-image, linear-gradient(180deg, #121a2b, #0c1424 40%, #0a1120 100%));
@@ -378,7 +384,7 @@
 }
 
 .hero-detail-head {
-  padding: clamp(2.4rem, 5vw, 3.8rem) 0 1.4rem;
+  padding: calc(clamp(2.4rem, 5vw, 3.8rem) + var(--top-nav-overlap, 0px)) 0 1.4rem;
   display: flex;
   align-items: center;
   gap: 1rem;

@@ -57,19 +57,14 @@ h6 {
 }
 
 .site-root {
-  --texture-base-image: url("/bg_texture_darkest.jpg");
-  --texture-light-width: 100vw;
-  --texture-dark-width: 100vw;
-  --texture-darkest-width: 100vw;
-  --texture-light-height: calc(var(--texture-light-width) * 1.2011111111);
-  --texture-dark-height: calc(var(--texture-dark-width) * 1.2011111111);
-  --texture-darkest-height: var(--texture-darkest-width);
-  --texture-dark-top: var(--texture-light-height);
-  --texture-darkest-top: calc(var(--texture-dark-top) + var(--texture-dark-height));
-  --texture-void-top: calc(var(--texture-darkest-top) + var(--texture-darkest-height));
+  --texture-base-image: url("/bg_texture_dark.jpg");
+  --texture-dark-image: url("/bg_texture_darkest.jpg");
+  --texture-base-width: 100vw;
+  --texture-base-height: calc(var(--texture-base-width) * 1.2011111111);
   position: relative;
   min-height: 100vh;
   isolation: isolate;
+  background: #04070e;
 }
 
 .site-content {
@@ -87,42 +82,25 @@ h6 {
 
 .site-background__layer {
   position: absolute;
-  inset: 0;
+  right: 0;
+  left: 0;
   background-position: center top;
-  background-size: auto;
-  background-repeat: no-repeat;
+  background-size: 100vw auto;
 }
 
 .site-background__layer--base {
+  top: 0;
+  height: var(--texture-base-height);
   background-image: var(--texture-base-image);
-  background-size: var(--texture-light-width) auto;
-}
-
-.site-root:has(main.page-like-patches) {
-  --texture-base-image: url("/bg_texture_dark.jpg");
+  background-repeat: no-repeat;
 }
 
 .site-background__layer--dark {
-  top: var(--texture-dark-top);
-  background-image: url("/bg_texture_dark.jpg");
-  background-size: var(--texture-dark-width) auto;
-  opacity: 0.96;
-}
-
-.site-background__layer--darkest {
-  top: var(--texture-darkest-top);
-  background-image: url("/bg_texture_darkest.jpg");
-  background-size: var(--texture-darkest-width) auto;
-  opacity: 0.97;
-}
-
-.site-background__void {
-  position: absolute;
-  top: var(--texture-void-top);
-  right: 0;
+  top: var(--texture-base-height);
   bottom: 0;
-  left: 0;
-  background: #04070e;
+  background-image: var(--texture-dark-image);
+  background-repeat: repeat-y;
+  opacity: 0.96;
 }
 
 a {

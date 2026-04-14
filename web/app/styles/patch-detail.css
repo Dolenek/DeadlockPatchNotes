@@ -242,20 +242,35 @@
 }
 
 .timeline-block {
-  border: 1px solid #5c5548;
-  background: linear-gradient(180deg, #211d18f1, #17140ff4);
-  box-shadow: 0 10px 24px #00000055;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
   scroll-margin-top: 84px;
 }
 
 .timeline-block-header {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   padding: 1rem 1rem 0.8rem;
-  border-bottom: 1px solid #907e5e33;
   display: flex;
   gap: 1rem;
   justify-content: space-between;
   align-items: flex-end;
   flex-wrap: wrap;
+  background:
+    linear-gradient(90deg, #3f2c18f4 0%, #332518ee 30%, #251d16dd 58%, #1815109c 82%, #18151000 100%),
+    linear-gradient(180deg, #ffffff10, #ffffff00 54%);
+  box-shadow: inset 0 -1px 0 #6c5b432e;
+}
+
+.timeline-block-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(120% 120% at 0% 0%, #9e673024, transparent 56%);
 }
 
 .timeline-block-heading h2 {
@@ -284,23 +299,37 @@
 }
 
 .patch-section {
-  border: 1px solid #5a5347;
-  background:
-    linear-gradient(145deg, #26211bf0, #1a1611f0),
-    repeating-linear-gradient(125deg, #ffffff05 0, #ffffff05 1px, transparent 1px, transparent 80px);
-  box-shadow: 0 10px 30px #00000055;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
   scroll-margin-top: 84px;
 }
 
 .patch-section-header {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   padding: 0.72rem 0.95rem;
-  border-bottom: 1px solid #8f7a592e;
-  background: linear-gradient(95deg, #4f3d24, #27211a 75%);
+  background:
+    linear-gradient(90deg, #6a4c26f5 0%, #4d351ef0 30%, #30251be0 58%, #1e1a1599 84%, #1e1a1500 100%),
+    linear-gradient(180deg, #ffffff14, #ffffff00 58%);
+  box-shadow: inset 0 -1px 0 #7b65422b;
+}
+
+.patch-section-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(120% 120% at 0% 0%, #d09a4520, transparent 52%);
 }
 
 .patch-section--items .patch-section-header,
 .patch-section--heroes .patch-section-header {
-  background: linear-gradient(95deg, #654927, #26211a 76%);
+  background:
+    linear-gradient(90deg, #7f4c20f5 0%, #5e361be9 32%, #36261be0 58%, #1d1a1699 84%, #1d1a1600 100%),
+    linear-gradient(180deg, #ffffff16, #ffffff00 58%);
 }
 
 .patch-section h2 {

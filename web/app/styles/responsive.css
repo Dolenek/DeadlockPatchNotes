@@ -38,6 +38,12 @@
 }
 
 @media (max-width: 720px) {
+  .heroes-masthead,
+  .hero-detail-page--hero,
+  .spell-detail-page {
+    --top-nav-overlap: 132px;
+  }
+
   .top-nav-inner {
     grid-template-columns: 1fr;
     gap: 0.55rem;

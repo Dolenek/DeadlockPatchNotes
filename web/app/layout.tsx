@@ -79,8 +79,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="site-background" aria-hidden>
             <div className="site-background__layer site-background__layer--base" />
             <div className="site-background__layer site-background__layer--dark" />
-            <div className="site-background__layer site-background__layer--darkest" />
-            <div className="site-background__void" />
           </div>
           <div className="site-content">
             <TopNav />
