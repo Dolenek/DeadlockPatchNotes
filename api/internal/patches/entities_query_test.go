@@ -332,3 +332,78 @@ func TestBuildSpellChanges_IndexesDoormanFollowupAbilityLines(t *testing.T) {
 		}
 	}
 }
+
+func TestBuildEntityQueries_TreatPromotedAbilitiesAsSpellsNotItems(t *testing.T) {
+	details := []PatchDetail{
+		{
+			Slug:  "u1",
+			Title: "U1",
+			Timeline: []PatchTimelineBlock{
+				{
+					ID:         "b1",
+					Kind:       "initial",
+					ReleasedAt: "2026-03-06T12:00:00Z",
+					Sections: []PatchSection{
+						{
+							ID:    "items",
+							Title: "Items",
+							Kind:  "items",
+							Entries: []PatchEntry{
+								{
+									ID:         "active-reload",
+									EntityName: "Active Reload",
+									Changes:    []PatchChange{{ID: "i1", Text: "Reload speed increased"}},
+								},
+							},
+						},
+						{
+							ID:    "heroes",
+							Title: "Heroes",
+							Kind:  "heroes",
+							Entries: []PatchEntry{
+								{
+									ID:                    "pocket",
+									EntityName:            "Pocket",
+									EntityIconFallbackURL: "https://example.test/pocket.png",
+									Groups: []PatchEntryGroup{
+										{
+											ID:              "affliction",
+											Title:           "Affliction",
+											IconFallbackURL: "https://example.test/affliction.png",
+											Changes:         []PatchChange{{ID: "s1", Text: "Duration reduced from 18s to 14s"}},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	itemsPayload := buildItemList(details)
+	if len(itemsPayload.Items) != 1 || itemsPayload.Items[0].Slug != "active-reload" {
+		t.Fatalf("expected only Active Reload in items list, got %+v", itemsPayload.Items)
+	}
+
+	if _, err := buildItemChanges(details, ItemChangesQuery{ItemSlug: "affliction"}); err != ErrItemNotFound {
+		t.Fatalf("expected ErrItemNotFound for affliction item lookup, got %v", err)
+	}
+
+	spellsPayload := buildSpellList(details)
+	if len(spellsPayload.Items) != 1 || spellsPayload.Items[0].Slug != "affliction" {
+		t.Fatalf("expected Affliction spell in spell list, got %+v", spellsPayload.Items)
+	}
+
+	spellTimeline, err := buildSpellChanges(details, SpellChangesQuery{SpellSlug: "affliction"})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(spellTimeline.Items) != 1 || len(spellTimeline.Items[0].Entries) != 1 {
+		t.Fatalf("expected one Affliction timeline entry, got %+v", spellTimeline.Items)
+	}
+	if spellTimeline.Items[0].Entries[0].HeroName != "Pocket" {
+		t.Fatalf("expected Pocket Affliction timeline entry, got %+v", spellTimeline.Items[0].Entries[0])
+	}
+}

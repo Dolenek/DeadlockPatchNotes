@@ -42,6 +42,7 @@ func buildStructuredSections(blocks []timelineCandidate, catalog *AssetCatalog) 
 	})
 
 	sections := toPatchSections(parsedSections)
+	sections = repairMisclassifiedItemAbilities(sections, catalog)
 	assignStructuredIDs(sections)
 	return sections
 }
@@ -101,6 +102,146 @@ func toStructuredAbilities(input []abilityRef) []structuredparse.AbilityRef {
 		})
 	}
 	return structuredparse.SortAbilities(abilities)
+}
+
+func repairMisclassifiedItemAbilities(sections []patches.PatchSection, catalog *AssetCatalog) []patches.PatchSection {
+	if catalog == nil {
+		return sections
+	}
+
+	itemsIndex := -1
+	heroesIndex := -1
+	for index := range sections {
+		switch sections[index].Kind {
+		case "items":
+			itemsIndex = index
+		case "heroes":
+			heroesIndex = index
+		}
+	}
+	if itemsIndex == -1 {
+		return sections
+	}
+
+	if heroesIndex == -1 {
+		sections = append(sections, patches.PatchSection{
+			ID:    "heroes",
+			Title: "Heroes",
+			Kind:  "heroes",
+		})
+		heroesIndex = len(sections) - 1
+	}
+
+	heroEntryIndexes := make(map[string]int, len(sections[heroesIndex].Entries))
+	for index := range sections[heroesIndex].Entries {
+		key := structuredparse.CanonicalHeroKey(sections[heroesIndex].Entries[index].EntityName)
+		if key == "" {
+			continue
+		}
+		heroEntryIndexes[key] = index
+	}
+
+	filteredItems := make([]patches.PatchEntry, 0, len(sections[itemsIndex].Entries))
+	for _, entry := range sections[itemsIndex].Entries {
+		if shouldKeepItemEntry(entry, catalog) {
+			filteredItems = append(filteredItems, entry)
+			continue
+		}
+
+		owner, ok := catalog.resolveUniqueAbility(entry.EntityName)
+		if !ok {
+			filteredItems = append(filteredItems, entry)
+			continue
+		}
+
+		heroEntry := ensureHeroSectionEntry(&sections[heroesIndex], heroEntryIndexes, owner)
+		abilityGroup := ensureHeroAbilityGroup(heroEntry, owner)
+		abilityGroup.Changes = append(abilityGroup.Changes, clonePatchChanges(entry.Changes)...)
+		for _, group := range entry.Groups {
+			abilityGroup.Changes = append(abilityGroup.Changes, clonePatchChanges(group.Changes)...)
+		}
+	}
+
+	sections[itemsIndex].Entries = filteredItems
+	return compactStructuredSections(sections)
+}
+
+func shouldKeepItemEntry(entry patches.PatchEntry, catalog *AssetCatalog) bool {
+	if _, ok := catalog.resolveNonAbilityItem(entry.EntityName, firstEntryChangeText(entry)); ok {
+		return true
+	}
+	_, ok := catalog.resolveUniqueAbility(entry.EntityName)
+	return !ok
+}
+
+func firstEntryChangeText(entry patches.PatchEntry) string {
+	if len(entry.Changes) > 0 {
+		return entry.Changes[0].Text
+	}
+	return ""
+}
+
+func ensureHeroSectionEntry(section *patches.PatchSection, indexes map[string]int, owner abilityOwnerRef) *patches.PatchEntry {
+	if existingIndex, ok := indexes[owner.HeroKey]; ok {
+		entry := &section.Entries[existingIndex]
+		if entry.EntityIconFallbackURL == "" {
+			entry.EntityIconFallbackURL = owner.HeroIconFallbackURL
+		}
+		if entry.EntityName == "" {
+			entry.EntityName = owner.HeroName
+		}
+		return entry
+	}
+
+	section.Entries = append(section.Entries, patches.PatchEntry{
+		EntityName:            owner.HeroName,
+		EntityIconFallbackURL: owner.HeroIconFallbackURL,
+	})
+	indexes[owner.HeroKey] = len(section.Entries) - 1
+	return &section.Entries[len(section.Entries)-1]
+}
+
+func ensureHeroAbilityGroup(entry *patches.PatchEntry, owner abilityOwnerRef) *patches.PatchEntryGroup {
+	abilityKey := structuredparse.NormalizeLookupKey(owner.AbilityName)
+	for index := range entry.Groups {
+		if structuredparse.NormalizeLookupKey(entry.Groups[index].Title) != abilityKey {
+			continue
+		}
+		group := &entry.Groups[index]
+		if group.IconFallbackURL == "" {
+			group.IconFallbackURL = owner.AbilityIconFallbackURL
+		}
+		if group.Title == "" {
+			group.Title = owner.AbilityName
+		}
+		return group
+	}
+
+	entry.Groups = append(entry.Groups, patches.PatchEntryGroup{
+		Title:           owner.AbilityName,
+		IconFallbackURL: owner.AbilityIconFallbackURL,
+	})
+	return &entry.Groups[len(entry.Groups)-1]
+}
+
+func compactStructuredSections(sections []patches.PatchSection) []patches.PatchSection {
+	filtered := make([]patches.PatchSection, 0, len(sections))
+	for _, section := range sections {
+		if len(section.Entries) == 0 {
+			continue
+		}
+		filtered = append(filtered, section)
+	}
+	return filtered
+}
+
+func clonePatchChanges(changes []patches.PatchChange) []patches.PatchChange {
+	if len(changes) == 0 {
+		return nil
+	}
+	cloned := make([]patches.PatchChange, len(changes))
+	copy(cloned, changes)
+	return cloned
 }
 
 func assignStructuredIDs(sections []patches.PatchSection) {

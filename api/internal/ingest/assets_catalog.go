@@ -50,11 +50,21 @@ type abilityRef struct {
 	ImageWebP string
 }
 
+type abilityOwnerRef struct {
+	HeroKey                string
+	HeroName               string
+	HeroIconFallbackURL    string
+	AbilityName            string
+	AbilityNormName        string
+	AbilityIconFallbackURL string
+}
+
 type AssetCatalog struct {
-	heroesByNorm     map[string]heroAsset
-	heroByID         map[int]heroAsset
-	itemsByNorm      map[string]itemAsset
-	abilitiesByHero  map[string][]abilityRef
+	heroesByNorm    map[string]heroAsset
+	heroByID        map[int]heroAsset
+	itemsByNorm     map[string]itemAsset
+	abilitiesByHero map[string][]abilityRef
+	abilitiesByNorm map[string][]abilityOwnerRef
 }
 
 func LoadAssetCatalog(ctx context.Context, client *http.Client) (*AssetCatalog, error) {
@@ -73,6 +83,7 @@ func LoadAssetCatalog(ctx context.Context, client *http.Client) (*AssetCatalog, 
 		heroByID:        make(map[int]heroAsset, len(heroes)),
 		itemsByNorm:     make(map[string]itemAsset, len(items)),
 		abilitiesByHero: map[string][]abilityRef{},
+		abilitiesByNorm: map[string][]abilityOwnerRef{},
 	}
 
 	for _, hero := range heroes {
@@ -91,7 +102,8 @@ func LoadAssetCatalog(ctx context.Context, client *http.Client) (*AssetCatalog, 
 		if !ok {
 			continue
 		}
-		heroKey := structuredparse.CanonicalHeroKey(hero.Name)
+		heroName := structuredparse.CanonicalHeroDisplayName(hero.Name)
+		heroKey := structuredparse.CanonicalHeroKey(heroName)
 		abilities := structuredparse.ExpandAbilityAliases(heroKey, []structuredparse.AbilityRef{
 			{
 				Name:            item.Name,
@@ -104,6 +116,14 @@ func LoadAssetCatalog(ctx context.Context, client *http.Client) (*AssetCatalog, 
 				NormName:  ability.NormName,
 				Image:     ability.IconFallbackURL,
 				ImageWebP: ability.IconFallbackURL,
+			})
+			catalog.addAbilityOwnerRef(abilityOwnerRef{
+				HeroKey:                heroKey,
+				HeroName:               heroName,
+				HeroIconFallbackURL:    hero.Images.IconImageSmall,
+				AbilityName:            ability.Name,
+				AbilityNormName:        ability.NormName,
+				AbilityIconFallbackURL: ability.IconFallbackURL,
 			})
 		}
 	}
@@ -152,6 +172,14 @@ func (c *AssetCatalog) resolveItem(name, changeText string) (itemAsset, bool) {
 	return itemAsset{}, false
 }
 
+func (c *AssetCatalog) resolveNonAbilityItem(name, changeText string) (itemAsset, bool) {
+	item, ok := c.resolveItem(name, changeText)
+	if !ok || item.Type == "ability" {
+		return itemAsset{}, false
+	}
+	return item, true
+}
+
 func (c *AssetCatalog) heroAbilities(heroName string) []abilityRef {
 	if c == nil {
 		return nil
@@ -164,6 +192,18 @@ func (c *AssetCatalog) heroAbilities(heroName string) []abilityRef {
 	return nil
 }
 
+func (c *AssetCatalog) resolveUniqueAbility(name string) (abilityOwnerRef, bool) {
+	if c == nil {
+		return abilityOwnerRef{}, false
+	}
+	key := structuredparse.NormalizeLookupKey(name)
+	owners := c.abilitiesByNorm[key]
+	if len(owners) != 1 {
+		return abilityOwnerRef{}, false
+	}
+	return owners[0], true
+}
+
 func resolveHeroDisplayName(rawPrefix string, hero heroAsset) string {
 	if displayName := structuredparse.CanonicalHeroDisplayName(rawPrefix); displayName != "" {
 		if structuredparse.CanonicalHeroKey(displayName) == structuredparse.CanonicalHeroKey(hero.Name) {
@@ -171,6 +211,25 @@ func resolveHeroDisplayName(rawPrefix string, hero heroAsset) string {
 		}
 	}
 	return structuredparse.CanonicalHeroDisplayName(hero.Name)
+}
+
+func (c *AssetCatalog) addAbilityOwnerRef(ref abilityOwnerRef) {
+	if c == nil {
+		return
+	}
+	key := structuredparse.NormalizeLookupKey(ref.AbilityNormName)
+	if key == "" {
+		key = structuredparse.NormalizeLookupKey(ref.AbilityName)
+	}
+	if key == "" {
+		return
+	}
+	for _, existing := range c.abilitiesByNorm[key] {
+		if existing.HeroKey == ref.HeroKey && existing.AbilityName == ref.AbilityName {
+			return
+		}
+	}
+	c.abilitiesByNorm[key] = append(c.abilitiesByNorm[key], ref)
 }
 
 func itemImage(item itemAsset) string {

@@ -261,6 +261,114 @@ func TestBuildStructuredSections_VindcitaAliasDoesNotCreateStandaloneEntry(t *te
 	}
 }
 
+func TestBuildStructuredSections_RepairsAfflictionOutOfItems(t *testing.T) {
+	catalog := testAssetCatalog()
+	blocks := []timelineCandidate{
+		{
+			Key: "post-1-steam-1",
+			BodyText: `[ Items ]
+- Active Reload: Reload speed increased
+- Affliction: Duration reduced from 18s to 14s`,
+		},
+	}
+
+	sections := buildStructuredSections(blocks, catalog)
+	items := sectionByKind(sections, "items")
+	if items == nil {
+		t.Fatal("expected items section")
+	}
+	if len(items.Entries) != 1 || items.Entries[0].EntityName != "Active Reload" {
+		t.Fatalf("expected only Active Reload to remain in items, got %+v", items.Entries)
+	}
+
+	heroes := sectionByKind(sections, "heroes")
+	if heroes == nil {
+		t.Fatal("expected heroes section")
+	}
+	pocket := heroByName(heroes.Entries, "Pocket")
+	if pocket == nil {
+		t.Fatal("expected Pocket entry")
+	}
+	affliction := groupByTitle(*pocket, "Affliction")
+	if affliction == nil {
+		t.Fatal("expected Affliction group under Pocket")
+	}
+	if len(affliction.Changes) != 1 || affliction.Changes[0].Text != "Duration reduced from 18s to 14s" {
+		t.Fatalf("unexpected Affliction changes: %+v", affliction.Changes)
+	}
+}
+
+func TestBuildStructuredSections_RepairsCrimsonSlashOutOfItems(t *testing.T) {
+	catalog := testAssetCatalog()
+	blocks := []timelineCandidate{
+		{
+			Key: "post-1-steam-1",
+			BodyText: `[ Items ]
+- Crimson Slash: adjusted slash effects height to be better aligned to crosshair.`,
+		},
+	}
+
+	sections := buildStructuredSections(blocks, catalog)
+	if items := sectionByKind(sections, "items"); items != nil && len(items.Entries) != 0 {
+		t.Fatalf("expected Crimson Slash to leave items, got %+v", items.Entries)
+	}
+
+	heroes := sectionByKind(sections, "heroes")
+	if heroes == nil {
+		t.Fatal("expected heroes section")
+	}
+	yamato := heroByName(heroes.Entries, "Yamato")
+	if yamato == nil {
+		t.Fatal("expected Yamato entry")
+	}
+	crimsonSlash := groupByTitle(*yamato, "Crimson Slash")
+	if crimsonSlash == nil {
+		t.Fatal("expected Crimson Slash group under Yamato")
+	}
+	if len(crimsonSlash.Changes) != 1 || crimsonSlash.Changes[0].Text != "adjusted slash effects height to be better aligned to crosshair." {
+		t.Fatalf("unexpected Crimson Slash changes: %+v", crimsonSlash.Changes)
+	}
+}
+
+func TestBuildStructuredSections_LeavesAmbiguousAbilityNamesInItems(t *testing.T) {
+	catalog := testAssetCatalog()
+	catalog.abilitiesByNorm["shared ability"] = []abilityOwnerRef{
+		{
+			HeroKey:             "abrams",
+			HeroName:            "Abrams",
+			HeroIconFallbackURL: "https://example.test/abrams.png",
+			AbilityName:         "Shared Ability",
+			AbilityNormName:     "shared ability",
+			AbilityIconFallbackURL: "https://example.test/shared-1.png",
+		},
+		{
+			HeroKey:             "bebop",
+			HeroName:            "Bebop",
+			HeroIconFallbackURL: "https://example.test/bebop.png",
+			AbilityName:         "Shared Ability",
+			AbilityNormName:     "shared ability",
+			AbilityIconFallbackURL: "https://example.test/shared-2.png",
+		},
+	}
+
+	blocks := []timelineCandidate{
+		{
+			Key: "post-1-steam-1",
+			BodyText: `[ Items ]
+- Shared Ability: Cooldown reduced`,
+		},
+	}
+
+	sections := buildStructuredSections(blocks, catalog)
+	items := sectionByKind(sections, "items")
+	if items == nil || len(items.Entries) != 1 || items.Entries[0].EntityName != "Shared Ability" {
+		t.Fatalf("expected ambiguous Shared Ability to remain in items, got %+v", items)
+	}
+	if heroes := sectionByKind(sections, "heroes"); heroes != nil && len(heroes.Entries) != 0 {
+		t.Fatalf("expected no hero entries for ambiguous ability, got %+v", heroes.Entries)
+	}
+}
+
 func sectionByKind(sections []patches.PatchSection, kind string) *patches.PatchSection {
 	for i := range sections {
 		if sections[i].Kind == kind {
@@ -292,12 +400,14 @@ func testAssetCatalog() *AssetCatalog {
 	catalog := &AssetCatalog{
 		heroesByNorm: map[string]heroAsset{
 			"haze":  {ID: 1, Name: "Haze", Images: heroImages{IconImageSmall: "https://example.test/haze.png"}},
+			"pocket": {ID: 7, Name: "Pocket", Images: heroImages{IconImageSmall: "https://example.test/pocket.png"}},
 			"bebop": {ID: 2, Name: "Bebop", Images: heroImages{IconImageSmall: "https://example.test/bebop.png"}},
 			"calico": {ID: 3, Name: "Calico", Images: heroImages{IconImageSmall: "https://example.test/calico.png"}},
 			"wraith": {ID: 4, Name: "Wraith", Images: heroImages{IconImageSmall: "https://example.test/wraith.png"}},
 			"the doorman": {ID: 5, Name: "The Doorman", Images: heroImages{IconImageSmall: "https://example.test/doorman.png"}},
 			"doorman": {ID: 5, Name: "The Doorman", Images: heroImages{IconImageSmall: "https://example.test/doorman.png"}},
 			"vindicta": {ID: 6, Name: "Vindicta", Images: heroImages{IconImageSmall: "https://example.test/vindicta.png"}},
+			"yamato": {ID: 8, Name: "Yamato", Images: heroImages{IconImageSmall: "https://example.test/yamato.png"}},
 		},
 		heroByID: map[int]heroAsset{
 			1: {ID: 1, Name: "Haze", Images: heroImages{IconImageSmall: "https://example.test/haze.png"}},
@@ -306,13 +416,20 @@ func testAssetCatalog() *AssetCatalog {
 			4: {ID: 4, Name: "Wraith", Images: heroImages{IconImageSmall: "https://example.test/wraith.png"}},
 			5: {ID: 5, Name: "The Doorman", Images: heroImages{IconImageSmall: "https://example.test/doorman.png"}},
 			6: {ID: 6, Name: "Vindicta", Images: heroImages{IconImageSmall: "https://example.test/vindicta.png"}},
+			7: {ID: 7, Name: "Pocket", Images: heroImages{IconImageSmall: "https://example.test/pocket.png"}},
+			8: {ID: 8, Name: "Yamato", Images: heroImages{IconImageSmall: "https://example.test/yamato.png"}},
 		},
 		itemsByNorm: map[string]itemAsset{
 			"active reload": {Name: "Active Reload", Type: "item", ShopImage: "https://example.test/active_reload.png"},
+			"affliction":    {Name: "Affliction", Type: "ability", Image: "https://example.test/affliction.png", HeroID: 7},
+			"crimson slash": {Name: "Crimson Slash", Type: "ability", Image: "https://example.test/crimson_slash.png", HeroID: 8},
 		},
 		abilitiesByHero: map[string][]abilityRef{
 			"haze": {
 				{Name: "Sleep Dagger", NormName: "sleep dagger", Image: "https://example.test/sleep_dagger.png"},
+			},
+			"pocket": {
+				{Name: "Affliction", NormName: "affliction", Image: "https://example.test/affliction.png"},
 			},
 			"bebop": {
 				{Name: "Grapple Arm", NormName: "grapple arm", Image: "https://example.test/hook.png"},
@@ -336,6 +453,59 @@ func testAssetCatalog() *AssetCatalog {
 			},
 			"vindicta": {
 				{Name: "Crow Familiar", NormName: "crow familiar", Image: "https://example.test/crow_familiar.png"},
+			},
+			"yamato": {
+				{Name: "Crimson Slash", NormName: "crimson slash", Image: "https://example.test/crimson_slash.png"},
+			},
+		},
+		abilitiesByNorm: map[string][]abilityOwnerRef{
+			"sleep dagger": {
+				{HeroKey: "haze", HeroName: "Haze", HeroIconFallbackURL: "https://example.test/haze.png", AbilityName: "Sleep Dagger", AbilityNormName: "sleep dagger", AbilityIconFallbackURL: "https://example.test/sleep_dagger.png"},
+			},
+			"affliction": {
+				{HeroKey: "pocket", HeroName: "Pocket", HeroIconFallbackURL: "https://example.test/pocket.png", AbilityName: "Affliction", AbilityNormName: "affliction", AbilityIconFallbackURL: "https://example.test/affliction.png"},
+			},
+			"grapple arm": {
+				{HeroKey: "bebop", HeroName: "Bebop", HeroIconFallbackURL: "https://example.test/bebop.png", AbilityName: "Grapple Arm", AbilityNormName: "grapple arm", AbilityIconFallbackURL: "https://example.test/hook.png"},
+			},
+			"hook": {
+				{HeroKey: "bebop", HeroName: "Bebop", HeroIconFallbackURL: "https://example.test/bebop.png", AbilityName: "Grapple Arm", AbilityNormName: "hook", AbilityIconFallbackURL: "https://example.test/hook.png"},
+			},
+			"hyper beam": {
+				{HeroKey: "bebop", HeroName: "Bebop", HeroIconFallbackURL: "https://example.test/bebop.png", AbilityName: "Hyper Beam", AbilityNormName: "hyper beam", AbilityIconFallbackURL: "https://example.test/hyper_beam.png"},
+			},
+			"hyperbeam": {
+				{HeroKey: "bebop", HeroName: "Bebop", HeroIconFallbackURL: "https://example.test/bebop.png", AbilityName: "Hyper Beam", AbilityNormName: "hyperbeam", AbilityIconFallbackURL: "https://example.test/hyper_beam.png"},
+			},
+			"exploding uppercut": {
+				{HeroKey: "bebop", HeroName: "Bebop", HeroIconFallbackURL: "https://example.test/bebop.png", AbilityName: "Exploding Uppercut", AbilityNormName: "exploding uppercut", AbilityIconFallbackURL: "https://example.test/uppercut.png"},
+			},
+			"uppercut": {
+				{HeroKey: "bebop", HeroName: "Bebop", HeroIconFallbackURL: "https://example.test/bebop.png", AbilityName: "Exploding Uppercut", AbilityNormName: "uppercut", AbilityIconFallbackURL: "https://example.test/uppercut.png"},
+			},
+			"leaping slash": {
+				{HeroKey: "calico", HeroName: "Calico", HeroIconFallbackURL: "https://example.test/calico.png", AbilityName: "Leaping Slash", AbilityNormName: "leaping slash", AbilityIconFallbackURL: "https://example.test/leaping_slash.png"},
+			},
+			"card trick": {
+				{HeroKey: "wraith", HeroName: "Wraith", HeroIconFallbackURL: "https://example.test/wraith.png", AbilityName: "Card Trick", AbilityNormName: "card trick", AbilityIconFallbackURL: "https://example.test/card_trick.png"},
+			},
+			"call bell": {
+				{HeroKey: "doorman", HeroName: "Doorman", HeroIconFallbackURL: "https://example.test/doorman.png", AbilityName: "Call Bell", AbilityNormName: "call bell", AbilityIconFallbackURL: "https://example.test/call_bell.png"},
+			},
+			"doorway": {
+				{HeroKey: "doorman", HeroName: "Doorman", HeroIconFallbackURL: "https://example.test/doorman.png", AbilityName: "Doorway", AbilityNormName: "doorway", AbilityIconFallbackURL: "https://example.test/doorway.png"},
+			},
+			"luggage cart": {
+				{HeroKey: "doorman", HeroName: "Doorman", HeroIconFallbackURL: "https://example.test/doorman.png", AbilityName: "Luggage Cart", AbilityNormName: "luggage cart", AbilityIconFallbackURL: "https://example.test/luggage_cart.png"},
+			},
+			"hotel guest": {
+				{HeroKey: "doorman", HeroName: "Doorman", HeroIconFallbackURL: "https://example.test/doorman.png", AbilityName: "Hotel Guest", AbilityNormName: "hotel guest", AbilityIconFallbackURL: "https://example.test/hotel_guest.png"},
+			},
+			"crow familiar": {
+				{HeroKey: "vindicta", HeroName: "Vindicta", HeroIconFallbackURL: "https://example.test/vindicta.png", AbilityName: "Crow Familiar", AbilityNormName: "crow familiar", AbilityIconFallbackURL: "https://example.test/crow_familiar.png"},
+			},
+			"crimson slash": {
+				{HeroKey: "yamato", HeroName: "Yamato", HeroIconFallbackURL: "https://example.test/yamato.png", AbilityName: "Crimson Slash", AbilityNormName: "crimson slash", AbilityIconFallbackURL: "https://example.test/crimson_slash.png"},
 			},
 		},
 	}
