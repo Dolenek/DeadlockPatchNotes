@@ -22,9 +22,10 @@ func TestBuildItemList_ReturnsItemsWithChanges(t *testing.T) {
 							Kind:  "items",
 							Entries: []PatchEntry{
 								{
-									ID:         "active-reload",
-									EntityName: "Active Reload",
-									Changes:    []PatchChange{{ID: "c1", Text: "Cooldown reduced"}},
+									ID:                    "active-reload",
+									EntityName:            "Active Reload",
+									EntityIconFallbackURL: "https://example.test/active_reload.png",
+									Changes:               []PatchChange{{ID: "c1", Text: "Cooldown reduced"}},
 								},
 							},
 						},
@@ -60,9 +61,10 @@ func TestBuildItemChanges_AppliesDateFilters(t *testing.T) {
 							Kind:  "items",
 							Entries: []PatchEntry{
 								{
-									ID:         "active-reload",
-									EntityName: "Active Reload",
-									Changes:    []PatchChange{{ID: "c1", Text: "Cooldown reduced"}},
+									ID:                    "active-reload",
+									EntityName:            "Active Reload",
+									EntityIconFallbackURL: "https://example.test/active_reload.png",
+									Changes:               []PatchChange{{ID: "c1", Text: "Cooldown reduced"}},
 								},
 							},
 						},
@@ -79,9 +81,10 @@ func TestBuildItemChanges_AppliesDateFilters(t *testing.T) {
 							Kind:  "items",
 							Entries: []PatchEntry{
 								{
-									ID:         "active-reload",
-									EntityName: "Active Reload",
-									Changes:    []PatchChange{{ID: "c2", Text: "Damage increased"}},
+									ID:                    "active-reload",
+									EntityName:            "Active Reload",
+									EntityIconFallbackURL: "https://example.test/active_reload.png",
+									Changes:               []PatchChange{{ID: "c2", Text: "Damage increased"}},
 								},
 							},
 						},
@@ -123,9 +126,10 @@ func TestBuildSpellList_SkipsTalentsAndKnownItems(t *testing.T) {
 							Kind:  "items",
 							Entries: []PatchEntry{
 								{
-									ID:         "active-reload",
-									EntityName: "Active Reload",
-									Changes:    []PatchChange{{ID: "i1", Text: "Reload speed increased"}},
+									ID:                    "active-reload",
+									EntityName:            "Active Reload",
+									EntityIconFallbackURL: "https://example.test/active_reload.png",
+									Changes:               []PatchChange{{ID: "i1", Text: "Reload speed increased"}},
 								},
 							},
 						},
@@ -350,9 +354,10 @@ func TestBuildEntityQueries_TreatPromotedAbilitiesAsSpellsNotItems(t *testing.T)
 							Kind:  "items",
 							Entries: []PatchEntry{
 								{
-									ID:         "active-reload",
-									EntityName: "Active Reload",
-									Changes:    []PatchChange{{ID: "i1", Text: "Reload speed increased"}},
+									ID:                    "active-reload",
+									EntityName:            "Active Reload",
+									EntityIconFallbackURL: "https://example.test/active_reload.png",
+									Changes:               []PatchChange{{ID: "i1", Text: "Reload speed increased"}},
 								},
 							},
 						},

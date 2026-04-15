@@ -46,11 +46,13 @@ export default async function ItemsPage() {
     }
   }
 
+  const visibleItems = payload.items.filter((item) => Boolean(item.iconUrl || item.iconFallbackUrl));
+
   const schema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: "Deadlock Items",
-    itemListElement: payload.items.map((item, index) => ({
+    itemListElement: visibleItems.map((item, index) => ({
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
@@ -83,7 +85,7 @@ export default async function ItemsPage() {
 
       <section className="shell heroes-list-section heroes-list-section--items">
         <div className="heroes-grid">
-          {payload.items.map((item, index) => (
+          {visibleItems.map((item, index) => (
             <article key={item.slug} className="hero-card">
               <Link href={`/items/${item.slug}`} className="hero-card-link">
                 <FallbackImage
