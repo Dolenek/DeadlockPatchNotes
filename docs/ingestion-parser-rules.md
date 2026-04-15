@@ -107,6 +107,10 @@ Supported patterns:
 - Explicit section headers:
   - `[ General ]`, `[ Items ]`, `[ Heroes ]`
   - plain `General`, `Items`, `Heroes`
+  - Steam subsection variants are normalized by leading keyword:
+    - `[ Hero Content Improvements ]`, `[ Hero Lab Updates ]` -> `heroes`
+    - `[ Item Content Improvements ]`, `[ Item Sound and Visuals ]` -> `items`
+    - other bracketed subsection headers fall back to `general`
 - Prefixed lines: `Prefix: change text`
 - Non-prefixed continuation lines
 
@@ -128,10 +132,12 @@ Hero grouping behavior:
 - `Card Types` heading opens `Card Types` group.
 - `Spades|Diamond|Hearts|Clubs|Joker` prefixed lines remain under `Card Types`.
 - Ability/card-type prefixes do not become standalone hero entries.
+- When parser is already inside a hero block, hero ability matching takes precedence over item resolution for the same prefix.
 
 Item behavior:
 
 - Item-prefixed line with empty change text becomes `Updated.`.
+- In `items` sections, plain item heading lines open the current item and subsequent non-prefixed lines attach to that item.
 
 Skipped lines:
 

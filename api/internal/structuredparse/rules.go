@@ -9,11 +9,11 @@ import (
 )
 
 var (
-	sectionHeaderRegex = regexp.MustCompile(`(?i)^\[\s*(general|items|heroes)\s*\]$`)
-	datePatchHeadingRegex = regexp.MustCompile(`(?i)^\d{2}-\d{2}-\d{4}\s+patch:\s*$`)
-	prefixedLineRegex = regexp.MustCompile(`^([^:]{1,64}):\s*(.*)$`)
-	nonAlphaNumRegex = regexp.MustCompile(`[^a-z0-9]+`)
-	spaceRegex = regexp.MustCompile(`\s+`)
+	bracketSectionHeaderRegex = regexp.MustCompile(`^\[\s*(.+?)\s*\]$`)
+	datePatchHeadingRegex     = regexp.MustCompile(`(?i)^\d{2}-\d{2}-\d{4}\s+patch:\s*$`)
+	prefixedLineRegex         = regexp.MustCompile(`^([^:]{1,64}):\s*(.*)$`)
+	nonAlphaNumRegex          = regexp.MustCompile(`[^a-z0-9]+`)
+	spaceRegex                = regexp.MustCompile(`\s+`)
 )
 
 //go:embed rules.json
@@ -54,8 +54,8 @@ func Slugify(value string) string {
 }
 
 func ParseSectionHeader(line string) (string, bool) {
-	if match := sectionHeaderRegex.FindStringSubmatch(strings.TrimSpace(line)); len(match) == 2 {
-		return strings.ToLower(match[1]), true
+	if match := bracketSectionHeaderRegex.FindStringSubmatch(strings.TrimSpace(line)); len(match) == 2 {
+		return classifyBracketSectionHeader(match[1]), true
 	}
 	switch strings.ToLower(strings.TrimSpace(line)) {
 	case "general":
@@ -66,6 +66,22 @@ func ParseSectionHeader(line string) (string, bool) {
 		return "heroes", true
 	}
 	return "", false
+}
+
+func classifyBracketSectionHeader(value string) string {
+	tokens := strings.Fields(NormalizeLookupKey(value))
+	if len(tokens) == 0 {
+		return "general"
+	}
+
+	switch tokens[0] {
+	case "hero", "heroes":
+		return "heroes"
+	case "item", "items":
+		return "items"
+	default:
+		return "general"
+	}
 }
 
 func ParsePrefixedLine(line string) (string, string, bool) {

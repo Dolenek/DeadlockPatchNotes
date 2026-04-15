@@ -78,7 +78,7 @@ type sectionAccumulator struct {
 
 func BuildSections(lines []string, resolver Resolver) []Section {
 	acc := &sectionAccumulator{
-		resolver: resolver,
+		resolver:    resolver,
 		itemEntries: map[string]*Entry{},
 		heroEntries: map[string]*heroEntryState{},
 	}
@@ -95,10 +95,15 @@ func BuildSections(lines []string, resolver Resolver) []Section {
 
 		if header, ok := ParseSectionHeader(line); ok {
 			mode = header
+			currentHero = ""
+			currentItem = ""
 			continue
 		}
 
 		if mode == "heroes" && acc.consumeHeroHeadingLine(line, &currentHero, &currentItem) {
+			continue
+		}
+		if mode == "items" && acc.consumeItemHeadingLine(line, &currentHero, &currentItem) {
 			continue
 		}
 
@@ -142,6 +147,22 @@ func (a *sectionAccumulator) consumeHeroHeadingLine(line string, currentHero, cu
 	return true
 }
 
+func (a *sectionAccumulator) consumeItemHeadingLine(line string, currentHero, currentItem *string) bool {
+	if a.resolver.ResolveItem == nil {
+		return false
+	}
+
+	item, ok := a.resolver.ResolveItem(line, "")
+	if !ok {
+		return false
+	}
+
+	a.ensureItem(item)
+	*currentItem = entryKey(item.Key, item.Name)
+	*currentHero = ""
+	return true
+}
+
 func (a *sectionAccumulator) consumePrefixedLine(mode, prefix, text string, currentHero, currentItem *string) bool {
 	if a.resolver.ResolveHero != nil {
 		if hero, ok := a.resolver.ResolveHero(prefix); ok {
@@ -156,6 +177,13 @@ func (a *sectionAccumulator) consumePrefixedLine(mode, prefix, text string, curr
 		}
 	}
 
+	if mode == "heroes" && *currentHero != "" {
+		if state := a.heroEntries[*currentHero]; state != nil {
+			applyHeroChange(state, prefix, text)
+			return true
+		}
+	}
+
 	item, itemResolved := ItemRef{}, false
 	if a.resolver.ResolveItem != nil {
 		item, itemResolved = a.resolver.ResolveItem(prefix, text)
@@ -165,7 +193,7 @@ func (a *sectionAccumulator) consumePrefixedLine(mode, prefix, text string, curr
 			item = ItemRef{Key: NormalizeLookupKey(prefix), Name: strings.TrimSpace(prefix)}
 		}
 		entry := a.ensureItem(item)
-		*currentItem = item.Key
+		*currentItem = entryKey(item.Key, item.Name)
 		*currentHero = ""
 		changeText := strings.TrimSpace(text)
 		if changeText == "" {
@@ -173,13 +201,6 @@ func (a *sectionAccumulator) consumePrefixedLine(mode, prefix, text string, curr
 		}
 		appendEntryChange(entry, changeText)
 		return true
-	}
-
-	if mode == "heroes" && *currentHero != "" {
-		if state := a.heroEntries[*currentHero]; state != nil {
-			applyHeroChange(state, prefix, text)
-			return true
-		}
 	}
 
 	if mode == "items" && *currentItem != "" {
@@ -202,10 +223,7 @@ func (a *sectionAccumulator) ensureGeneral() *Entry {
 }
 
 func (a *sectionAccumulator) ensureItem(item ItemRef) *Entry {
-	key := item.Key
-	if key == "" {
-		key = NormalizeLookupKey(item.Name)
-	}
+	key := entryKey(item.Key, item.Name)
 	if existing, ok := a.itemEntries[key]; ok {
 		return existing
 	}
@@ -217,6 +235,13 @@ func (a *sectionAccumulator) ensureItem(item ItemRef) *Entry {
 	a.itemEntries[key] = entry
 	a.itemOrder = append(a.itemOrder, key)
 	return entry
+}
+
+func entryKey(key, fallbackName string) string {
+	if key != "" {
+		return key
+	}
+	return NormalizeLookupKey(fallbackName)
 }
 
 func (a *sectionAccumulator) ensureHero(hero HeroRef) *heroEntryState {

@@ -129,6 +129,44 @@ func TestBuildStructuredSections_AbilityPrefixesStayOnCurrentHero(t *testing.T) 
 	}
 }
 
+func TestBuildStructuredSections_HeroAbilityPrefixesBeatItemResolution(t *testing.T) {
+	catalog := testAssetCatalog()
+	blocks := []timelineCandidate{
+		{
+			Key: "post-1-steam-1",
+			BodyText: `[ Heroes ]
+- Abrams
+- Siphon Life: Added new animation logic support for Siphon Life and items.
+- Shoulder Charge: Base duration increased from 1.2s to 1.4s.
+- Shoulder Charge: T1 is now "On Hero Collide: +25% Weapon Damage for 8s".`,
+		},
+	}
+
+	sections := buildStructuredSections(blocks, catalog)
+	if items := sectionByKind(sections, "items"); items != nil && len(items.Entries) != 0 {
+		t.Fatalf("expected no item entries, got %+v", items.Entries)
+	}
+
+	heroes := sectionByKind(sections, "heroes")
+	if heroes == nil {
+		t.Fatal("expected heroes section")
+	}
+	abrams := heroByName(heroes.Entries, "Abrams")
+	if abrams == nil {
+		t.Fatal("expected Abrams entry")
+	}
+	if groupByTitle(*abrams, "Siphon Life") == nil {
+		t.Fatal("expected Siphon Life group under Abrams")
+	}
+	shoulderCharge := groupByTitle(*abrams, "Shoulder Charge")
+	if shoulderCharge == nil {
+		t.Fatal("expected Shoulder Charge group under Abrams")
+	}
+	if len(shoulderCharge.Changes) != 2 {
+		t.Fatalf("expected 2 Shoulder Charge changes, got %+v", shoulderCharge.Changes)
+	}
+}
+
 func TestBuildStructuredSections_CardTypesStayInHeroGroup(t *testing.T) {
 	catalog := testAssetCatalog()
 	blocks := []timelineCandidate{
@@ -369,6 +407,50 @@ func TestBuildStructuredSections_LeavesAmbiguousAbilityNamesInItems(t *testing.T
 	}
 }
 
+func TestBuildStructuredSections_ParsesExtendedSteamSectionHeaders(t *testing.T) {
+	catalog := testAssetCatalog()
+	blocks := []timelineCandidate{
+		{
+			Key: "post-1-steam-1",
+			BodyText: `[ Hero Content Improvements ]
+- Yamato
+- Crimson Slash: adjusted slash effects height to be better aligned to crosshair.
+[ Item Content Improvements ]
+- Active Reload
+- Now plays a sound when entering the active window.
+- Magic Carpet
+- Fixed a bug that caused the ambient sound to not loop properly.`,
+		},
+	}
+
+	sections := buildStructuredSections(blocks, catalog)
+
+	heroes := sectionByKind(sections, "heroes")
+	if heroes == nil {
+		t.Fatal("expected heroes section")
+	}
+	yamato := heroByName(heroes.Entries, "Yamato")
+	if yamato == nil {
+		t.Fatal("expected Yamato entry")
+	}
+	if groupByTitle(*yamato, "Crimson Slash") == nil {
+		t.Fatal("expected Crimson Slash group under Yamato")
+	}
+
+	items := sectionByKind(sections, "items")
+	if items == nil {
+		t.Fatal("expected items section")
+	}
+	activeReload := itemEntryByName(items.Entries, "Active Reload")
+	if activeReload == nil || len(activeReload.Changes) != 1 {
+		t.Fatalf("expected Active Reload item entry with one change, got %+v", activeReload)
+	}
+	magicCarpet := itemEntryByName(items.Entries, "Magic Carpet")
+	if magicCarpet == nil || len(magicCarpet.Changes) != 1 {
+		t.Fatalf("expected Magic Carpet item entry with one change, got %+v", magicCarpet)
+	}
+}
+
 func sectionByKind(sections []patches.PatchSection, kind string) *patches.PatchSection {
 	for i := range sections {
 		if sections[i].Kind == kind {
@@ -396,10 +478,20 @@ func groupByTitle(entry patches.PatchEntry, title string) *patches.PatchEntryGro
 	return nil
 }
 
+func itemEntryByName(entries []patches.PatchEntry, name string) *patches.PatchEntry {
+	for i := range entries {
+		if entries[i].EntityName == name {
+			return &entries[i]
+		}
+	}
+	return nil
+}
+
 func testAssetCatalog() *AssetCatalog {
 	catalog := &AssetCatalog{
 		heroesByNorm: map[string]heroAsset{
 			"haze":  {ID: 1, Name: "Haze", Images: heroImages{IconImageSmall: "https://example.test/haze.png"}},
+			"abrams": {ID: 9, Name: "Abrams", Images: heroImages{IconImageSmall: "https://example.test/abrams.png"}},
 			"pocket": {ID: 7, Name: "Pocket", Images: heroImages{IconImageSmall: "https://example.test/pocket.png"}},
 			"bebop": {ID: 2, Name: "Bebop", Images: heroImages{IconImageSmall: "https://example.test/bebop.png"}},
 			"calico": {ID: 3, Name: "Calico", Images: heroImages{IconImageSmall: "https://example.test/calico.png"}},
@@ -418,15 +510,23 @@ func testAssetCatalog() *AssetCatalog {
 			6: {ID: 6, Name: "Vindicta", Images: heroImages{IconImageSmall: "https://example.test/vindicta.png"}},
 			7: {ID: 7, Name: "Pocket", Images: heroImages{IconImageSmall: "https://example.test/pocket.png"}},
 			8: {ID: 8, Name: "Yamato", Images: heroImages{IconImageSmall: "https://example.test/yamato.png"}},
+			9: {ID: 9, Name: "Abrams", Images: heroImages{IconImageSmall: "https://example.test/abrams.png"}},
 		},
 		itemsByNorm: map[string]itemAsset{
-			"active reload": {Name: "Active Reload", Type: "item", ShopImage: "https://example.test/active_reload.png"},
-			"affliction":    {Name: "Affliction", Type: "ability", Image: "https://example.test/affliction.png", HeroID: 7},
-			"crimson slash": {Name: "Crimson Slash", Type: "ability", Image: "https://example.test/crimson_slash.png", HeroID: 8},
+			"active reload":   {Name: "Active Reload", Type: "item", ShopImage: "https://example.test/active_reload.png"},
+			"magic carpet":    {Name: "Magic Carpet", Type: "item", ShopImage: "https://example.test/magic_carpet.png"},
+			"affliction":      {Name: "Affliction", Type: "ability", Image: "https://example.test/affliction.png", HeroID: 7},
+			"crimson slash":   {Name: "Crimson Slash", Type: "ability", Image: "https://example.test/crimson_slash.png", HeroID: 8},
+			"siphon life":     {Name: "Siphon Life", Type: "ability", Image: "https://example.test/siphon_life.png", HeroID: 9},
+			"shoulder charge": {Name: "Shoulder Charge", Type: "ability", Image: "https://example.test/shoulder_charge.png", HeroID: 9},
 		},
 		abilitiesByHero: map[string][]abilityRef{
 			"haze": {
 				{Name: "Sleep Dagger", NormName: "sleep dagger", Image: "https://example.test/sleep_dagger.png"},
+			},
+			"abrams": {
+				{Name: "Siphon Life", NormName: "siphon life", Image: "https://example.test/siphon_life.png"},
+				{Name: "Shoulder Charge", NormName: "shoulder charge", Image: "https://example.test/shoulder_charge.png"},
 			},
 			"pocket": {
 				{Name: "Affliction", NormName: "affliction", Image: "https://example.test/affliction.png"},
@@ -461,6 +561,12 @@ func testAssetCatalog() *AssetCatalog {
 		abilitiesByNorm: map[string][]abilityOwnerRef{
 			"sleep dagger": {
 				{HeroKey: "haze", HeroName: "Haze", HeroIconFallbackURL: "https://example.test/haze.png", AbilityName: "Sleep Dagger", AbilityNormName: "sleep dagger", AbilityIconFallbackURL: "https://example.test/sleep_dagger.png"},
+			},
+			"siphon life": {
+				{HeroKey: "abrams", HeroName: "Abrams", HeroIconFallbackURL: "https://example.test/abrams.png", AbilityName: "Siphon Life", AbilityNormName: "siphon life", AbilityIconFallbackURL: "https://example.test/siphon_life.png"},
+			},
+			"shoulder charge": {
+				{HeroKey: "abrams", HeroName: "Abrams", HeroIconFallbackURL: "https://example.test/abrams.png", AbilityName: "Shoulder Charge", AbilityNormName: "shoulder charge", AbilityIconFallbackURL: "https://example.test/shoulder_charge.png"},
 			},
 			"affliction": {
 				{HeroKey: "pocket", HeroName: "Pocket", HeroIconFallbackURL: "https://example.test/pocket.png", AbilityName: "Affliction", AbilityNormName: "affliction", AbilityIconFallbackURL: "https://example.test/affliction.png"},
