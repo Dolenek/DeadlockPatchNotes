@@ -175,7 +175,8 @@ Slug/thread identity contract:
 ## Sync Observability
 
 - `sync_runs` row is inserted with `status='running'` at start.
-- Final row updates status, counters, finish timestamp, and message.
+- Final row updates status, discovered/processed/failed counters, finish timestamp, and a bounded failure summary.
+- `success` requires at least one discovered thread and no thread failures. Mixed outcomes use `partial`; discovery, catalog, or all-thread failures use `failed` and a non-zero CLI exit.
 - `sync_runs.status` is free-text in schema.
 
 ## External Dependencies Used by Ingest
@@ -187,3 +188,4 @@ Slug/thread identity contract:
 - Asset catalog:
   - `https://assets.deadlock-api.com/v2/heroes`
   - `https://assets.deadlock-api.com/v2/items`
+- Responses are capped at 10 MiB. Redirects and crawler pagination must remain on the requested origin, and known forum challenge pages fail discovery.

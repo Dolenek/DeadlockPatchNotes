@@ -18,7 +18,7 @@ type patchDetailRecord struct {
 	Excerpt string
 }
 
-func buildPatchFromThread(ctx context.Context, client *http.Client, thread ForumThread, catalog *AssetCatalog) (patchDetailRecord, []timelineCandidate, time.Time, time.Time) {
+func buildPatchFromThread(ctx context.Context, client *http.Client, thread ForumThread, catalog *AssetCatalog) (patchDetailRecord, []timelineCandidate, time.Time, time.Time, error) {
 	blocks := make([]timelineCandidate, 0, len(thread.Posts)+2)
 	coverImage := ""
 
@@ -27,27 +27,25 @@ func buildPatchFromThread(ctx context.Context, client *http.Client, thread Forum
 		hasSteamContent := false
 		if post.SteamURL != "" {
 			event, err := FetchSteamEvent(ctx, client, post.SteamURL, post.PublishedAt)
-			if err == nil {
-				hasSteamContent = len(event.BodyBlocks) > 0
-				if coverImage == "" {
-					coverImage = firstNonEmpty(event.HeroImage, post.SteamImage)
-				}
-				for blockIndex, block := range event.BodyBlocks {
-					kind := block.Kind
-					if isFirstPost && blockIndex == 0 {
-						kind = "initial"
-					}
-					blocks = append(blocks, timelineCandidate{
-						Key:        fmt.Sprintf("post-%s-steam-%d", post.PostID, blockIndex+1),
-						Kind:       kind,
-						Title:      firstNonEmpty(block.Title, event.Title),
-						SourceType: "steam-news",
-						SourceURL:  post.SteamURL,
-						PostID:     post.PostID,
-						ReleasedAt: nonZeroTime(block.ReleasedAt, post.PublishedAt),
-						BodyText:   strings.TrimSpace(block.BodyText),
-					})
-				}
+			if err != nil {
+				return patchDetailRecord{}, nil, time.Time{}, time.Time{}, fmt.Errorf("fetch Steam event for post %s: %w", post.PostID, err)
+			}
+			hasSteamContent = len(event.BodyBlocks) > 0
+			if coverImage == "" {
+				coverImage = firstNonEmpty(event.HeroImage, post.SteamImage)
+			}
+			for blockIndex, block := range event.BodyBlocks {
+				kind := timelineKindForPost(isFirstPost, blockIndex, block.Kind)
+				blocks = append(blocks, timelineCandidate{
+					Key:        fmt.Sprintf("post-%s-steam-%d", post.PostID, blockIndex+1),
+					Kind:       kind,
+					Title:      firstNonEmpty(block.Title, event.Title),
+					SourceType: "steam-news",
+					SourceURL:  post.SteamURL,
+					PostID:     post.PostID,
+					ReleasedAt: nonZeroTime(block.ReleasedAt, post.PublishedAt),
+					BodyText:   strings.TrimSpace(block.BodyText),
+				})
 			}
 		}
 
@@ -89,7 +87,7 @@ func buildPatchFromThread(ctx context.Context, client *http.Client, thread Forum
 	}
 
 	if len(blocks) == 0 {
-		return patchDetailRecord{}, nil, time.Time{}, time.Time{}
+		return patchDetailRecord{}, nil, time.Time{}, time.Time{}, nil
 	}
 
 	publishedAt := blocks[0].ReleasedAt
@@ -98,7 +96,17 @@ func buildPatchFromThread(ctx context.Context, client *http.Client, thread Forum
 	payload := buildDetailPayload(thread, blocks, coverImage, catalog)
 	excerpt := buildIntro(payload.Sections[0].Entries)
 
-	return patchDetailRecord{Payload: payload, Excerpt: excerpt}, blocks, publishedAt, updatedAt
+	return patchDetailRecord{Payload: payload, Excerpt: excerpt}, blocks, publishedAt, updatedAt, nil
+}
+
+func timelineKindForPost(isFirstPost bool, blockIndex int, parsedKind string) string {
+	if blockIndex != 0 {
+		return parsedKind
+	}
+	if isFirstPost {
+		return "initial"
+	}
+	return "hotfix"
 }
 
 func buildDetailPayload(thread ForumThread, blocks []timelineCandidate, coverImage string, catalog *AssetCatalog) patches.PatchDetail {
@@ -142,7 +150,7 @@ func buildDetailPayload(thread ForumThread, blocks []timelineCandidate, coverIma
 		HeroImageURL: coverImage,
 		Intro:        intro,
 		Sections:     sections,
-		Timeline: timeline,
+		Timeline:     timeline,
 	}
 }
 

@@ -22,9 +22,10 @@ func TestBuildHeroList_ReturnsHeroesWithChanges(t *testing.T) {
 							Kind:  "heroes",
 							Entries: []PatchEntry{
 								{
-									ID:         "abrams",
-									EntityName: "Abrams",
-									Changes:    []PatchChange{{ID: "c1", Text: "Base health increased"}},
+									ID:                    "abrams",
+									EntityName:            "Abrams",
+									EntityIconFallbackURL: "https://example.test/abrams.png",
+									Changes:               []PatchChange{{ID: "c1", Text: "Base health increased"}},
 								},
 							},
 						},

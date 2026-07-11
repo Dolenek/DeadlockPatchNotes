@@ -1,6 +1,7 @@
 package httpapi
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -36,7 +37,7 @@ func TestDaysSinceLastUpdateHeroBaselineDefaultsToMostRecentPatchOrHero(t *testi
 	location := mustLoadBerlinTestLocation(t)
 
 	store := &daysSinceRepoStub{
-		patchPublishedAt: "2026-03-13T12:00:00Z",
+		patchPublishedAt:  "2026-03-13T12:00:00Z",
 		heroLastChangedAt: "2026-03-01T12:00:00Z",
 	}
 	handler := NewRouter(store)
@@ -62,7 +63,7 @@ func TestDaysSinceLastUpdateHeroOnlyUpdateUsesHeroTimestamp(t *testing.T) {
 	location := mustLoadBerlinTestLocation(t)
 
 	store := &daysSinceRepoStub{
-		patchPublishedAt: "2026-03-13T12:00:00Z",
+		patchPublishedAt:  "2026-03-13T12:00:00Z",
 		heroLastChangedAt: "2026-03-01T12:00:00Z",
 	}
 	handler := NewRouter(store)
@@ -119,11 +120,11 @@ func TestDaysSinceLastUpdateMissingHeroReturns404(t *testing.T) {
 }
 
 type daysSinceRepoStub struct {
-	patchPublishedAt string
+	patchPublishedAt  string
 	heroLastChangedAt string
 }
 
-func (s *daysSinceRepoStub) List(page, limit int) (patches.PatchListResponse, error) {
+func (s *daysSinceRepoStub) List(_ context.Context, page, limit int) (patches.PatchListResponse, error) {
 	return patches.PatchListResponse{
 		Patches: []patches.PatchSummary{
 			{
@@ -140,11 +141,11 @@ func (s *daysSinceRepoStub) List(page, limit int) (patches.PatchListResponse, er
 	}, nil
 }
 
-func (s *daysSinceRepoStub) GetBySlug(string) (patches.PatchDetail, error) {
+func (s *daysSinceRepoStub) GetBySlug(context.Context, string) (patches.PatchDetail, error) {
 	return patches.PatchDetail{}, nil
 }
 
-func (s *daysSinceRepoStub) ListHeroes() (patches.HeroListResponse, error) {
+func (s *daysSinceRepoStub) ListHeroes(context.Context) (patches.HeroListResponse, error) {
 	return patches.HeroListResponse{
 		Items: []patches.HeroSummary{
 			{
@@ -156,23 +157,23 @@ func (s *daysSinceRepoStub) ListHeroes() (patches.HeroListResponse, error) {
 	}, nil
 }
 
-func (s *daysSinceRepoStub) GetHeroChanges(patches.HeroChangesQuery) (patches.HeroChangesResponse, error) {
+func (s *daysSinceRepoStub) GetHeroChanges(context.Context, patches.HeroChangesQuery) (patches.HeroChangesResponse, error) {
 	return patches.HeroChangesResponse{}, nil
 }
 
-func (s *daysSinceRepoStub) ListItems() (patches.ItemListResponse, error) {
+func (s *daysSinceRepoStub) ListItems(context.Context) (patches.ItemListResponse, error) {
 	return patches.ItemListResponse{}, nil
 }
 
-func (s *daysSinceRepoStub) GetItemChanges(patches.ItemChangesQuery) (patches.ItemChangesResponse, error) {
+func (s *daysSinceRepoStub) GetItemChanges(context.Context, patches.ItemChangesQuery) (patches.ItemChangesResponse, error) {
 	return patches.ItemChangesResponse{}, nil
 }
 
-func (s *daysSinceRepoStub) ListSpells() (patches.SpellListResponse, error) {
+func (s *daysSinceRepoStub) ListSpells(context.Context) (patches.SpellListResponse, error) {
 	return patches.SpellListResponse{}, nil
 }
 
-func (s *daysSinceRepoStub) GetSpellChanges(patches.SpellChangesQuery) (patches.SpellChangesResponse, error) {
+func (s *daysSinceRepoStub) GetSpellChanges(context.Context, patches.SpellChangesQuery) (patches.SpellChangesResponse, error) {
 	return patches.SpellChangesResponse{}, nil
 }
 

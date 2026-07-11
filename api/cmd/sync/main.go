@@ -47,9 +47,14 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("sync complete: discovered=%d processed=%d inserted=%d updated=%d\n",
+	printStats(stats)
+}
+
+func printStats(stats ingest.SyncStats) {
+	fmt.Printf("sync complete: discovered=%d processed=%d failed=%d inserted=%d updated=%d\n",
 		stats.DiscoveredThreads,
 		stats.ProcessedThreads,
+		stats.FailedThreads,
 		stats.InsertedPatches,
 		stats.UpdatedPatches,
 	)

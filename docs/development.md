@@ -20,7 +20,7 @@ Default API URL: `http://localhost:8080`.
 Optional API env var:
 
 - `API_READ_CACHE_TTL` (Go duration, default `10m`)
-- `SITE_URL` (optional canonical web host used for RSS item links; fallback is request host)
+- `SITE_URL` (optional canonical web host used for RSS item links; fallback is `https://www.deadlockpatchnotes.com`)
 
 ## Run Web
 

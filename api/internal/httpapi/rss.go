@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"errors"
 	"net/http"
+	"strings"
 	"time"
 
 	"deadlockpatchnotes/api/internal/patches"
@@ -51,7 +52,7 @@ type rssGUID struct {
 }
 
 func (a *API) patchFeedRSS(w http.ResponseWriter, r *http.Request) {
-	patchesPayload, err := listAllPatchSummaries(a.store)
+	patchesPayload, err := listAllPatchSummaries(r.Context(), a.store)
 	if err != nil {
 		writeError(w, r, http.StatusInternalServerError, "internal_error", "failed to list patches")
 		return
@@ -60,7 +61,7 @@ func (a *API) patchFeedRSS(w http.ResponseWriter, r *http.Request) {
 
 	siteBaseURL := resolveFeedSiteBaseURL(r)
 	now := rssNow().UTC()
-	items, err := buildPatchRSSItems(a.store, patchesPayload, siteBaseURL, now)
+	items, err := buildPatchRSSItems(r.Context(), a.store, patchesPayload, siteBaseURL, now)
 	if err != nil {
 		writeError(w, r, http.StatusInternalServerError, "internal_error", "failed to load patch feed item")
 		return
@@ -95,7 +96,7 @@ func (a *API) heroFeedRSS(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	payload, err := a.store.GetHeroChanges(patches.HeroChangesQuery{HeroSlug: heroSlug})
+	payload, err := a.store.GetHeroChanges(r.Context(), patches.HeroChangesQuery{HeroSlug: heroSlug})
 	if err != nil {
 		if errors.Is(err, patches.ErrHeroNotFound) {
 			writeError(w, r, http.StatusNotFound, "resource_not_found", "hero not found")
@@ -127,7 +128,7 @@ func (a *API) heroDaysWithoutUpdateRSS(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	heroesPayload, err := a.store.ListHeroes()
+	heroesPayload, err := a.store.ListHeroes(r.Context())
 	if err != nil {
 		writeError(w, r, http.StatusInternalServerError, "internal_error", "failed to load heroes")
 		return

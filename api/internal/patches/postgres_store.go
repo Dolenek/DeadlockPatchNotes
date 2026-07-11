@@ -26,11 +26,12 @@ type patchReadSnapshot struct {
 type PostgresStore struct {
 	db *sql.DB
 
-	cacheTTL time.Duration
+	cacheTTL        time.Duration
+	buildSnapshotFn func(context.Context) (*patchReadSnapshot, error)
 
-	snapshotMu       sync.RWMutex
-	refreshMu        sync.Mutex
-	snapshot         *patchReadSnapshot
+	snapshotMu        sync.RWMutex
+	refreshMu         sync.Mutex
+	snapshot          *patchReadSnapshot
 	snapshotExpiresAt time.Time
 }
 
@@ -45,7 +46,7 @@ func NewPostgresStore(db *sql.DB, cacheTTL time.Duration) *PostgresStore {
 	}
 }
 
-func (s *PostgresStore) List(page, limit int) (PatchListResponse, error) {
+func (s *PostgresStore) List(ctx context.Context, page, limit int) (PatchListResponse, error) {
 	if limit <= 0 {
 		limit = 12
 	}
@@ -53,7 +54,7 @@ func (s *PostgresStore) List(page, limit int) (PatchListResponse, error) {
 		page = 1
 	}
 
-	snapshot, err := s.getSnapshot()
+	snapshot, err := s.getSnapshot(ctx)
 	if err != nil {
 		return PatchListResponse{}, fmt.Errorf("load read snapshot: %w", err)
 	}
@@ -92,8 +93,8 @@ func (s *PostgresStore) List(page, limit int) (PatchListResponse, error) {
 	}, nil
 }
 
-func (s *PostgresStore) GetBySlug(slug string) (PatchDetail, error) {
-	snapshot, err := s.getSnapshot()
+func (s *PostgresStore) GetBySlug(ctx context.Context, slug string) (PatchDetail, error) {
+	snapshot, err := s.getSnapshot(ctx)
 	if err != nil {
 		return PatchDetail{}, fmt.Errorf("load read snapshot: %w", err)
 	}
@@ -106,55 +107,55 @@ func (s *PostgresStore) GetBySlug(slug string) (PatchDetail, error) {
 	return detail, nil
 }
 
-func (s *PostgresStore) ListHeroes() (HeroListResponse, error) {
-	snapshot, err := s.getSnapshot()
+func (s *PostgresStore) ListHeroes(ctx context.Context) (HeroListResponse, error) {
+	snapshot, err := s.getSnapshot(ctx)
 	if err != nil {
 		return HeroListResponse{}, fmt.Errorf("load read snapshot: %w", err)
 	}
 	return snapshot.heroList, nil
 }
 
-func (s *PostgresStore) GetHeroChanges(query HeroChangesQuery) (HeroChangesResponse, error) {
-	snapshot, err := s.getSnapshot()
+func (s *PostgresStore) GetHeroChanges(ctx context.Context, query HeroChangesQuery) (HeroChangesResponse, error) {
+	snapshot, err := s.getSnapshot(ctx)
 	if err != nil {
 		return HeroChangesResponse{}, fmt.Errorf("load read snapshot: %w", err)
 	}
 	return buildHeroChanges(snapshot.details, query)
 }
 
-func (s *PostgresStore) ListItems() (ItemListResponse, error) {
-	snapshot, err := s.getSnapshot()
+func (s *PostgresStore) ListItems(ctx context.Context) (ItemListResponse, error) {
+	snapshot, err := s.getSnapshot(ctx)
 	if err != nil {
 		return ItemListResponse{}, fmt.Errorf("load read snapshot: %w", err)
 	}
 	return snapshot.itemList, nil
 }
 
-func (s *PostgresStore) GetItemChanges(query ItemChangesQuery) (ItemChangesResponse, error) {
-	snapshot, err := s.getSnapshot()
+func (s *PostgresStore) GetItemChanges(ctx context.Context, query ItemChangesQuery) (ItemChangesResponse, error) {
+	snapshot, err := s.getSnapshot(ctx)
 	if err != nil {
 		return ItemChangesResponse{}, fmt.Errorf("load read snapshot: %w", err)
 	}
 	return buildItemChanges(snapshot.details, query)
 }
 
-func (s *PostgresStore) ListSpells() (SpellListResponse, error) {
-	snapshot, err := s.getSnapshot()
+func (s *PostgresStore) ListSpells(ctx context.Context) (SpellListResponse, error) {
+	snapshot, err := s.getSnapshot(ctx)
 	if err != nil {
 		return SpellListResponse{}, fmt.Errorf("load read snapshot: %w", err)
 	}
 	return snapshot.spellList, nil
 }
 
-func (s *PostgresStore) GetSpellChanges(query SpellChangesQuery) (SpellChangesResponse, error) {
-	snapshot, err := s.getSnapshot()
+func (s *PostgresStore) GetSpellChanges(ctx context.Context, query SpellChangesQuery) (SpellChangesResponse, error) {
+	snapshot, err := s.getSnapshot(ctx)
 	if err != nil {
 		return SpellChangesResponse{}, fmt.Errorf("load read snapshot: %w", err)
 	}
 	return buildSpellChanges(snapshot.details, query)
 }
 
-func (s *PostgresStore) getSnapshot() (*patchReadSnapshot, error) {
+func (s *PostgresStore) getSnapshot(ctx context.Context) (*patchReadSnapshot, error) {
 	now := time.Now()
 	s.snapshotMu.RLock()
 	if s.snapshot != nil && now.Before(s.snapshotExpiresAt) {
@@ -176,8 +177,18 @@ func (s *PostgresStore) getSnapshot() (*patchReadSnapshot, error) {
 	}
 	s.snapshotMu.RUnlock()
 
-	snapshot, err := s.buildSnapshot()
+	s.snapshotMu.RLock()
+	staleSnapshot := s.snapshot
+	s.snapshotMu.RUnlock()
+
+	snapshot, err := s.refreshSnapshot(ctx)
 	if err != nil {
+		if ctx.Err() != nil {
+			return nil, ctx.Err()
+		}
+		if staleSnapshot != nil {
+			return staleSnapshot, nil
+		}
 		return nil, err
 	}
 
@@ -189,8 +200,15 @@ func (s *PostgresStore) getSnapshot() (*patchReadSnapshot, error) {
 	return snapshot, nil
 }
 
-func (s *PostgresStore) buildSnapshot() (*patchReadSnapshot, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+func (s *PostgresStore) refreshSnapshot(ctx context.Context) (*patchReadSnapshot, error) {
+	if s.buildSnapshotFn != nil {
+		return s.buildSnapshotFn(ctx)
+	}
+	return s.buildSnapshot(ctx)
+}
+
+func (s *PostgresStore) buildSnapshot(parent context.Context) (*patchReadSnapshot, error) {
+	ctx, cancel := context.WithTimeout(parent, 15*time.Second)
 	defer cancel()
 
 	rows, err := s.db.QueryContext(ctx, `
@@ -301,13 +319,14 @@ func (s *PostgresStore) buildSnapshot() (*patchReadSnapshot, error) {
 		}
 		return left.Before(right)
 	})
+	aggregateDetails := deduplicateTimelineEvents(details)
 
 	return &patchReadSnapshot{
-		details:        details,
+		details:        aggregateDetails,
 		detailBySlug:   detailBySlug,
 		patchSummaries: patchSummaries,
-		heroList:       buildHeroList(details),
-		itemList:       buildItemList(details),
-		spellList:      buildSpellList(details),
+		heroList:       buildHeroList(aggregateDetails),
+		itemList:       buildItemList(aggregateDetails),
+		spellList:      buildSpellList(aggregateDetails),
 	}, nil
 }

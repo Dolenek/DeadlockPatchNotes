@@ -278,6 +278,39 @@ func TestHydratePatchDetail_CanonicalizesDoormanNameAcrossArticleVariants(t *tes
 	}
 }
 
+func TestHydrateTimelineBlocks_NormalizesExactlyOneInitialBlock(t *testing.T) {
+	blocks := []PatchTimelineBlock{
+		{
+			ID:         "first",
+			Kind:       "initial",
+			Title:      "Initial Update",
+			ReleasedAt: "2026-05-22T12:00:00Z",
+			Changes:    []PatchChange{{ID: "first-1", Text: "First change"}},
+		},
+		{
+			ID:         "follow-up",
+			Kind:       "initial",
+			Title:      "Initial Update",
+			ReleasedAt: "2026-05-28T12:00:00Z",
+			Changes:    []PatchChange{{ID: "follow-up-1", Text: "Follow-up change"}},
+		},
+	}
+
+	hydrated := hydrateTimelineBlocks(blocks, nil)
+	if len(hydrated) != 2 {
+		t.Fatalf("expected 2 blocks, got %d", len(hydrated))
+	}
+	if hydrated[0].Kind != "initial" {
+		t.Fatalf("expected first block to be initial, got %q", hydrated[0].Kind)
+	}
+	if hydrated[1].Kind != "hotfix" {
+		t.Fatalf("expected follow-up block to be hotfix, got %q", hydrated[1].Kind)
+	}
+	if hydrated[1].Title != "Hotfix 2026-05-28" {
+		t.Fatalf("expected normalized hotfix title, got %q", hydrated[1].Title)
+	}
+}
+
 func TestHydratePatchDetail_KeepsDoormanFollowupAbilityLinesOutOfGeneral(t *testing.T) {
 	detail := PatchDetail{
 		Slug:        "test-update",

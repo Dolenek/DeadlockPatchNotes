@@ -1,0 +1,2 @@
+ALTER TABLE sync_runs
+  ADD COLUMN IF NOT EXISTS failed_threads INT NOT NULL DEFAULT 0;

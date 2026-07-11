@@ -1,6 +1,7 @@
 package patches
 
 import (
+	"context"
 	"embed"
 	"encoding/json"
 	"errors"
@@ -42,7 +43,7 @@ func NewStore() *Store {
 	return &Store{items: items, order: order}
 }
 
-func (s *Store) List(page, limit int) (PatchListResponse, error) {
+func (s *Store) List(_ context.Context, page, limit int) (PatchListResponse, error) {
 	if limit <= 0 {
 		limit = 12
 	}
@@ -84,7 +85,7 @@ func (s *Store) List(page, limit int) (PatchListResponse, error) {
 	}, nil
 }
 
-func (s *Store) GetBySlug(slug string) (PatchDetail, error) {
+func (s *Store) GetBySlug(_ context.Context, slug string) (PatchDetail, error) {
 	item, ok := s.items[slug]
 	if !ok {
 		return PatchDetail{}, ErrPatchNotFound
@@ -92,7 +93,7 @@ func (s *Store) GetBySlug(slug string) (PatchDetail, error) {
 	return hydratePatchDetail(item.detail), nil
 }
 
-func (s *Store) ListHeroes() (HeroListResponse, error) {
+func (s *Store) ListHeroes(_ context.Context) (HeroListResponse, error) {
 	details := make([]PatchDetail, 0, len(s.order))
 	for _, item := range s.order {
 		details = append(details, item.detail)
@@ -100,7 +101,7 @@ func (s *Store) ListHeroes() (HeroListResponse, error) {
 	return buildHeroList(details), nil
 }
 
-func (s *Store) GetHeroChanges(query HeroChangesQuery) (HeroChangesResponse, error) {
+func (s *Store) GetHeroChanges(_ context.Context, query HeroChangesQuery) (HeroChangesResponse, error) {
 	details := make([]PatchDetail, 0, len(s.order))
 	for _, item := range s.order {
 		details = append(details, item.detail)
@@ -108,7 +109,7 @@ func (s *Store) GetHeroChanges(query HeroChangesQuery) (HeroChangesResponse, err
 	return buildHeroChanges(details, query)
 }
 
-func (s *Store) ListItems() (ItemListResponse, error) {
+func (s *Store) ListItems(_ context.Context) (ItemListResponse, error) {
 	details := make([]PatchDetail, 0, len(s.order))
 	for _, item := range s.order {
 		details = append(details, item.detail)
@@ -116,7 +117,7 @@ func (s *Store) ListItems() (ItemListResponse, error) {
 	return buildItemList(details), nil
 }
 
-func (s *Store) GetItemChanges(query ItemChangesQuery) (ItemChangesResponse, error) {
+func (s *Store) GetItemChanges(_ context.Context, query ItemChangesQuery) (ItemChangesResponse, error) {
 	details := make([]PatchDetail, 0, len(s.order))
 	for _, item := range s.order {
 		details = append(details, item.detail)
@@ -124,7 +125,7 @@ func (s *Store) GetItemChanges(query ItemChangesQuery) (ItemChangesResponse, err
 	return buildItemChanges(details, query)
 }
 
-func (s *Store) ListSpells() (SpellListResponse, error) {
+func (s *Store) ListSpells(_ context.Context) (SpellListResponse, error) {
 	details := make([]PatchDetail, 0, len(s.order))
 	for _, item := range s.order {
 		details = append(details, item.detail)
@@ -132,7 +133,7 @@ func (s *Store) ListSpells() (SpellListResponse, error) {
 	return buildSpellList(details), nil
 }
 
-func (s *Store) GetSpellChanges(query SpellChangesQuery) (SpellChangesResponse, error) {
+func (s *Store) GetSpellChanges(_ context.Context, query SpellChangesQuery) (SpellChangesResponse, error) {
 	details := make([]PatchDetail, 0, len(s.order))
 	for _, item := range s.order {
 		details = append(details, item.detail)

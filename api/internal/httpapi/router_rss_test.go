@@ -61,6 +61,28 @@ func TestPatchFeedRSS(t *testing.T) {
 	}
 }
 
+func TestPatchFeedRSSIgnoresForwardedHostWithoutSiteURL(t *testing.T) {
+	t.Setenv("SITE_URL", "")
+
+	handler := NewRouter(patches.NewStore())
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/patches/rss.xml", nil)
+	req.Header.Set("X-Forwarded-Host", "attacker.example")
+	req.Header.Set("X-Forwarded-Proto", "https")
+	rr := httptest.NewRecorder()
+
+	handler.ServeHTTP(rr, req)
+	if rr.Code != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", rr.Code)
+	}
+	body := rr.Body.String()
+	if !strings.Contains(body, canonicalSiteURL+"/patches") {
+		t.Fatalf("expected canonical site URL in feed: %s", body)
+	}
+	if strings.Contains(body, "attacker.example") {
+		t.Fatalf("forwarded host leaked into RSS feed: %s", body)
+	}
+}
+
 func TestHeroFeedRSS(t *testing.T) {
 	t.Setenv("SITE_URL", "https://www.deadlockpatchnotes.com")
 

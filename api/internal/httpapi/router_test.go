@@ -1,7 +1,9 @@
 package httpapi
 
 import (
+	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -27,6 +29,27 @@ func TestHealthz(t *testing.T) {
 	}
 	if payload["status"] != "ok" {
 		t.Fatalf("expected status ok, got %q", payload["status"])
+	}
+}
+
+func TestHealthzReturnsUnavailableWhenDependencyFails(t *testing.T) {
+	h := NewRouter(patches.NewStore(), func(context.Context) error {
+		return errors.New("database unavailable")
+	})
+	req := httptest.NewRequest(http.MethodGet, "/api/healthz", nil)
+	rr := httptest.NewRecorder()
+
+	h.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusServiceUnavailable {
+		t.Fatalf("expected status 503, got %d", rr.Code)
+	}
+	var payload map[string]string
+	if err := json.Unmarshal(rr.Body.Bytes(), &payload); err != nil {
+		t.Fatalf("decode response: %v", err)
+	}
+	if payload["status"] != "unavailable" {
+		t.Fatalf("expected unavailable status, got %q", payload["status"])
 	}
 }
 

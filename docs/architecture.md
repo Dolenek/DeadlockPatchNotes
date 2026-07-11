@@ -26,6 +26,8 @@ Read path split:
 
 - Postgres read model builds a TTL-cached snapshot from `patches` rows.
 - Patch list/detail/entity timelines and RSS feeds are served from cached snapshot state between refreshes.
+- Aggregate entity histories deduplicate identical cross-patch source events; patch detail pages retain their original timelines.
+- Snapshot refreshes are request-cancelable and fall back to the last usable snapshot on transient database errors.
 
 Migrations in `api/internal/db/migrations/*.sql` are applied at startup.
 
@@ -39,6 +41,7 @@ Migrations in `api/internal/db/migrations/*.sql` are applied at startup.
   - `patches` (summary + detail JSON)
   - `patch_release_blocks` (timeline block metadata)
   - `sync_runs` (run observability)
+- A run is successful only when discovery and every discovered thread complete. Empty/challenge discovery and catalog failures are `failed`; mixed per-thread outcomes are `partial`.
 
 ## Web Layer (`web/`)
 

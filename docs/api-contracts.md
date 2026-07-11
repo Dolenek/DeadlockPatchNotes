@@ -49,6 +49,9 @@ Date-only behavior:
 { "status": "ok" }
 ```
 
+- Returns `200` only when the API can ping PostgreSQL within two seconds.
+- Returns `503` with `{ "status": "unavailable" }` when the dependency check fails.
+
 ### `GET /api/scalar`
 
 - `200` with `Content-Type: text/html; charset=utf-8`
@@ -124,7 +127,8 @@ Errors:
 - RSS 2.0 feed of recent patches.
 - One RSS item per patch slug.
 - Item ordering is `publishedAt DESC` (newest first).
-- Item links target `/patches/{slug}` on `SITE_URL` host when configured (fallback: request host).
+- Item links target `/patches/{slug}` on a validated `SITE_URL`; an absent or invalid value falls back to `https://www.deadlockpatchnotes.com`.
+- Request and forwarded host headers never influence generated RSS URLs.
 - Feed size is capped to `50` items.
 
 ## `GET /api/v1/heroes`
@@ -165,7 +169,7 @@ Hero timeline block naming:
 - RSS 2.0 per-hero feed.
 - One item per patch where the hero has timeline changes.
 - Item descriptions aggregate all hero changes from that patch (general + skill group lines).
-- Item links target `/heroes/{heroSlug}` on `SITE_URL` host when configured (fallback: request host).
+- Item links target `/heroes/{heroSlug}` on the validated canonical site host.
 - Unknown hero slug returns `404` with `resource_not_found` JSON error payload.
 - Feed size is capped to `50` patch items.
 
@@ -174,7 +178,7 @@ Hero timeline block naming:
 - RSS 2.0 per-hero live streak feed.
 - Returns a single item titled `Days since last update: N`.
 - `N` uses Europe/Berlin noon checkpoints (`12:00`) with immediate reset to `0` when a hero update lands.
-- Item links target `/heroes/{heroSlug}` on `SITE_URL` host when configured (fallback: request host).
+- Item links target `/heroes/{heroSlug}` on the validated canonical site host.
 - Unknown hero slug returns `404` with `resource_not_found` JSON error payload.
 
 ## `GET /api/v1/items`
@@ -229,3 +233,5 @@ Timeline block naming follows hero/item pattern (`releaseType`, `displayLabel`, 
 - Cache refresh is TTL-based (default `10m`, env: `API_READ_CACHE_TTL`).
 - Snapshot refresh preloads and hydrates patch payloads once per cache window.
 - List/detail/entity + RSS endpoints read from the cached snapshot in steady state.
+- Refresh work inherits the request context and stops after 15 seconds at most.
+- A transient refresh failure serves the last usable stale snapshot; cancellation is still propagated.

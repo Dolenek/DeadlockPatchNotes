@@ -1,6 +1,7 @@
 package httpapi
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -14,16 +15,22 @@ import (
 )
 
 type API struct {
-	store patches.Repository
+	store          patches.Repository
+	readinessCheck func(context.Context) error
 }
 
-func NewRouter(store patches.Repository) http.Handler {
-	api := &API{store: store}
+func NewRouter(store patches.Repository, readinessChecks ...func(context.Context) error) http.Handler {
+	readinessCheck := func(context.Context) error { return nil }
+	if len(readinessChecks) > 0 && readinessChecks[0] != nil {
+		readinessCheck = readinessChecks[0]
+	}
+	api := &API{store: store, readinessCheck: readinessCheck}
 
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
+	r.Use(middleware.Timeout(30 * time.Second))
 	r.Use(corsMiddleware)
 
 	r.Get("/api/healthz", api.healthz)
@@ -48,7 +55,13 @@ func NewRouter(store patches.Repository) http.Handler {
 	return r
 }
 
-func (a *API) healthz(w http.ResponseWriter, _ *http.Request) {
+func (a *API) healthz(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(r.Context(), 2*time.Second)
+	defer cancel()
+	if err := a.readinessCheck(ctx); err != nil {
+		writeJSON(w, http.StatusServiceUnavailable, map[string]string{"status": "unavailable"})
+		return
+	}
 	writeJSON(w, http.StatusOK, map[string]string{"status": "ok"})
 }
 
@@ -72,7 +85,7 @@ func (a *API) listPatches(w http.ResponseWriter, r *http.Request) {
 		limit = 50
 	}
 
-	payload, err := a.store.List(page, limit)
+	payload, err := a.store.List(r.Context(), page, limit)
 	if err != nil {
 		writeError(w, r, http.StatusInternalServerError, "internal_error", "failed to list patches")
 		return
@@ -88,7 +101,7 @@ func (a *API) getPatch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	patch, err := a.store.GetBySlug(slug)
+	patch, err := a.store.GetBySlug(r.Context(), slug)
 	if err != nil {
 		if errors.Is(err, patches.ErrPatchNotFound) {
 			writeError(w, r, http.StatusNotFound, "resource_not_found", "patch not found")
@@ -102,7 +115,7 @@ func (a *API) getPatch(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) listHeroes(w http.ResponseWriter, r *http.Request) {
-	payload, err := a.store.ListHeroes()
+	payload, err := a.store.ListHeroes(r.Context())
 	if err != nil {
 		writeError(w, r, http.StatusInternalServerError, "internal_error", "failed to list heroes")
 		return
@@ -128,7 +141,7 @@ func (a *API) getHeroChanges(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	payload, err := a.store.GetHeroChanges(patches.HeroChangesQuery{
+	payload, err := a.store.GetHeroChanges(r.Context(), patches.HeroChangesQuery{
 		HeroSlug: heroSlug,
 		Skill:    strings.TrimSpace(r.URL.Query().Get("skill")),
 		From:     from,
@@ -147,7 +160,7 @@ func (a *API) getHeroChanges(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) listItems(w http.ResponseWriter, r *http.Request) {
-	payload, err := a.store.ListItems()
+	payload, err := a.store.ListItems(r.Context())
 	if err != nil {
 		writeError(w, r, http.StatusInternalServerError, "internal_error", "failed to list items")
 		return
@@ -173,7 +186,7 @@ func (a *API) getItemChanges(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	payload, err := a.store.GetItemChanges(patches.ItemChangesQuery{
+	payload, err := a.store.GetItemChanges(r.Context(), patches.ItemChangesQuery{
 		ItemSlug: itemSlug,
 		From:     from,
 		To:       to,
@@ -191,7 +204,7 @@ func (a *API) getItemChanges(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) listSpells(w http.ResponseWriter, r *http.Request) {
-	payload, err := a.store.ListSpells()
+	payload, err := a.store.ListSpells(r.Context())
 	if err != nil {
 		writeError(w, r, http.StatusInternalServerError, "internal_error", "failed to list spells")
 		return
@@ -217,7 +230,7 @@ func (a *API) getSpellChanges(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	payload, err := a.store.GetSpellChanges(patches.SpellChangesQuery{
+	payload, err := a.store.GetSpellChanges(r.Context(), patches.SpellChangesQuery{
 		SpellSlug: spellSlug,
 		From:      from,
 		To:        to,

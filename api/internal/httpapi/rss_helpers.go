@@ -1,6 +1,7 @@
 package httpapi
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -19,6 +20,8 @@ var (
 	berlinLocationErr  error
 )
 
+const canonicalSiteURL = "https://www.deadlockpatchnotes.com"
+
 type heroPatchGroup struct {
 	PatchSlug   string
 	PatchTitle  string
@@ -26,8 +29,8 @@ type heroPatchGroup struct {
 	Lines       []string
 }
 
-func listAllPatchSummaries(repository patches.Repository) ([]patches.PatchSummary, error) {
-	firstPage, err := repository.List(1, 1)
+func listAllPatchSummaries(ctx context.Context, repository patches.Repository) ([]patches.PatchSummary, error) {
+	firstPage, err := repository.List(ctx, 1, 1)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +38,7 @@ func listAllPatchSummaries(repository patches.Repository) ([]patches.PatchSummar
 		return nil, nil
 	}
 
-	fullPage, err := repository.List(1, firstPage.Pagination.TotalItems)
+	fullPage, err := repository.List(ctx, 1, firstPage.Pagination.TotalItems)
 	if err != nil {
 		return nil, err
 	}
@@ -58,10 +61,10 @@ func preparePatchSummariesForFeed(summaries []patches.PatchSummary, maxItems int
 	return summaries
 }
 
-func buildPatchRSSItems(store patches.Repository, summaries []patches.PatchSummary, siteBaseURL string, now time.Time) ([]rssItem, error) {
+func buildPatchRSSItems(ctx context.Context, store patches.Repository, summaries []patches.PatchSummary, siteBaseURL string, now time.Time) ([]rssItem, error) {
 	items := make([]rssItem, 0, len(summaries))
 	for _, patchSummary := range summaries {
-		detail, err := store.GetBySlug(patchSummary.Slug)
+		detail, err := store.GetBySlug(ctx, patchSummary.Slug)
 		if err != nil {
 			return nil, err
 		}
@@ -185,7 +188,7 @@ func resolveFeedSiteBaseURL(r *http.Request) string {
 	if envSiteURL != "" {
 		return envSiteURL
 	}
-	return requestOrigin(r)
+	return canonicalSiteURL
 }
 
 func normalizeSiteURL(raw string) string {
@@ -200,7 +203,7 @@ func normalizeSiteURL(raw string) string {
 	if parsed.Scheme != "http" && parsed.Scheme != "https" {
 		return ""
 	}
-	if parsed.Host == "" {
+	if parsed.Hostname() == "" || parsed.User != nil {
 		return ""
 	}
 	parsed.Path = ""
@@ -209,37 +212,8 @@ func normalizeSiteURL(raw string) string {
 	return strings.TrimSuffix(parsed.String(), "/")
 }
 
-func requestOrigin(r *http.Request) string {
-	scheme := firstForwardedHeaderValue(r.Header.Get("X-Forwarded-Proto"))
-	if scheme == "" {
-		if r.TLS != nil {
-			scheme = "https"
-		} else {
-			scheme = "http"
-		}
-	}
-	host := firstForwardedHeaderValue(r.Header.Get("X-Forwarded-Host"))
-	if host == "" {
-		host = strings.TrimSpace(r.Host)
-	}
-	if host == "" {
-		host = "localhost"
-	}
-	return scheme + "://" + host
-}
-
 func resolveRequestURL(r *http.Request) string {
-	return requestOrigin(r) + r.URL.RequestURI()
-}
-
-func firstForwardedHeaderValue(raw string) string {
-	if raw == "" {
-		return ""
-	}
-	if comma := strings.Index(raw, ","); comma >= 0 {
-		raw = raw[:comma]
-	}
-	return strings.TrimSpace(raw)
+	return buildAbsoluteURL(resolveFeedSiteBaseURL(r), r.URL.RequestURI())
 }
 
 func buildAbsoluteURL(baseURL, path string) string {

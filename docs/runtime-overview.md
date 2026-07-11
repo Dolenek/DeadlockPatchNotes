@@ -36,14 +36,15 @@ Deadlock Patch Notes ingests official Deadlock changelog content, stores normali
 1. Reads `DATABASE_URL`, `PATCH_FORUM_URL`, `PATCH_SYNC_MAX_PAGES`, `PATCH_SYNC_TIMEOUT_SECONDS`.
 2. Applies defaults for missing/invalid sync numeric env values.
 3. Opens DB and applies migrations.
-4. Crawls changelog thread listing, fetches threads/posts, optionally parses Steam links.
+4. Crawls changelog thread listing, fetches threads/posts, and resolves every referenced Steam event.
 5. Builds patch payload + timeline blocks and upserts DB rows.
 6. Writes run observability row to `sync_runs`.
 
 Run semantics:
 
-- Sync is best-effort per thread (thread-level failures are skipped).
-- Sync can finish with `status=success` even when some discovered threads failed to process.
+- Empty/challenge discovery, catalog failure, or no successfully processed threads fails the run.
+- A mix of successful and failed threads is persisted as `partial` and exits non-zero.
+- A patch is not overwritten when one of its referenced Steam events fails.
 
 ## Data Lifecycle
 
@@ -59,7 +60,7 @@ Run semantics:
 4. Block normalization:
   - dedupe by normalized body hash
   - sort by release time
-  - first effective block forced to `initial`
+  - exactly the first effective block is `initial`; all later post/event starts are `hotfix`
 5. Structured payload construction:
   - parse/infer sections (`general`, `items`, `heroes`)
   - fallback general shape when structured parsing fails
@@ -70,6 +71,8 @@ Run semantics:
 7. Read path:
   - API builds a cached in-memory snapshot from `patches.detail_payload` and summary columns
   - list/detail/timeline + RSS endpoints serve from the snapshot until TTL expiry
+  - stale data remains available during transient refresh failures, while request cancellation propagates to PostgreSQL
+  - duplicate cross-patch events are removed from aggregate entity histories but retained on patch detail pages
   - frontend fetches API responses and renders SSR output
 
 ## Persistence Model

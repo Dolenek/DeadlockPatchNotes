@@ -22,6 +22,8 @@ var (
 	nextPageRegex   = regexp.MustCompile(`rel="next"\s+href="([^"]+)"`)
 )
 
+const maxSourceResponseBytes int64 = 10 << 20
+
 type ForumThreadRef struct {
 	URL string
 }
@@ -63,13 +65,16 @@ func CrawlChangelogThreads(ctx context.Context, client *http.Client, changelogUR
 		if err != nil {
 			return nil, err
 		}
+		if isForumChallengePage(raw) {
+			return nil, fmt.Errorf("forum challenge page returned for %s", current)
+		}
 
 		for _, match := range threadHrefRegex.FindAllStringSubmatch(raw, -1) {
 			if len(match) < 2 {
 				continue
 			}
 			abs := resolveURL(current, match[1])
-			if !isPatchThreadURL(abs) {
+			if !sameOriginURL(changelogURL, abs) || !isPatchThreadURL(abs) {
 				continue
 			}
 			if seenThreads[abs] {
@@ -84,6 +89,9 @@ func CrawlChangelogThreads(ctx context.Context, client *http.Client, changelogUR
 			break
 		}
 		next := resolveURL(current, nextMatch[1])
+		if !sameOriginURL(changelogURL, next) {
+			return nil, fmt.Errorf("reject cross-origin changelog page %s", next)
+		}
 		if next == current {
 			break
 		}
@@ -190,21 +198,63 @@ func fetchText(ctx context.Context, client *http.Client, targetURL string) (stri
 	}
 	req.Header.Set("User-Agent", "deadlockpatchnotes-ingester/1.0")
 
-	res, err := client.Do(req)
+	res, err := doSameOriginRequest(client, req)
 	if err != nil {
 		return "", fmt.Errorf("request %s: %w", targetURL, err)
 	}
 	defer res.Body.Close()
+	if res.Request != nil && res.Request.URL != nil && !sameOriginURL(targetURL, res.Request.URL.String()) {
+		return "", fmt.Errorf("request %s redirected across origin to %s", targetURL, res.Request.URL.String())
+	}
 
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
 		return "", fmt.Errorf("request %s: status %d", targetURL, res.StatusCode)
 	}
 
-	body, err := io.ReadAll(res.Body)
+	if res.ContentLength > maxSourceResponseBytes {
+		return "", fmt.Errorf("response %s exceeds %d bytes", targetURL, maxSourceResponseBytes)
+	}
+	body, err := io.ReadAll(io.LimitReader(res.Body, maxSourceResponseBytes+1))
 	if err != nil {
 		return "", fmt.Errorf("read response %s: %w", targetURL, err)
 	}
+	if int64(len(body)) > maxSourceResponseBytes {
+		return "", fmt.Errorf("response %s exceeds %d bytes", targetURL, maxSourceResponseBytes)
+	}
 	return string(body), nil
+}
+
+func doSameOriginRequest(client *http.Client, request *http.Request) (*http.Response, error) {
+	requestClient := *client
+	originalRedirectPolicy := client.CheckRedirect
+	requestClient.CheckRedirect = func(next *http.Request, previous []*http.Request) error {
+		if len(previous) >= 10 {
+			return fmt.Errorf("stopped after %d redirects", len(previous))
+		}
+		if len(previous) > 0 && !sameOriginURL(previous[0].URL.String(), next.URL.String()) {
+			return fmt.Errorf("reject cross-origin redirect to %s", next.URL.String())
+		}
+		if originalRedirectPolicy != nil {
+			return originalRedirectPolicy(next, previous)
+		}
+		return nil
+	}
+	return requestClient.Do(request)
+}
+
+func sameOriginURL(leftRaw, rightRaw string) bool {
+	left, leftErr := url.Parse(leftRaw)
+	right, rightErr := url.Parse(rightRaw)
+	if leftErr != nil || rightErr != nil {
+		return false
+	}
+	return strings.EqualFold(left.Scheme, right.Scheme) && strings.EqualFold(left.Host, right.Host)
+}
+
+func isForumChallengePage(raw string) bool {
+	lower := strings.ToLower(raw)
+	return strings.Contains(lower, "/.stile/challenge") ||
+		(strings.Contains(lower, "challenge") && strings.Contains(lower, "rung=nojs"))
 }
 
 func parseForumTime(value string) (time.Time, error) {

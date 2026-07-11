@@ -9,8 +9,8 @@ import (
 )
 
 var (
-	structuredNonAlphaNumRegex   = regexp.MustCompile(`[^a-z0-9]+`)
-	structuredSpaceRegex         = regexp.MustCompile(`\s+`)
+	structuredNonAlphaNumRegex = regexp.MustCompile(`[^a-z0-9]+`)
+	structuredSpaceRegex       = regexp.MustCompile(`\s+`)
 )
 
 type parseTemplateCatalog struct {
@@ -81,10 +81,19 @@ func hydrateTimelineBlocks(blocks []PatchTimelineBlock, mergedSections []PatchSe
 		return left.Before(right)
 	})
 
-	if len(hydrated) > 0 && hydrated[0].Kind != "initial" {
-		hydrated[0].Kind = "initial"
-		if strings.TrimSpace(hydrated[0].Title) == "" || strings.HasPrefix(strings.ToLower(hydrated[0].Title), "hotfix ") {
-			hydrated[0].Title = "Initial Update"
+	for index := range hydrated {
+		if index == 0 {
+			hydrated[index].Kind = "initial"
+			if strings.TrimSpace(hydrated[index].Title) == "" || strings.HasPrefix(strings.ToLower(hydrated[index].Title), "hotfix ") {
+				hydrated[index].Title = "Initial Update"
+			}
+			continue
+		}
+		if hydrated[index].Kind == "initial" {
+			hydrated[index].Kind = "hotfix"
+			if strings.EqualFold(strings.TrimSpace(hydrated[index].Title), "Initial Update") {
+				hydrated[index].Title = timelineDefaultTitle("hotfix", hydrated[index].ReleasedAt)
+			}
 		}
 	}
 

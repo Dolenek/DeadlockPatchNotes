@@ -1,6 +1,7 @@
 package httpapi
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
@@ -20,7 +21,7 @@ func (a *API) daysSinceLastUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	baseline, err := a.resolveDaysSinceBaseline(heroSlug, onlyUpdate)
+	baseline, err := a.resolveDaysSinceBaseline(r.Context(), heroSlug, onlyUpdate)
 	if err != nil {
 		writeDaysSinceBaselineError(w, r, err)
 		return
@@ -36,8 +37,8 @@ func (a *API) daysSinceLastUpdate(w http.ResponseWriter, r *http.Request) {
 	writePlainText(w, http.StatusOK, fmt.Sprintf("Days since last update: %d", days))
 }
 
-func (a *API) resolveDaysSinceBaseline(heroSlug string, onlyUpdate bool) (time.Time, error) {
-	lastPatchAt, err := a.resolveLatestPatchTimestamp()
+func (a *API) resolveDaysSinceBaseline(ctx context.Context, heroSlug string, onlyUpdate bool) (time.Time, error) {
+	lastPatchAt, err := a.resolveLatestPatchTimestamp(ctx)
 	if err != nil {
 		return time.Time{}, err
 	}
@@ -45,7 +46,7 @@ func (a *API) resolveDaysSinceBaseline(heroSlug string, onlyUpdate bool) (time.T
 		return lastPatchAt, nil
 	}
 
-	heroLastUpdateAt, err := a.resolveHeroLastChangedTimestamp(heroSlug)
+	heroLastUpdateAt, err := a.resolveHeroLastChangedTimestamp(ctx, heroSlug)
 	if err != nil {
 		return time.Time{}, err
 	}
@@ -73,8 +74,8 @@ func resolveDaysBaseline(lastHeroUpdateAt, lastPatchAt time.Time, onlyUpdate boo
 	return lastHeroUpdateAt
 }
 
-func (a *API) resolveLatestPatchTimestamp() (time.Time, error) {
-	patchSummaries, err := listAllPatchSummaries(a.store)
+func (a *API) resolveLatestPatchTimestamp(ctx context.Context) (time.Time, error) {
+	patchSummaries, err := listAllPatchSummaries(ctx, a.store)
 	if err != nil {
 		return time.Time{}, err
 	}
@@ -85,8 +86,8 @@ func (a *API) resolveLatestPatchTimestamp() (time.Time, error) {
 	return parseTimeRFC3339(latestPatch[0].PublishedAt), nil
 }
 
-func (a *API) resolveHeroLastChangedTimestamp(heroSlug string) (time.Time, error) {
-	heroesPayload, err := a.store.ListHeroes()
+func (a *API) resolveHeroLastChangedTimestamp(ctx context.Context, heroSlug string) (time.Time, error) {
+	heroesPayload, err := a.store.ListHeroes(ctx)
 	if err != nil {
 		return time.Time{}, err
 	}

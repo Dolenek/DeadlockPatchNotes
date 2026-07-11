@@ -11,7 +11,7 @@
 
 Networking and publish defaults:
 
-- API publish: `${API_HOST_BIND:-0.0.0.0}:${API_PORT:-18081}:8080`
+- API publish: `${API_HOST_BIND:-127.0.0.1}:${API_PORT:-18081}:8080`
 - Web publish: `${WEB_HOST_BIND:-127.0.0.1}:${WEB_PORT:-3000}:3000`
 
 ## Environment Variables
@@ -29,6 +29,7 @@ Compose `.env`:
 - `PATCH_FORUM_URL`
 - `PATCH_SYNC_MAX_PAGES`
 - `PATCH_SYNC_TIMEOUT_SECONDS`
+- `SITE_URL` (defaults to `https://www.deadlockpatchnotes.com` for API RSS URLs)
 
 Web local env (`web/.env.example`):
 
@@ -37,6 +38,7 @@ Web local env (`web/.env.example`):
 Runtime defaults in code:
 
 - API address default `:8080`.
+- API runs as a non-root user with a read-only filesystem, dropped capabilities, healthcheck, and bounded PID/memory defaults under Compose.
 - Web API client default base URL: `https://deadlockpatchnotes.com/api`.
 - `API_BASE_URL` exact `/api` suffix is normalized in web client config parsing.
 - Sync defaults:
@@ -44,6 +46,8 @@ Runtime defaults in code:
   - max pages `20`
   - HTTP timeout `30` seconds
 - Invalid/non-positive sync numeric env values fall back to defaults.
+- Sync rejects oversized responses, cross-origin pagination/redirects, and known forum challenge pages.
+- `sync_runs.status` is `success`, `partial`, or `failed`; `failed_threads` records per-thread failures and the CLI exits non-zero for partial/failed runs.
 
 ## Build and Run Commands
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"strings"
@@ -18,6 +19,7 @@ type SyncConfig struct {
 type SyncStats struct {
 	DiscoveredThreads int
 	ProcessedThreads  int
+	FailedThreads     int
 	InsertedPatches   int
 	UpdatedPatches    int
 }
@@ -40,38 +42,42 @@ func RunPatchSync(ctx context.Context, db *sql.DB, client *http.Client, cfg Sync
 	if err != nil {
 		return stats, err
 	}
-	finalize := func(status, message string, runErr error) (SyncStats, error) {
-		_ = finishSyncRun(ctx, db, runID, status, message, stats)
-		if runErr != nil {
-			return stats, runErr
-		}
-		return stats, nil
-	}
 
 	refs, err := CrawlChangelogThreads(ctx, client, cfg.ForumURL, cfg.MaxPages)
 	if err != nil {
-		return finalize("failed", err.Error(), err)
+		return finalizeSyncRun(ctx, db, runID, "failed", err.Error(), stats, err)
 	}
 	stats.DiscoveredThreads = len(refs)
+	if len(refs) == 0 {
+		err := errors.New("no patch threads discovered")
+		return finalizeSyncRun(ctx, db, runID, "failed", err.Error(), stats, err)
+	}
 
 	catalog, err := LoadAssetCatalog(ctx, client)
 	if err != nil {
-		catalog = nil
+		err = fmt.Errorf("load asset catalog: %w", err)
+		return finalizeSyncRun(ctx, db, runID, "failed", err.Error(), stats, err)
 	}
 
+	stats, failures := syncDiscoveredThreads(ctx, db, client, catalog, refs, stats)
+	if stats.FailedThreads == 0 {
+		return finalizeSyncRun(ctx, db, runID, "success", "sync complete", stats, nil)
+	}
+	status := "partial"
+	if stats.ProcessedThreads == 0 {
+		status = "failed"
+	}
+	err = fmt.Errorf("%d of %d patch threads failed: %s", stats.FailedThreads, stats.DiscoveredThreads, strings.Join(failures, "; "))
+	return finalizeSyncRun(ctx, db, runID, status, err.Error(), stats, err)
+}
+
+func syncDiscoveredThreads(ctx context.Context, db *sql.DB, client *http.Client, catalog *AssetCatalog, refs []ForumThreadRef, stats SyncStats) (SyncStats, []string) {
+	failures := make([]string, 0, 4)
 	for _, ref := range refs {
-		thread, err := FetchThread(ctx, client, ref.URL)
-		if err != nil || len(thread.Posts) == 0 {
-			continue
-		}
-
-		detail, blocks, publishedAt, updatedAt := buildPatchFromThread(ctx, client, thread, catalog)
-		if len(blocks) == 0 {
-			continue
-		}
-
-		inserted, err := upsertPatch(ctx, db, thread, detail, blocks, publishedAt, updatedAt)
+		inserted, err := syncPatchThread(ctx, db, client, catalog, ref)
 		if err != nil {
+			stats.FailedThreads++
+			failures = appendSyncFailure(failures, fmt.Sprintf("%s: %v", ref.URL, err))
 			continue
 		}
 		stats.ProcessedThreads++
@@ -81,8 +87,45 @@ func RunPatchSync(ctx context.Context, db *sql.DB, client *http.Client, cfg Sync
 			stats.UpdatedPatches++
 		}
 	}
+	return stats, failures
+}
 
-	return finalize("success", "sync complete", nil)
+func finalizeSyncRun(ctx context.Context, db *sql.DB, runID int64, status, message string, stats SyncStats, runErr error) (SyncStats, error) {
+	if finishErr := finishSyncRun(ctx, db, runID, status, message, stats); finishErr != nil {
+		runErr = errors.Join(runErr, fmt.Errorf("finish sync run: %w", finishErr))
+	}
+	return stats, runErr
+}
+
+func syncPatchThread(ctx context.Context, db *sql.DB, client *http.Client, catalog *AssetCatalog, ref ForumThreadRef) (bool, error) {
+	thread, err := FetchThread(ctx, client, ref.URL)
+	if err != nil {
+		return false, err
+	}
+	if len(thread.Posts) == 0 {
+		return false, errors.New("no official posts parsed")
+	}
+
+	detail, blocks, publishedAt, updatedAt, err := buildPatchFromThread(ctx, client, thread, catalog)
+	if err != nil {
+		return false, err
+	}
+	if len(blocks) == 0 {
+		return false, errors.New("no release blocks parsed")
+	}
+	inserted, err := upsertPatch(ctx, db, thread, detail, blocks, publishedAt, updatedAt)
+	if err != nil {
+		return false, fmt.Errorf("upsert: %w", err)
+	}
+	return inserted, nil
+}
+
+func appendSyncFailure(failures []string, message string) []string {
+	const maxRecordedFailures = 5
+	if len(failures) >= maxRecordedFailures {
+		return failures
+	}
+	return append(failures, message)
 }
 
 func upsertPatch(ctx context.Context, db *sql.DB, thread ForumThread, detail patchDetailRecord, blocks []timelineCandidate, publishedAt, updatedAt time.Time) (bool, error) {
@@ -246,10 +289,11 @@ func finishSyncRun(ctx context.Context, db *sql.DB, runID int64, status, message
 			run_finished_at = now(),
 			discovered_threads = $3,
 			processed_threads = $4,
-			inserted_patches = $5,
-			updated_patches = $6,
-			message = $7
+			failed_threads = $5,
+			inserted_patches = $6,
+			updated_patches = $7,
+			message = $8
 		WHERE id = $1
-	`, runID, status, stats.DiscoveredThreads, stats.ProcessedThreads, stats.InsertedPatches, stats.UpdatedPatches, message)
+	`, runID, status, stats.DiscoveredThreads, stats.ProcessedThreads, stats.FailedThreads, stats.InsertedPatches, stats.UpdatedPatches, message)
 	return err
 }

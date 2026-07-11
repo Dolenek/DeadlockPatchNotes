@@ -116,6 +116,25 @@
                 }
               }
             }
+          },
+          "503": {
+            "description": "PostgreSQL readiness check failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "unavailable"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
