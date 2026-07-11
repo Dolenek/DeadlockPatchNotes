@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	assetsHeroesURL = "https://assets.deadlock-api.com/v2/heroes"
-	assetsItemsURL  = "https://assets.deadlock-api.com/v2/items"
+	assetsHeroesURL = "https://api.deadlock-api.com/v1/assets/heroes"
+	assetsItemsURL  = "https://api.deadlock-api.com/v1/assets/items"
 )
 
 var (

@@ -27,6 +27,7 @@ Compose `.env`:
 - `WEB_HOST_BIND`
 - `WEB_PORT`
 - `PATCH_FORUM_URL`
+- `PATCH_STEAM_NEWS_URL`
 - `PATCH_SYNC_MAX_PAGES`
 - `PATCH_SYNC_TIMEOUT_SECONDS`
 - `SITE_URL` (defaults to `https://www.deadlockpatchnotes.com` for API RSS URLs)
@@ -47,6 +48,7 @@ Runtime defaults in code:
   - HTTP timeout `30` seconds
 - Invalid/non-positive sync numeric env values fall back to defaults.
 - Sync rejects oversized responses, cross-origin pagination/redirects, and known forum challenge pages.
+- When forum discovery is blocked or empty, sync reads official `Minor Update` posts from the Steam Web API and appends only continuous follow-ups (maximum 14-day gap) to the latest stored patch.
 - `sync_runs.status` is `success`, `partial`, or `failed`; `failed_threads` records per-thread failures and the CLI exits non-zero for partial/failed runs.
 
 ## Build and Run Commands

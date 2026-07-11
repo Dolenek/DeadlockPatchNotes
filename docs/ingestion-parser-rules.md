@@ -186,6 +186,11 @@ Slug/thread identity contract:
 - Steam news pages:
   - `https://store.steampowered.com/news/app/1422450/view/...`
 - Asset catalog:
-  - `https://assets.deadlock-api.com/v2/heroes`
-  - `https://assets.deadlock-api.com/v2/items`
+  - `https://api.deadlock-api.com/v1/assets/heroes`
+  - `https://api.deadlock-api.com/v1/assets/items`
+- Steam fallback discovery:
+  - `https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/`
+  - accepts only titles matching `Minor Update - MM-DD-YYYY`
+  - appends new bodies as hotfix blocks to the latest stored patch
+  - refuses a gap above 14 days instead of guessing that a new top-level patch is a follow-up
 - Responses are capped at 10 MiB. Redirects and crawler pagination must remain on the requested origin, and known forum challenge pages fail discovery.

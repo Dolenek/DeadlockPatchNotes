@@ -12,8 +12,9 @@ import (
 )
 
 type SyncConfig struct {
-	ForumURL string
-	MaxPages int
+	ForumURL     string
+	SteamNewsURL string
+	MaxPages     int
 }
 
 type SyncStats struct {
@@ -44,14 +45,13 @@ func RunPatchSync(ctx context.Context, db *sql.DB, client *http.Client, cfg Sync
 	}
 
 	refs, err := CrawlChangelogThreads(ctx, client, cfg.ForumURL, cfg.MaxPages)
-	if err != nil {
-		return finalizeSyncRun(ctx, db, runID, "failed", err.Error(), stats, err)
+	if err != nil || len(refs) == 0 {
+		if err == nil {
+			err = errors.New("no patch threads discovered")
+		}
+		return runSteamNewsFallback(ctx, db, client, cfg.SteamNewsURL, runID, stats, err)
 	}
 	stats.DiscoveredThreads = len(refs)
-	if len(refs) == 0 {
-		err := errors.New("no patch threads discovered")
-		return finalizeSyncRun(ctx, db, runID, "failed", err.Error(), stats, err)
-	}
 
 	catalog, err := LoadAssetCatalog(ctx, client)
 	if err != nil {
@@ -69,6 +69,26 @@ func RunPatchSync(ctx context.Context, db *sql.DB, client *http.Client, cfg Sync
 	}
 	err = fmt.Errorf("%d of %d patch threads failed: %s", stats.FailedThreads, stats.DiscoveredThreads, strings.Join(failures, "; "))
 	return finalizeSyncRun(ctx, db, runID, status, err.Error(), stats, err)
+}
+
+func runSteamNewsFallback(ctx context.Context, db *sql.DB, client *http.Client, sourceURL string, runID int64, stats SyncStats, forumErr error) (SyncStats, error) {
+	catalog, err := LoadAssetCatalog(ctx, client)
+	if err != nil {
+		err = fmt.Errorf("forum discovery unavailable (%v); load asset catalog for Steam fallback: %w", forumErr, err)
+		return finalizeSyncRun(ctx, db, runID, "failed", err.Error(), stats, err)
+	}
+	result, err := syncLatestPatchFromSteamNews(ctx, db, client, catalog, sourceURL)
+	stats.DiscoveredThreads = result.DiscoveredNews
+	if err != nil {
+		err = fmt.Errorf("forum discovery unavailable (%v); Steam fallback: %w", forumErr, err)
+		return finalizeSyncRun(ctx, db, runID, "failed", err.Error(), stats, err)
+	}
+	stats.ProcessedThreads = 1
+	if result.AddedBlocks > 0 {
+		stats.UpdatedPatches = 1
+	}
+	message := fmt.Sprintf("Steam fallback complete: discovered=%d added_blocks=%d", result.DiscoveredNews, result.AddedBlocks)
+	return finalizeSyncRun(ctx, db, runID, "success", message, stats, nil)
 }
 
 func syncDiscoveredThreads(ctx context.Context, db *sql.DB, client *http.Client, catalog *AssetCatalog, refs []ForumThreadRef, stats SyncStats) (SyncStats, []string) {

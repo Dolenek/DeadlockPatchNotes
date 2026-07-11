@@ -42,6 +42,7 @@ Migrations in `api/internal/db/migrations/*.sql` are applied at startup.
   - `patch_release_blocks` (timeline block metadata)
   - `sync_runs` (run observability)
 - A run is successful only when discovery and every discovered thread complete. Empty/challenge discovery and catalog failures are `failed`; mixed per-thread outcomes are `partial`.
+- Forum challenge/empty discovery falls back to the official Steam Web API for tightly filtered minor updates and merges them into the latest patch timeline.
 
 ## Web Layer (`web/`)
 

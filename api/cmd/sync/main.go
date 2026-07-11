@@ -19,10 +19,8 @@ func main() {
 		log.Fatal("DATABASE_URL is required")
 	}
 
-	forumURL := os.Getenv("PATCH_FORUM_URL")
-	if forumURL == "" {
-		forumURL = "https://forums.playdeadlock.com/forums/changelog.10/"
-	}
+	forumURL := readStringEnv("PATCH_FORUM_URL", "https://forums.playdeadlock.com/forums/changelog.10/")
+	steamNewsURL := readStringEnv("PATCH_STEAM_NEWS_URL", ingest.DefaultSteamNewsURL)
 
 	maxPages := readIntEnv("PATCH_SYNC_MAX_PAGES", 20)
 	timeoutSeconds := readIntEnv("PATCH_SYNC_TIMEOUT_SECONDS", 30)
@@ -40,14 +38,22 @@ func main() {
 
 	client := &http.Client{Timeout: time.Duration(timeoutSeconds) * time.Second}
 	stats, err := ingest.RunPatchSync(ctx, database, client, ingest.SyncConfig{
-		ForumURL: forumURL,
-		MaxPages: maxPages,
+		ForumURL:     forumURL,
+		SteamNewsURL: steamNewsURL,
+		MaxPages:     maxPages,
 	})
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	printStats(stats)
+}
+
+func readStringEnv(key, fallback string) string {
+	if value := os.Getenv(key); value != "" {
+		return value
+	}
+	return fallback
 }
 
 func printStats(stats ingest.SyncStats) {

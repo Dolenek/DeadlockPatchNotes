@@ -36,13 +36,14 @@ Deadlock Patch Notes ingests official Deadlock changelog content, stores normali
 1. Reads `DATABASE_URL`, `PATCH_FORUM_URL`, `PATCH_SYNC_MAX_PAGES`, `PATCH_SYNC_TIMEOUT_SECONDS`.
 2. Applies defaults for missing/invalid sync numeric env values.
 3. Opens DB and applies migrations.
-4. Crawls changelog thread listing, fetches threads/posts, and resolves every referenced Steam event.
+4. Crawls changelog thread listing, fetches threads/posts, and resolves every referenced Steam event. If the forum listing is blocked or empty, it discovers official minor updates through the Steam Web API.
 5. Builds patch payload + timeline blocks and upserts DB rows.
 6. Writes run observability row to `sync_runs`.
 
 Run semantics:
 
 - Empty/challenge discovery, catalog failure, or no successfully processed threads fails the run.
+- A successful Steam fallback updates the latest patch with previously unseen minor-update blocks. A gap above 14 days fails loudly because it may represent a new top-level patch.
 - A mix of successful and failed threads is persisted as `partial` and exits non-zero.
 - A patch is not overwritten when one of its referenced Steam events fails.
 
@@ -98,6 +99,7 @@ Schema notes:
 - `API_READ_CACHE_TTL` (server only; Go duration, default `10m`)
 - `SITE_URL` (server + web; optional canonical site URL used for SEO and RSS item links)
 - `PATCH_FORUM_URL` (sync only; default changelog URL)
+- `PATCH_STEAM_NEWS_URL` (sync only; default official Steam Web API query for the latest 100 app news items)
 - `PATCH_SYNC_MAX_PAGES` (sync only; default `20`, invalid/non-positive -> default)
 - `PATCH_SYNC_TIMEOUT_SECONDS` (sync only; default `30`, invalid/non-positive -> default)
 
