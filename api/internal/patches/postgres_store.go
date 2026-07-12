@@ -11,7 +11,10 @@ import (
 	"time"
 )
 
-const defaultReadCacheTTL = 10 * time.Minute
+const (
+	defaultReadCacheTTL     = 10 * time.Minute
+	failedRefreshRetryDelay = 5 * time.Second
+)
 
 type patchReadSnapshot struct {
 	details        []PatchDetail
@@ -187,6 +190,9 @@ func (s *PostgresStore) getSnapshot(ctx context.Context) (*patchReadSnapshot, er
 			return nil, ctx.Err()
 		}
 		if staleSnapshot != nil {
+			s.snapshotMu.Lock()
+			s.snapshotExpiresAt = time.Now().Add(s.refreshRetryDelay())
+			s.snapshotMu.Unlock()
 			return staleSnapshot, nil
 		}
 		return nil, err
@@ -198,6 +204,13 @@ func (s *PostgresStore) getSnapshot(ctx context.Context) (*patchReadSnapshot, er
 	s.snapshotMu.Unlock()
 
 	return snapshot, nil
+}
+
+func (s *PostgresStore) refreshRetryDelay() time.Duration {
+	if s.cacheTTL < failedRefreshRetryDelay {
+		return s.cacheTTL
+	}
+	return failedRefreshRetryDelay
 }
 
 func (s *PostgresStore) refreshSnapshot(ctx context.Context) (*patchReadSnapshot, error) {
@@ -223,7 +236,7 @@ func (s *PostgresStore) buildSnapshot(parent context.Context) (*patchReadSnapsho
 			source_url,
 			detail_payload
 		FROM patches
-		ORDER BY updated_at DESC
+		ORDER BY published_at DESC, slug DESC
 	`)
 	if err != nil {
 		return nil, err

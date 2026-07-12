@@ -89,6 +89,8 @@ Query:
 - `page` default `1`
 - `limit` default `12`, max `50`
 
+Patch ordering is `publishedAt DESC` (newest top-level patch first), with slug as a deterministic tie-breaker.
+
 Response shape:
 
 ```json
@@ -235,3 +237,4 @@ Timeline block naming follows hero/item pattern (`releaseType`, `displayLabel`, 
 - List/detail/entity + RSS endpoints read from the cached snapshot in steady state.
 - Refresh work inherits the request context and stops after 15 seconds at most.
 - A transient refresh failure serves the last usable stale snapshot; cancellation is still propagated.
+- After a failed refresh, stale reads use a short retry delay before another request attempts PostgreSQL again.

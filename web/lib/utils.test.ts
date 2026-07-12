@@ -8,6 +8,7 @@ import {
   formatForumDate,
   formatUpdateLabel,
   normalizeLookupKey,
+  patchPageRedirectPath,
   sectionAnchor,
   slugifyLookup,
   timelineBlockAnchor
@@ -24,6 +25,17 @@ describe("clampPage", () => {
   it("uses positive integer values", () => {
     expect(clampPage("3")).toBe(3);
     expect(clampPage(["7", "2"])).toBe(7);
+  });
+});
+
+describe("patchPageRedirectPath", () => {
+  it("redirects an out-of-range request to the effective page", () => {
+    expect(patchPageRedirectPath(999, 4)).toBe("/patches?page=4");
+    expect(patchPageRedirectPath(4, 1)).toBe("/patches");
+  });
+
+  it("does not redirect an already effective page", () => {
+    expect(patchPageRedirectPath(4, 4)).toBeNull();
   });
 });
 

@@ -12,7 +12,9 @@ func TestPostgresStoreReturnsStaleSnapshotAfterRefreshFailure(t *testing.T) {
 	store := NewPostgresStore(nil, time.Minute)
 	store.snapshot = stale
 	store.snapshotExpiresAt = time.Now().Add(-time.Minute)
+	refreshCount := 0
 	store.buildSnapshotFn = func(context.Context) (*patchReadSnapshot, error) {
+		refreshCount++
 		return nil, errors.New("database unavailable")
 	}
 
@@ -22,6 +24,17 @@ func TestPostgresStoreReturnsStaleSnapshotAfterRefreshFailure(t *testing.T) {
 	}
 	if got != stale {
 		t.Fatal("expected existing stale snapshot")
+	}
+
+	got, err = store.getSnapshot(context.Background())
+	if err != nil {
+		t.Fatalf("expected stale snapshot during retry delay, got error %v", err)
+	}
+	if got != stale {
+		t.Fatal("expected existing stale snapshot during retry delay")
+	}
+	if refreshCount != 1 {
+		t.Fatalf("expected one refresh attempt during retry delay, got %d", refreshCount)
 	}
 }
 

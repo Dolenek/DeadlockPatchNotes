@@ -9,36 +9,9 @@ import {
   SpellListResponse
 } from "@/lib/types";
 import { resolveMirroredAssetURL } from "@/lib/asset-mirror";
+import { resolveAPIBaseURL } from "@/lib/api-base-url";
 
-const DEFAULT_API_BASE_URL = "https://deadlockpatchnotes.com/api";
-
-function normalizeBasePath(pathname: string) {
-  const trimmed = pathname.replace(/\/+$/, "");
-  if (trimmed === "" || trimmed === "/") {
-    return "";
-  }
-  if (trimmed === "/api") {
-    return "";
-  }
-  return trimmed;
-}
-
-function resolveAPIBaseURL() {
-  const candidate = (process.env.API_BASE_URL ?? DEFAULT_API_BASE_URL).trim();
-  if (candidate === "") {
-    return DEFAULT_API_BASE_URL;
-  }
-
-  try {
-    const parsed = new URL(candidate);
-    const path = normalizeBasePath(parsed.pathname);
-    return `${parsed.origin}${path}`;
-  } catch {
-    throw new Error(`Invalid API_BASE_URL: ${candidate}`);
-  }
-}
-
-const API_BASE_URL = resolveAPIBaseURL();
+const API_BASE_URL = resolveAPIBaseURL(process.env.API_BASE_URL);
 
 export class APIError extends Error {
   status: number;

@@ -167,7 +167,7 @@ func upsertPatch(ctx context.Context, db *sql.DB, thread ForumThread, detail pat
 
 	var patchID int64
 	inserted := false
-	err = tx.QueryRowContext(ctx, `SELECT id FROM patches WHERE slug = $1`, thread.Slug).Scan(&patchID)
+	err = tx.QueryRowContext(ctx, `SELECT id FROM patches WHERE thread_id = $1`, thread.ThreadID).Scan(&patchID)
 	if err == sql.ErrNoRows {
 		inserted = true
 		err = tx.QueryRowContext(ctx, `
@@ -211,7 +211,7 @@ func upsertPatch(ctx context.Context, db *sql.DB, thread ForumThread, detail pat
 		_, err = tx.ExecContext(ctx, `
 			UPDATE patches
 			SET
-				thread_id = $2,
+				slug = $2,
 				title = $3,
 				category = $4,
 				intro = $5,
@@ -227,7 +227,7 @@ func upsertPatch(ctx context.Context, db *sql.DB, thread ForumThread, detail pat
 			WHERE id = $1
 		`,
 			patchID,
-			thread.ThreadID,
+			thread.Slug,
 			detail.Payload.Title,
 			detail.Payload.Category,
 			detail.Payload.Intro,

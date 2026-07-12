@@ -46,6 +46,7 @@ Fetch caching:
   - reads `page` query
   - normalizes with `clampPage` (invalid or `<1` -> `1`)
   - calls `getPatches(page, 12)`
+  - redirects page numbers above the API-reported last page to the effective last-page URL
   - metadata behavior:
     - page 1: canonical `/patches`, indexable
     - page > 1: canonical self (`/patches?page=N`), `noindex,follow`
@@ -138,6 +139,7 @@ Detail-page behavior:
 
 - Web utility route for remote image sampling is `GET /image-proxy?url=<https-url>`.
 - This route is intentionally outside `/api/*` to avoid overlap with backend API reverse-proxy routing.
+- Requests and every redirect hop are restricted to the configured HTTPS image-host allowlist.
 
 ### `FallbackImage` (`use client`)
 

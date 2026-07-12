@@ -12,6 +12,13 @@ export function clampPage(value: string | string[] | undefined): number {
   return parsed;
 }
 
+export function patchPageRedirectPath(requestedPage: number, effectivePage: number): string | null {
+  if (requestedPage === effectivePage) {
+    return null;
+  }
+  return effectivePage <= 1 ? "/patches" : `/patches?page=${effectivePage}`;
+}
+
 export function formatDisplayDate(isoDate: string): string {
   const date = new Date(isoDate);
   return date.toLocaleDateString("en-US", {

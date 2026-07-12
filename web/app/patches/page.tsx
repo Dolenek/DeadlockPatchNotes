@@ -1,10 +1,11 @@
 import { Pagination } from "@/components/Pagination";
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { DecorativeImageLayers } from "@/components/DecorativeImageLayers";
 import { JsonLd } from "@/components/JsonLd";
 import { PatchCard } from "@/components/PatchCard";
 import { getPatches } from "@/lib/api";
-import { clampPage } from "@/lib/utils";
+import { clampPage, patchPageRedirectPath } from "@/lib/utils";
 import { SEO_SITE_NAME, buildAbsoluteURL, resolveSocialImageURL, truncateDescription } from "@/lib/seo";
 
 type PatchesPageProps = {
@@ -58,6 +59,10 @@ export default async function PatchesPage({ searchParams }: PatchesPageProps) {
   const resolvedParams = await searchParams;
   const page = clampPage(resolvedParams.page);
   const patchList = await getPatches(page, 12);
+  const redirectPath = patchPageRedirectPath(page, patchList.pagination.page);
+  if (redirectPath) {
+    redirect(redirectPath);
+  }
   const canonicalURL = buildAbsoluteURL("/patches", page > 1 ? { page } : undefined);
   const schema = {
     "@context": "https://schema.org",

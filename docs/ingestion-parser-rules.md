@@ -157,14 +157,14 @@ If structured parse yields no sections:
 
 `upsertPatch` transaction:
 
-1. Insert or update `patches` row by slug.
+1. Insert or update the `patches` row by immutable forum `thread_id` and refresh its current slug.
 2. Replace all `patch_release_blocks` rows for that patch ID.
 3. Insert timeline block metadata with stable sort order.
 4. Commit transaction.
 
 Slug/thread identity contract:
 
-- Upsert lookup key is `slug`.
+- Upsert lookup key is immutable forum `thread_id`; slug changes are persisted during update.
 - Database uniqueness is enforced on both `slug` and `thread_id`.
 
 `patch_release_blocks` notes:
