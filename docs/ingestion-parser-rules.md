@@ -5,7 +5,7 @@
 `api/cmd/sync/main.go` runs one ingestion pass:
 
 1. Read env config.
-2. Open DB + apply migrations.
+2. Open DB with the scoped `deadlock_sync` role after the migration service has completed.
 3. Run `ingest.RunPatchSync`.
 4. Print discovered/processed/inserted/updated counters.
 
@@ -21,13 +21,14 @@ Config defaults and validation:
 `RunPatchSync` is best-effort per discovered thread.
 
 - Thread fetch/parse/build/upsert failures are skipped and sync continues.
-- Run status can still finish as `success` when some discovered threads fail processing.
+- Any per-thread failure makes the run `partial`; if no thread succeeds, the run is `failed`.
 - `processed_threads` counts only successfully upserted threads.
+- `inserted_patches` and `updated_patches` count actual database content changes; an unchanged thread still counts as processed but increments neither write counter.
 
 Asset catalog behavior:
 
 - Sync attempts to load heroes/items catalog.
-- If catalog load fails, sync continues with `catalog=nil` (degraded structured parsing/icon enrichment).
+- If catalog load fails, the run fails before thread processing because structured parsing and icon enrichment cannot be completed reliably.
 
 ## Thread Discovery
 
@@ -157,10 +158,10 @@ If structured parse yields no sections:
 
 `upsertPatch` transaction:
 
-1. Insert or update the `patches` row by immutable forum `thread_id` and refresh its current slug.
-2. Replace all `patch_release_blocks` rows for that patch ID.
-3. Insert timeline block metadata with stable sort order.
-4. Commit transaction.
+1. Acquire a transaction-scoped advisory lock for immutable forum `thread_id`.
+2. Insert a new patch, update a changed patch, or only refresh `last_synced_at` when patch and timeline content are unchanged.
+3. Replace `patch_release_blocks` only for inserted or changed patches.
+4. Insert timeline block metadata with stable sort order and commit.
 
 Slug/thread identity contract:
 

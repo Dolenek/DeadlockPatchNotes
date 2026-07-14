@@ -27,6 +27,8 @@ func NewRouter(store patches.Repository, readinessChecks ...func(context.Context
 	api := &API{store: store, readinessCheck: readinessCheck}
 
 	r := chi.NewRouter()
+	r.Use(securityHeadersMiddleware)
+	r.Use(httpsRedirectMiddleware)
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
@@ -35,6 +37,7 @@ func NewRouter(store patches.Repository, readinessChecks ...func(context.Context
 
 	r.Get("/api/healthz", api.healthz)
 	r.Get("/api/scalar", api.scalarDocs)
+	r.Get("/api/scalar-init.js", api.scalarInit)
 	r.Get("/api/openapi.json", api.openapiSpec)
 
 	r.Route("/api/v1", func(v1 chi.Router) {
@@ -66,9 +69,17 @@ func (a *API) healthz(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) scalarDocs(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Content-Security-Policy", "default-src 'none'; base-uri 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'")
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write(scalarHTML)
+}
+
+func (a *API) scalarInit(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Content-Type", "application/javascript; charset=utf-8")
+	w.Header().Set("Cache-Control", "public, max-age=86400")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write(scalarInitJS)
 }
 
 func (a *API) openapiSpec(w http.ResponseWriter, _ *http.Request) {

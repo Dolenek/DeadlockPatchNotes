@@ -7,4 +7,6 @@ var (
 	scalarHTML []byte
 	//go:embed static/openapi.json
 	openAPISpecJSON []byte
+	//go:embed static/scalar-init.js
+	scalarInitJS []byte
 )

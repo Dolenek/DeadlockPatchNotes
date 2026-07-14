@@ -25,6 +25,11 @@ type SyncStats struct {
 	UpdatedPatches    int
 }
 
+type patchWriteResult struct {
+	Inserted bool
+	Updated  bool
+}
+
 type timelineCandidate struct {
 	Key        string
 	Kind       string
@@ -94,16 +99,16 @@ func runSteamNewsFallback(ctx context.Context, db *sql.DB, client *http.Client, 
 func syncDiscoveredThreads(ctx context.Context, db *sql.DB, client *http.Client, catalog *AssetCatalog, refs []ForumThreadRef, stats SyncStats) (SyncStats, []string) {
 	failures := make([]string, 0, 4)
 	for _, ref := range refs {
-		inserted, err := syncPatchThread(ctx, db, client, catalog, ref)
+		writeResult, err := syncPatchThread(ctx, db, client, catalog, ref)
 		if err != nil {
 			stats.FailedThreads++
 			failures = appendSyncFailure(failures, fmt.Sprintf("%s: %v", ref.URL, err))
 			continue
 		}
 		stats.ProcessedThreads++
-		if inserted {
+		if writeResult.Inserted {
 			stats.InsertedPatches++
-		} else {
+		} else if writeResult.Updated {
 			stats.UpdatedPatches++
 		}
 	}
@@ -117,27 +122,27 @@ func finalizeSyncRun(ctx context.Context, db *sql.DB, runID int64, status, messa
 	return stats, runErr
 }
 
-func syncPatchThread(ctx context.Context, db *sql.DB, client *http.Client, catalog *AssetCatalog, ref ForumThreadRef) (bool, error) {
+func syncPatchThread(ctx context.Context, db *sql.DB, client *http.Client, catalog *AssetCatalog, ref ForumThreadRef) (patchWriteResult, error) {
 	thread, err := FetchThread(ctx, client, ref.URL)
 	if err != nil {
-		return false, err
+		return patchWriteResult{}, err
 	}
 	if len(thread.Posts) == 0 {
-		return false, errors.New("no official posts parsed")
+		return patchWriteResult{}, errors.New("no official posts parsed")
 	}
 
 	detail, blocks, publishedAt, updatedAt, err := buildPatchFromThread(ctx, client, thread, catalog)
 	if err != nil {
-		return false, err
+		return patchWriteResult{}, err
 	}
 	if len(blocks) == 0 {
-		return false, errors.New("no release blocks parsed")
+		return patchWriteResult{}, errors.New("no release blocks parsed")
 	}
-	inserted, err := upsertPatch(ctx, db, thread, detail, blocks, publishedAt, updatedAt)
+	writeResult, err := upsertPatch(ctx, db, thread, detail, blocks, publishedAt, updatedAt)
 	if err != nil {
-		return false, fmt.Errorf("upsert: %w", err)
+		return patchWriteResult{}, fmt.Errorf("upsert: %w", err)
 	}
-	return inserted, nil
+	return writeResult, nil
 }
 
 func appendSyncFailure(failures []string, message string) []string {
@@ -148,10 +153,10 @@ func appendSyncFailure(failures []string, message string) []string {
 	return append(failures, message)
 }
 
-func upsertPatch(ctx context.Context, db *sql.DB, thread ForumThread, detail patchDetailRecord, blocks []timelineCandidate, publishedAt, updatedAt time.Time) (bool, error) {
+func upsertPatch(ctx context.Context, db *sql.DB, thread ForumThread, detail patchDetailRecord, blocks []timelineCandidate, publishedAt, updatedAt time.Time) (patchWriteResult, error) {
 	detailRaw, err := json.Marshal(detail.Payload)
 	if err != nil {
-		return false, fmt.Errorf("encode detail payload: %w", err)
+		return patchWriteResult{}, fmt.Errorf("encode detail payload: %w", err)
 	}
 
 	excerpt := detail.Excerpt
@@ -161,15 +166,38 @@ func upsertPatch(ctx context.Context, db *sql.DB, thread ForumThread, detail pat
 
 	tx, err := db.BeginTx(ctx, nil)
 	if err != nil {
-		return false, err
+		return patchWriteResult{}, err
 	}
 	defer tx.Rollback()
+	if _, err := tx.ExecContext(ctx, `SELECT pg_advisory_xact_lock($1)`, thread.ThreadID); err != nil {
+		return patchWriteResult{}, fmt.Errorf("lock patch thread: %w", err)
+	}
 
 	var patchID int64
-	inserted := false
-	err = tx.QueryRowContext(ctx, `SELECT id FROM patches WHERE thread_id = $1`, thread.ThreadID).Scan(&patchID)
+	var stored storedPatchState
+	err = tx.QueryRowContext(ctx, `
+		SELECT
+			id, slug, title, category, intro, excerpt, hero_image_url,
+			published_at, updated_at, source_type, source_url, detail_payload
+		FROM patches
+		WHERE thread_id = $1
+	`, thread.ThreadID).Scan(
+		&patchID,
+		&stored.Slug,
+		&stored.Title,
+		&stored.Category,
+		&stored.Intro,
+		&stored.Excerpt,
+		&stored.HeroImageURL,
+		&stored.PublishedAt,
+		&stored.UpdatedAt,
+		&stored.SourceType,
+		&stored.SourceURL,
+		&stored.DetailPayload,
+	)
+	writeResult := patchWriteResult{}
 	if err == sql.ErrNoRows {
-		inserted = true
+		writeResult.Inserted = true
 		err = tx.QueryRowContext(ctx, `
 			INSERT INTO patches (
 				thread_id,
@@ -203,11 +231,27 @@ func upsertPatch(ctx context.Context, db *sql.DB, thread ForumThread, detail pat
 			detailRaw,
 		).Scan(&patchID)
 		if err != nil {
-			return false, err
+			return patchWriteResult{}, err
 		}
 	} else if err != nil {
-		return false, err
+		return patchWriteResult{}, err
 	} else {
+		desired := newStoredPatchState(thread, detail, excerpt, publishedAt, updatedAt, detailRaw)
+		blocksMatch, err := storedTimelineMatches(ctx, tx, patchID, blocks)
+		if err != nil {
+			return patchWriteResult{}, err
+		}
+		writeResult.Updated = !stored.matches(desired) || !blocksMatch
+		if !writeResult.Updated {
+			if _, err := tx.ExecContext(ctx, `UPDATE patches SET last_synced_at = now() WHERE id = $1`, patchID); err != nil {
+				return patchWriteResult{}, err
+			}
+			if err := tx.Commit(); err != nil {
+				return patchWriteResult{}, err
+			}
+			return writeResult, nil
+		}
+
 		_, err = tx.ExecContext(ctx, `
 			UPDATE patches
 			SET
@@ -240,12 +284,12 @@ func upsertPatch(ctx context.Context, db *sql.DB, thread ForumThread, detail pat
 			detailRaw,
 		)
 		if err != nil {
-			return false, err
+			return patchWriteResult{}, err
 		}
 	}
 
 	if _, err := tx.ExecContext(ctx, `DELETE FROM patch_release_blocks WHERE patch_id = $1`, patchID); err != nil {
-		return false, err
+		return patchWriteResult{}, err
 	}
 
 	for index, block := range blocks {
@@ -278,14 +322,14 @@ func upsertPatch(ctx context.Context, db *sql.DB, thread ForumThread, detail pat
 			index+1,
 		)
 		if err != nil {
-			return false, err
+			return patchWriteResult{}, err
 		}
 	}
 
 	if err := tx.Commit(); err != nil {
-		return false, err
+		return patchWriteResult{}, err
 	}
-	return inserted, nil
+	return writeResult, nil
 }
 
 func startSyncRun(ctx context.Context, db *sql.DB) (int64, error) {

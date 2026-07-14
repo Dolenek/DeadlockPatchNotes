@@ -18,9 +18,25 @@ mkdir -p "$BACKUP_DIR"
 
 TS="$(date -u +%Y%m%d-%H%M%S)"
 OUT_FILE="$BACKUP_DIR/patchnotes-${TS}.dump"
+TMP_FILE="$(mktemp "$BACKUP_DIR/.patchnotes-${TS}.XXXXXX.dump")"
+
+cleanup() {
+  if [ -n "${TMP_FILE:-}" ]; then
+    rm -f -- "$TMP_FILE"
+  fi
+}
+trap cleanup EXIT
 
 /usr/bin/docker-compose exec -T db \
-  pg_dump -U "$POSTGRES_USER" -d "$POSTGRES_DB" -Fc > "$OUT_FILE"
+  pg_dump -U "$POSTGRES_USER" -d "$POSTGRES_DB" -Fc > "$TMP_FILE"
+
+if [ ! -s "$TMP_FILE" ]; then
+  echo "pg_dump produced an empty backup"
+  exit 1
+fi
+
+mv -- "$TMP_FILE" "$OUT_FILE"
+TMP_FILE=""
 
 find "$BACKUP_DIR" -type f -name 'patchnotes-*.dump' -mtime +14 -delete
 

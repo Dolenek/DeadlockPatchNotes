@@ -41,6 +41,11 @@ Date-only behavior:
 - `from=YYYY-MM-DD` becomes `00:00:00.000000000Z`
 - `to=YYYY-MM-DD` becomes `23:59:59.999999999Z`
 
+Entity filter behavior:
+
+- A known hero, item, or spell returns `200` with stable global metadata and an empty `timeline` when no changes fall inside the requested range.
+- `404 resource_not_found` is reserved for an unknown entity slug, not an empty filtered result.
+
 ## Meta Endpoints
 
 ### `GET /api/healthz`
@@ -236,5 +241,6 @@ Timeline block naming follows hero/item pattern (`releaseType`, `displayLabel`, 
 - Snapshot refresh preloads and hydrates patch payloads once per cache window.
 - List/detail/entity + RSS endpoints read from the cached snapshot in steady state.
 - Refresh work inherits the request context and stops after 15 seconds at most.
+- Waiting behind another in-flight snapshot refresh is also request-cancelable.
 - A transient refresh failure serves the last usable stale snapshot; cancellation is still propagated.
 - After a failed refresh, stale reads use a short retry delay before another request attempts PostgreSQL again.

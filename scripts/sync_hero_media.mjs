@@ -2,8 +2,14 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { createAssetRegistry, downloadAssets, fetchJson } from "./patch_fixture/assets.mjs";
+import {
+  createAssetRegistry,
+  fetchJson,
+  replaceAssetDirectory,
+  writeTextFileAtomically,
+} from "./patch_fixture/assets.mjs";
 import { slugify } from "./patch_fixture/utils.mjs";
+import { MAX_JSON_BYTES, fetchAllowedURL, readLimitedResponse } from "./asset_security.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -89,13 +95,16 @@ async function fetchHeroByName(name) {
 
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
     try {
-      const response = await fetch(target, { headers: REQUEST_HEADERS });
+      const response = await fetchAllowedURL(target, { headers: REQUEST_HEADERS });
       if (response.status === 404) {
+        await response.body?.cancel().catch(() => undefined);
         return null;
       }
       if (response.ok) {
-        return response.json();
+        const bytes = await readLimitedResponse(response, MAX_JSON_BYTES);
+        return JSON.parse(bytes.toString("utf8"));
       }
+      await response.body?.cancel().catch(() => undefined);
       if (!RETRYABLE_STATUS.has(response.status) || attempt >= maxAttempts) {
         throw new Error(`Request failed: ${target} (${response.status})`);
       }
@@ -229,10 +238,8 @@ async function buildHeroMediaManifest() {
 }
 
 async function writeOutputs(manifest, assetsRegistry) {
-  await fs.rm(HERO_ASSET_DIR, { recursive: true, force: true });
-  await downloadAssets(assetsRegistry, WEB_PUBLIC_DIR);
-  await fs.mkdir(path.dirname(HERO_MANIFEST_PATH), { recursive: true });
-  await fs.writeFile(HERO_MANIFEST_PATH, `${JSON.stringify(manifest, null, 2)}\n`);
+  await replaceAssetDirectory(assetsRegistry, WEB_PUBLIC_DIR, HERO_ASSET_DIR);
+  await writeTextFileAtomically(HERO_MANIFEST_PATH, `${JSON.stringify(manifest, null, 2)}\n`);
 }
 
 async function main() {
@@ -246,6 +253,11 @@ async function main() {
     assetsRegistry,
     manifest,
   } = await buildHeroMediaManifest();
+  if (missingPayload.length > 0 || missingMedia.length > 0) {
+    throw new Error(
+      `Hero media sync is incomplete (missing payloads: ${missingPayload.length}, missing media: ${missingMedia.length})`,
+    );
+  }
   await writeOutputs(manifest, assetsRegistry);
 
   process.stdout.write(`heroes in full roster: ${rosterCount}\n`);

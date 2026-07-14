@@ -33,7 +33,7 @@ type PostgresStore struct {
 	buildSnapshotFn func(context.Context) (*patchReadSnapshot, error)
 
 	snapshotMu        sync.RWMutex
-	refreshMu         sync.Mutex
+	refreshPermit     chan struct{}
 	snapshot          *patchReadSnapshot
 	snapshotExpiresAt time.Time
 }
@@ -43,9 +43,12 @@ func NewPostgresStore(db *sql.DB, cacheTTL time.Duration) *PostgresStore {
 		cacheTTL = defaultReadCacheTTL
 	}
 
+	refreshPermit := make(chan struct{}, 1)
+	refreshPermit <- struct{}{}
 	return &PostgresStore{
-		db:       db,
-		cacheTTL: cacheTTL,
+		db:            db,
+		cacheTTL:      cacheTTL,
+		refreshPermit: refreshPermit,
 	}
 }
 
@@ -168,8 +171,12 @@ func (s *PostgresStore) getSnapshot(ctx context.Context) (*patchReadSnapshot, er
 	}
 	s.snapshotMu.RUnlock()
 
-	s.refreshMu.Lock()
-	defer s.refreshMu.Unlock()
+	select {
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	case <-s.refreshPermit:
+	}
+	defer func() { s.refreshPermit <- struct{}{} }()
 
 	now = time.Now()
 	s.snapshotMu.RLock()

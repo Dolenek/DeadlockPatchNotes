@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import syncFS from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { parseAllowedDownloadURL, resolveContainedPath } from "./asset_security.mjs";
 
 const DEFAULT_API_BASE_URL = "https://deadlockpatchnotes.com/api";
 const DEFAULT_CONCURRENCY = 8;
@@ -10,11 +11,7 @@ const REQUEST_HEADERS = {
   "User-Agent": "deadlockpatchnotes-icon-audit/1.0",
 };
 const RETRYABLE_STATUS = new Set([408, 425, 429, 500, 502, 503, 504]);
-const ALLOWED_REMOTE_HOSTS = new Set([
-  "assets-bucket.deadlock-api.com",
-  "assets.deadlock-api.com",
-  "clan.akamai.steamstatic.com",
-]);
+const ALLOWED_REMOTE_HOSTS = new Set(["assets-bucket.deadlock-api.com", "assets.deadlock-api.com", "clan.akamai.steamstatic.com"]);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -245,7 +242,12 @@ async function collectPatchSlugs(apiBaseURL) {
 function classifyURL(url, webPublicDir) {
   if (url.startsWith("/")) {
     const relativePath = url.replace(/^\/+/, "");
-    const diskPath = path.join(webPublicDir, relativePath);
+    let diskPath;
+    try {
+      diskPath = resolveContainedPath(webPublicDir, relativePath, "API local asset path");
+    } catch {
+      return { kind: "other" };
+    }
     const localExists = syncFS.existsSync(diskPath);
     return {
       kind: "local",
@@ -256,11 +258,11 @@ function classifyURL(url, webPublicDir) {
 
   if (url.startsWith("https://") || url.startsWith("http://")) {
     try {
-      const host = new URL(url).hostname;
+      const parsed = new URL(url);
       return {
         kind: "remote",
-        host,
-        allowedHost: ALLOWED_REMOTE_HOSTS.has(host),
+        host: parsed.hostname,
+        allowedHost: parseAllowedDownloadURL(url, ALLOWED_REMOTE_HOSTS) !== null,
       };
     } catch {
       return { kind: "other" };

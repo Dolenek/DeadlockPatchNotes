@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { decodeHashFragment } from "@/lib/utils";
 
 type TableOfContentsProps = {
   groups: TableOfContentsGroup[];
@@ -56,7 +57,7 @@ export function TableOfContents({ groups }: TableOfContentsProps) {
     }
 
     const syncFromHash = () => {
-      const targetID = decodeURIComponent(window.location.hash.replace(/^#/, ""));
+      const targetID = decodeHashFragment(window.location.hash);
       if (targetID !== "" && anchorOrder.includes(targetID)) {
         setActiveId(targetID);
       }

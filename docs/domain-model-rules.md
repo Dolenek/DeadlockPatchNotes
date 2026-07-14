@@ -76,6 +76,7 @@ Skill filtering:
 - `skill=general` returns only general entry-level changes.
 - Other `skill` values use normalized exact-title matching against groups.
 - Unknown skill for an existing hero produces empty `timeline` (not an error).
+- Hero metadata and `lastChangedAt` describe the complete history and remain populated even when skill/date filters produce an empty timeline.
 
 ## Item Timeline Rules
 
@@ -83,6 +84,7 @@ Skill filtering:
 - Item timeline blocks contain only direct entry changes.
 - Nested groups are not used in item timeline output.
 - Date filtering is inclusive and UTC-normalized.
+- Known items retain complete-history metadata and return an empty timeline when the selected date range has no matches.
 
 ## Spell Timeline Rules
 
@@ -96,6 +98,8 @@ Spell timeline data is inferred from hero timeline data.
    - Standalone entries matching known item names are excluded.
 3. Name collisions:
    - Same spell slug across heroes is merged into one spell timeline with multiple hero entries.
+4. Filtered results:
+   - Known spells retain complete-history metadata and return an empty timeline when the selected date range has no matches.
 
 ## Date, Label, and Ordering Rules
 

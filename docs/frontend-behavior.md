@@ -19,24 +19,31 @@ API base URL resolution:
 - Uses `API_BASE_URL` env when set.
 - Falls back to `https://deadlockpatchnotes.com/api` when env is missing/blank.
 - Normalizes exact `/api` suffix so both `https://deadlockpatchnotes.com` and `https://deadlockpatchnotes.com/api` are valid inputs.
+- Accepts only HTTP(S) URLs without embedded credentials.
 - Invalid non-empty `API_BASE_URL` throws `Invalid API_BASE_URL: ...`.
 
 SEO URL resolution:
 
 - Uses `SITE_URL` env when set.
 - Falls back to `https://www.deadlockpatchnotes.com` when env is missing/blank.
+- Accepts only HTTP(S) URLs without embedded credentials and normalizes them to their origin.
 - Invalid non-empty `SITE_URL` throws `Invalid SITE_URL: ...`.
 
 Fetch caching:
 
 - All API fetches use `next: { revalidate: 30 }`.
 
+Transport and response security:
+
+- Requests marked `X-Forwarded-Proto: http` receive a `308` redirect to the validated HTTPS `SITE_URL` origin; the request `Host` header is never used to construct the redirect.
+- Global responses include CSP, HSTS, clickjacking, MIME-sniffing, referrer, opener, and permissions-policy protections.
+
 ## Route Map
 
 ### Root
 
 - `/` is an indexable landing page.
-  - fetches latest patch cards via `getPatches(1, 6)`
+  - fetches the latest patch card via `getPatches(1, 1)`
   - links to patch archive and entity timelines
   - emits `WebSite` + `CollectionPage` JSON-LD
 
@@ -140,6 +147,9 @@ Detail-page behavior:
 - Web utility route for remote image sampling is `GET /image-proxy?url=<https-url>`.
 - This route is intentionally outside `/api/*` to avoid overlap with backend API reverse-proxy routing.
 - Requests and every redirect hop are restricted to the configured HTTPS image-host allowlist.
+- Requests time out after 10 seconds and are canceled when the client request is canceled.
+- Upstream responses must be a supported raster type (AVIF, GIF, JPEG, PNG, or WebP), match the expected file signature, and are capped at 8 MiB.
+- Responses add `nosniff` and restrictive CSP headers before being served from the site origin.
 
 ### `FallbackImage` (`use client`)
 

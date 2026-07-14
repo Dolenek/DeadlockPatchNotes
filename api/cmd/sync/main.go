@@ -32,10 +32,6 @@ func main() {
 	}
 	defer database.Close()
 
-	if err := db.ApplyMigrations(ctx, database); err != nil {
-		log.Fatal(err)
-	}
-
 	client := &http.Client{Timeout: time.Duration(timeoutSeconds) * time.Second}
 	stats, err := ingest.RunPatchSync(ctx, database, client, ingest.SyncConfig{
 		ForumURL:     forumURL,

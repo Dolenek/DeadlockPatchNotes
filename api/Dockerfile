@@ -7,6 +7,7 @@ RUN go mod download
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /out/server ./cmd/server
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /out/sync ./cmd/sync
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /out/migrate ./cmd/migrate
 
 FROM alpine:3.23
 RUN apk add --no-cache ca-certificates tzdata \
@@ -16,6 +17,7 @@ WORKDIR /app
 
 COPY --from=build /out/server /usr/local/bin/server
 COPY --from=build /out/sync /usr/local/bin/sync
+COPY --from=build /out/migrate /usr/local/bin/migrate
 
 EXPOSE 8080
 USER app

@@ -9,6 +9,7 @@ Deadlock Patch Notes ingests official Deadlock changelog content, stores normali
 - `api/`
   - `cmd/server`: HTTP API process
   - `cmd/sync`: one-shot ingestion/sync process
+  - `cmd/migrate`: one-shot schema migration and runtime-role provisioning process
   - `internal/httpapi`: routes, query parsing, response shaping
   - `internal/patches`: domain models, hydration, hero/item/spell timeline builders, DB-backed repository
   - `internal/ingest`: forum/Steam crawling, parsing, payload assembly, persistence orchestration
@@ -27,15 +28,21 @@ Deadlock Patch Notes ingests official Deadlock changelog content, stores normali
 
 1. Reads `DATABASE_URL`, optional `API_ADDR` (default `:8080`), optional `API_READ_CACHE_TTL` (default `10m`), and optional `SITE_URL` (for canonical RSS item links).
 2. Opens PostgreSQL via `db.OpenPostgres`.
-3. Applies embedded migrations from `api/internal/db/migrations`.
-4. Constructs `patches.NewPostgresStore`.
-5. Serves routes from `httpapi.NewRouter`.
+3. Constructs `patches.NewPostgresStore`.
+4. Serves routes from `httpapi.NewRouter` with a read-only database role.
+
+### Migration Process (`api/cmd/migrate`)
+
+1. Connects with the database-owner `DATABASE_URL`.
+2. Applies embedded migrations from `api/internal/db/migrations`.
+3. Creates or updates `deadlock_api` and `deadlock_sync` with separate passwords.
+4. Grants the API role read-only table access and the sync role only the table/sequence write access needed by ingestion.
 
 ### Sync Process (`api/cmd/sync`)
 
 1. Reads `DATABASE_URL`, `PATCH_FORUM_URL`, `PATCH_SYNC_MAX_PAGES`, `PATCH_SYNC_TIMEOUT_SECONDS`.
 2. Applies defaults for missing/invalid sync numeric env values.
-3. Opens DB and applies migrations.
+3. Opens DB with the `deadlock_sync` runtime role; migrations must already be complete.
 4. Crawls changelog thread listing, fetches threads/posts, and resolves every referenced Steam event. If the forum listing is blocked or empty, it discovers official minor updates through the Steam Web API.
 5. Builds patch payload + timeline blocks and upserts DB rows.
 6. Writes run observability row to `sync_runs`.
@@ -103,6 +110,12 @@ Schema notes:
 - `PATCH_SYNC_MAX_PAGES` (sync only; default `20`, invalid/non-positive -> default)
 - `PATCH_SYNC_TIMEOUT_SECONDS` (sync only; default `30`, invalid/non-positive -> default)
 
+### Migration
+
+- `DATABASE_URL` (required database-owner connection)
+- `API_DB_PASSWORD` (required, at least 16 characters)
+- `SYNC_DB_PASSWORD` (required, at least 16 characters and distinct in deployment configuration)
+
 ### Web
 
 - `API_BASE_URL`
@@ -116,6 +129,7 @@ Schema notes:
 ### Docker Compose
 
 - `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`
+- `API_DB_PASSWORD`, `SYNC_DB_PASSWORD` (use URL-safe values because Compose places them in runtime connection URLs)
 - `API_HOST_BIND`, `API_PORT`
 - `WEB_HOST_BIND`, `WEB_PORT`
 - `SITE_URL`

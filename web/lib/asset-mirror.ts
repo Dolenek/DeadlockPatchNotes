@@ -1,5 +1,4 @@
-import fs from "node:fs";
-import path from "node:path";
+import mirrorManifest from "@/public/assets/mirror/manifest.json";
 
 type ManifestAsset = {
   url?: string;
@@ -10,45 +9,20 @@ type MirrorManifest = {
   assets?: ManifestAsset[];
 };
 
-const MANIFEST_REL_PATH = path.join("assets", "mirror", "manifest.json");
-
 let mirrorLookup: Map<string, string> | null = null;
 
-function candidateManifestPaths(): string[] {
-  const cwd = process.cwd();
-  return [
-    path.join(cwd, "public", MANIFEST_REL_PATH),
-    path.join(cwd, "web", "public", MANIFEST_REL_PATH),
-  ];
-}
-
 function loadMirrorLookup(): Map<string, string> {
-  for (const candidatePath of candidateManifestPaths()) {
-    try {
-      if (!fs.existsSync(candidatePath)) {
-        continue;
-      }
-
-      const raw = fs.readFileSync(candidatePath, "utf8");
-      const payload = JSON.parse(raw) as MirrorManifest;
-      const lookup = new Map<string, string>();
-
-      for (const asset of payload.assets ?? []) {
-        const remoteURL = String(asset?.url ?? "").trim();
-        const localPath = String(asset?.localPath ?? "").trim();
-        if (!remoteURL || !localPath.startsWith("/")) {
-          continue;
-        }
-        lookup.set(remoteURL, localPath);
-      }
-
-      return lookup;
-    } catch {
-      return new Map();
+  const lookup = new Map<string, string>();
+  const payload = mirrorManifest as MirrorManifest;
+  for (const asset of payload.assets ?? []) {
+    const remoteURL = String(asset?.url ?? "").trim();
+    const localPath = String(asset?.localPath ?? "").trim();
+    if (!remoteURL || !localPath.startsWith("/")) {
+      continue;
     }
+    lookup.set(remoteURL, localPath);
   }
-
-  return new Map();
+  return lookup;
 }
 
 function isRemoteURL(value: string): boolean {

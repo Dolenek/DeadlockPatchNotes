@@ -29,7 +29,7 @@ Read path split:
 - Aggregate entity histories deduplicate identical cross-patch source events; patch detail pages retain their original timelines.
 - Snapshot refreshes are request-cancelable and fall back to the last usable snapshot on transient database errors.
 
-Migrations in `api/internal/db/migrations/*.sql` are applied at startup.
+Migrations in `api/internal/db/migrations/*.sql` are applied only by the one-shot `api/cmd/migrate` process. The API role has read-only table grants; the sync role has scoped table/sequence write grants. Neither runtime process receives owner or migration privileges.
 
 ## Ingestion Pipeline (`api/cmd/sync` + `api/internal/ingest`)
 
@@ -41,6 +41,7 @@ Migrations in `api/internal/db/migrations/*.sql` are applied at startup.
   - `patches` (summary + detail JSON)
   - `patch_release_blocks` (timeline block metadata)
   - `sync_runs` (run observability)
+- Per-thread upserts use transaction-scoped advisory locks; unchanged content refreshes sync freshness without rewriting release blocks or incrementing update counters.
 - A run is successful only when discovery and every discovered thread complete. Empty/challenge discovery and catalog failures are `failed`; mixed per-thread outcomes are `partial`.
 - Forum challenge/empty discovery falls back to the official Steam Web API for tightly filtered minor updates and merges them into the latest patch timeline.
 
@@ -64,7 +65,8 @@ Frontend API base behavior:
 
 ## Deployment Model
 
-- `docker-compose.yml` runs `db`, `api`, `web`, and one-shot `sync`.
+- `docker-compose.yml` runs `db`, one-shot `migrate`, `api`, `web`, and one-shot `sync`.
 - PostgreSQL persistence uses named volume `pgdata`.
+- API, web, migration, and sync containers run without capabilities and with read-only root filesystems; the web image contains only the standalone Next.js runtime and uses a bounded cache `tmpfs`.
 - API bind host/port is configurable via `API_HOST_BIND` and `API_PORT`.
 - Web bind host/port is configurable via `WEB_HOST_BIND` and `WEB_PORT`.

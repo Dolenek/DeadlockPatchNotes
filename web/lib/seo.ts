@@ -9,8 +9,8 @@ export const SEO_DEFAULT_DESCRIPTION =
   "Deadlock patch notes archive with timeline-based updates, hero changes, spell updates, and item balance history.";
 export const SEO_DEFAULT_IMAGE_PATH = "/Oldgods_header.png";
 
-function resolveSiteURL() {
-  const candidate = (process.env.SITE_URL ?? DEFAULT_SITE_URL).trim();
+export function resolveSiteURL(rawValue: string | undefined) {
+  const candidate = (rawValue ?? DEFAULT_SITE_URL).trim();
   const fallback = candidate === "" ? DEFAULT_SITE_URL : candidate;
 
   let parsed: URL;
@@ -20,13 +20,18 @@ function resolveSiteURL() {
     throw new Error(`Invalid SITE_URL: ${fallback}`);
   }
 
+  const usesHTTP = parsed.protocol === "http:" || parsed.protocol === "https:";
+  if (!usesHTTP || parsed.hostname === "" || parsed.username !== "" || parsed.password !== "") {
+    throw new Error(`Invalid SITE_URL: ${fallback}`);
+  }
+
   parsed.pathname = "";
   parsed.search = "";
   parsed.hash = "";
   return parsed.toString().replace(/\/$/, "");
 }
 
-export const SEO_BASE_URL = resolveSiteURL();
+export const SEO_BASE_URL = resolveSiteURL(process.env.SITE_URL);
 export const SEO_METADATA_BASE_URL = new URL(`${SEO_BASE_URL}/`);
 
 function normalizePathname(pathname: string) {

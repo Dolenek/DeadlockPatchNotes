@@ -99,7 +99,10 @@ func buildHeroChanges(details []PatchDetail, query HeroChangesQuery) (HeroChange
 	filterSkillNorm := normalizeLookupKey(skillFilter)
 
 	timeline := make([]HeroTimelineBlock, 0, 64)
-	heroMeta := HeroSummary{Slug: targetSlug}
+	heroMeta, found := findHeroSummary(details, targetSlug)
+	if !found {
+		return HeroChangesResponse{}, ErrHeroNotFound
+	}
 
 	for _, detail := range details {
 		hydrated := hydratePatchDetail(detail)
@@ -122,19 +125,6 @@ func buildHeroChanges(details []PatchDetail, query HeroChangesQuery) (HeroChange
 					}
 					if len(entry.Changes) == 0 && len(entry.Groups) == 0 {
 						continue
-					}
-
-					if heroMeta.Name == "" {
-						heroMeta.Name = entry.EntityName
-					}
-					if heroMeta.IconURL == "" {
-						heroMeta.IconURL = strings.TrimSpace(entry.EntityIconURL)
-					}
-					if heroMeta.IconFallbackURL == "" {
-						heroMeta.IconFallbackURL = strings.TrimSpace(entry.EntityIconFallbackURL)
-					}
-					if releasedAt.After(parseRFC3339(heroMeta.LastChangedAt)) {
-						heroMeta.LastChangedAt = releasedAt.UTC().Format(time.RFC3339)
 					}
 
 					generalChanges := cloneChanges(entry.Changes)
@@ -187,10 +177,6 @@ func buildHeroChanges(details []PatchDetail, query HeroChangesQuery) (HeroChange
 				}
 			}
 		}
-	}
-
-	if heroMeta.Name == "" {
-		return HeroChangesResponse{}, ErrHeroNotFound
 	}
 
 	sort.SliceStable(timeline, func(i, j int) bool {

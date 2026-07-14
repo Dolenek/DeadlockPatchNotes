@@ -67,11 +67,70 @@ func TestScalarDocs(t *testing.T) {
 		t.Fatalf("expected html content-type, got %q", rr.Header().Get("Content-Type"))
 	}
 	body := rr.Body.String()
-	if !strings.Contains(body, "Scalar.createApiReference") {
-		t.Fatal("expected scalar initialization in html")
+	if !strings.Contains(body, "@scalar/api-reference@1.62.5") {
+		t.Fatal("expected pinned Scalar dependency")
 	}
-	if !strings.Contains(body, "/api/openapi.json") {
-		t.Fatal("expected scalar page to reference /api/openapi.json")
+	if !strings.Contains(body, "sha384-jVBCKhcCfx34USN27x4iQK1SBNdL/HxKq3KuBAxTS4WPaP5w80K4fjpwB+DezJL5") {
+		t.Fatal("expected Scalar subresource integrity hash")
+	}
+	if !strings.Contains(body, "/api/scalar-init.js") {
+		t.Fatal("expected local Scalar initialization script")
+	}
+}
+
+func TestScalarInitScript(t *testing.T) {
+	h := NewRouter(patches.NewStore())
+	req := httptest.NewRequest(http.MethodGet, "/api/scalar-init.js", nil)
+	rr := httptest.NewRecorder()
+
+	h.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK || !strings.Contains(rr.Body.String(), "/api/openapi.json") {
+		t.Fatalf("unexpected Scalar init response: status=%d body=%q", rr.Code, rr.Body.String())
+	}
+	if !strings.Contains(rr.Header().Get("Content-Type"), "application/javascript") {
+		t.Fatalf("expected JavaScript content type, got %q", rr.Header().Get("Content-Type"))
+	}
+}
+
+func TestSecurityHeaders(t *testing.T) {
+	h := NewRouter(patches.NewStore())
+	req := httptest.NewRequest(http.MethodGet, "/api/healthz", nil)
+	rr := httptest.NewRecorder()
+
+	h.ServeHTTP(rr, req)
+
+	for _, header := range []string{
+		"Content-Security-Policy",
+		"Permissions-Policy",
+		"Referrer-Policy",
+		"Strict-Transport-Security",
+		"X-Content-Type-Options",
+		"X-Frame-Options",
+	} {
+		if rr.Header().Get(header) == "" {
+			t.Errorf("expected %s security header", header)
+		}
+	}
+}
+
+func TestHTTPForwardedRequestRedirectsToCanonicalHTTPSHost(t *testing.T) {
+	t.Setenv("SITE_URL", "https://www.deadlockpatchnotes.com")
+	h := NewRouter(patches.NewStore())
+	req := httptest.NewRequest(http.MethodGet, "http://attacker.example/api/v1/patches?page=2", nil)
+	req.Header.Set("X-Forwarded-Proto", "http")
+	rr := httptest.NewRecorder()
+
+	h.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusPermanentRedirect {
+		t.Fatalf("expected status 308, got %d", rr.Code)
+	}
+	if location := rr.Header().Get("Location"); location != "https://www.deadlockpatchnotes.com/api/v1/patches?page=2" {
+		t.Fatalf("unexpected redirect target: %q", location)
+	}
+	if rr.Header().Get("Cache-Control") != "no-store" {
+		t.Fatal("expected redirect not to be cached")
 	}
 }
 

@@ -40,10 +40,6 @@ func run(ctx context.Context) error {
 	}
 	defer database.Close()
 
-	if err := db.ApplyMigrations(ctx, database); err != nil {
-		return err
-	}
-
 	cacheTTL := readDurationEnv("API_READ_CACHE_TTL", 10*time.Minute)
 	store := patches.NewPostgresStore(database, cacheTTL)
 	handler := httpapi.NewRouter(store, database.PingContext)

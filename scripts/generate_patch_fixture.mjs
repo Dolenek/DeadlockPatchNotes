@@ -1,7 +1,11 @@
 #!/usr/bin/env node
-import fs from "node:fs/promises";
 import path from "node:path";
-import { createAssetRegistry, downloadAssets, fetchJson } from "./patch_fixture/assets.mjs";
+import {
+  createAssetRegistry,
+  fetchJson,
+  replaceAssetDirectory,
+  writeTextFileAtomically,
+} from "./patch_fixture/assets.mjs";
 import {
   FIXTURE_PATH,
   MANIFEST_PATH,
@@ -42,15 +46,12 @@ function buildManifest(assetsRegistry) {
 }
 
 async function writeOutputs(detail, assetsRegistry) {
-  await fs.rm(PATCH_ASSET_DIR, { recursive: true, force: true });
-  await downloadAssets(assetsRegistry, WEB_PUBLIC_DIR);
+  await replaceAssetDirectory(assetsRegistry, WEB_PUBLIC_DIR, PATCH_ASSET_DIR);
 
-  await fs.mkdir(path.dirname(FIXTURE_PATH), { recursive: true });
-  await fs.writeFile(FIXTURE_PATH, `${JSON.stringify(detail, null, 2)}\n`);
+  await writeTextFileAtomically(FIXTURE_PATH, `${JSON.stringify(detail, null, 2)}\n`);
 
   const manifest = buildManifest(assetsRegistry);
-  await fs.mkdir(path.dirname(MANIFEST_PATH), { recursive: true });
-  await fs.writeFile(MANIFEST_PATH, `${JSON.stringify(manifest, null, 2)}\n`);
+  await writeTextFileAtomically(MANIFEST_PATH, `${JSON.stringify(manifest, null, 2)}\n`);
 }
 
 function printSummary(stats) {

@@ -2,9 +2,10 @@
 
 ## Docker Deployment Model
 
-`docker-compose.yml` defines four services:
+`docker-compose.yml` defines five services:
 
 - `db`: PostgreSQL 16 with persisted `pgdata` volume.
+- `migrate`: one-shot schema migration and runtime-role provisioning process.
 - `api`: Go API process (`server`) on internal port `8080`.
 - `web`: Next.js app on internal port `3000`.
 - `sync`: one-shot ingestion process (`sync` binary).
@@ -13,6 +14,7 @@ Networking and publish defaults:
 
 - API publish: `${API_HOST_BIND:-127.0.0.1}:${API_PORT:-18081}:8080`
 - Web publish: `${WEB_HOST_BIND:-127.0.0.1}:${WEB_PORT:-3000}:3000`
+- Docker build contexts exclude `.env` and `.env.*` files (except committed examples), so local secrets and build-only overrides are not copied into images.
 
 ## Environment Variables
 
@@ -21,6 +23,8 @@ Compose `.env`:
 - `POSTGRES_DB`
 - `POSTGRES_USER`
 - `POSTGRES_PASSWORD`
+- `API_DB_PASSWORD`
+- `SYNC_DB_PASSWORD`
 - `API_HOST_BIND`
 - `API_PORT`
 - `API_READ_CACHE_TTL`
@@ -39,7 +43,9 @@ Web local env (`web/.env.example`):
 Runtime defaults in code:
 
 - API address default `:8080`.
-- API runs as a non-root user with a read-only filesystem, dropped capabilities, healthcheck, and bounded PID/memory defaults under Compose.
+- API and web run as non-root users with read-only filesystems, dropped capabilities, healthchecks, and bounded PID/memory defaults under Compose.
+- The standalone web image uses Node.js 24 and excludes source files, dev dependencies, and local `.env*` files.
+- Migration uses the database-owner account; API uses the read-only `deadlock_api` role and sync uses the scoped writer `deadlock_sync` role.
 - Web API client default base URL: `https://deadlockpatchnotes.com/api`.
 - `API_BASE_URL` exact `/api` suffix is normalized in web client config parsing.
 - Sync defaults:
@@ -57,14 +63,22 @@ Runtime defaults in code:
 
 ```bash
 cd api
-DATABASE_URL='postgres://deadlock:deadlock@localhost:5432/deadlock_patchnotes?sslmode=disable' go run ./cmd/server
+DATABASE_URL='postgres://deadlock_api:<api-password>@localhost:5432/deadlock_patchnotes?sslmode=disable' go run ./cmd/server
+```
+
+### Migration
+
+```bash
+cd api
+API_DB_PASSWORD='<api-password>' SYNC_DB_PASSWORD='<sync-password>' \
+DATABASE_URL='postgres://deadlock:<owner-password>@localhost:5432/deadlock_patchnotes?sslmode=disable' go run ./cmd/migrate
 ```
 
 ### Sync
 
 ```bash
 cd api
-DATABASE_URL='postgres://deadlock:deadlock@localhost:5432/deadlock_patchnotes?sslmode=disable' go run ./cmd/sync
+DATABASE_URL='postgres://deadlock_sync:<sync-password>@localhost:5432/deadlock_patchnotes?sslmode=disable' go run ./cmd/sync
 ```
 
 ### Web
@@ -77,7 +91,7 @@ npm run dev
 ### Compose
 
 ```bash
-docker-compose up -d --build db api web
+docker-compose up -d --build db migrate api web
 docker-compose run --rm sync
 ```
 
@@ -90,7 +104,7 @@ docker-compose run --rm sync
 - `scripts/server/backup_postgres.sh`
   - requires repository `.env`
   - performs `pg_dump -Fc` from compose `db`
-  - writes `backups/patchnotes-<UTC timestamp>.dump`
+  - writes to a temporary file, rejects an empty dump, then atomically publishes `backups/patchnotes-<UTC timestamp>.dump`
   - deletes backups older than 14 days
   - calls `/usr/bin/docker-compose` explicitly
 - `scripts/server/install_cron.sh`
@@ -111,8 +125,10 @@ Purpose:
 
 Behavior details:
 
-- Clears patch asset output directory before re-downloading assets.
-- Asset download failures are logged as warnings and do not fail the whole run.
+- Downloads every asset into a staging directory and replaces the previous asset directory only after the complete download succeeds.
+- Any asset download failure fails the run and preserves the previous known-good directory.
+- Fixture and manifest files are written through same-directory temporary files before rename.
+- Network reads use an HTTPS host allowlist, revalidate redirect targets, enforce response-size limits, and validate downloaded image content/signatures before writing.
 
 ### `scripts/patch_fixture/config.mjs`
 
@@ -138,8 +154,14 @@ Behavior details:
 
 ### `scripts/patch_fixture/assets.mjs`
 
-- HTTP fetch wrappers with user-agent.
-- Asset registry and local file download writes.
+- HTTP fetch wrappers with user-agent plus the shared URL, redirect, size, and image-content validation layer.
+- Asset registry, fail-fast downloads, staged directory replacement, and atomic text-file writes.
+
+### `scripts/sync_hero_media.mjs`
+
+- Builds the in-game hero media manifest and mirrored hero assets.
+- Missing hero payload/media fails the run before output replacement.
+- Asset downloads use the same staged replacement behavior, preserving the previous directory on failure.
 
 ### `scripts/patch_fixture/utils.mjs`
 

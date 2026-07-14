@@ -1,3 +1,6 @@
 .git
 cmd/**/.DS_Store
 **/*.test
+.env
+.env.*
+!.env.example

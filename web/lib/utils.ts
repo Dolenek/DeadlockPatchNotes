@@ -12,6 +12,15 @@ export function clampPage(value: string | string[] | undefined): number {
   return parsed;
 }
 
+export function decodeHashFragment(hash: string): string {
+  const encodedFragment = hash.replace(/^#/, "");
+  try {
+    return decodeURIComponent(encodedFragment);
+  } catch {
+    return "";
+  }
+}
+
 export function patchPageRedirectPath(requestedPage: number, effectivePage: number): string | null {
   if (requestedPage === effectivePage) {
     return null;

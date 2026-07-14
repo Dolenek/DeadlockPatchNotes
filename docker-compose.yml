@@ -20,12 +20,12 @@ services:
     restart: unless-stopped
     environment:
       API_ADDR: ":8080"
-      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable
+      DATABASE_URL: postgres://deadlock_api:${API_DB_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable
       API_READ_CACHE_TTL: ${API_READ_CACHE_TTL:-10m}
       SITE_URL: ${SITE_URL:-https://www.deadlockpatchnotes.com}
     depends_on:
-      db:
-        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     ports:
       - "${API_HOST_BIND:-127.0.0.1}:${API_PORT:-18081}:8080"
     read_only: true
@@ -50,6 +50,40 @@ services:
         condition: service_healthy
     ports:
       - "${WEB_HOST_BIND:-127.0.0.1}:${WEB_PORT:-3000}:3000"
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+      - /app/.next/cache:size=128m,uid=1000,gid=1000,mode=0700
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 128
+    mem_limit: 512m
+
+  migrate:
+    build:
+      context: ./api
+    command: ["migrate"]
+    restart: "no"
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable
+      API_DB_PASSWORD: ${API_DB_PASSWORD}
+      SYNC_DB_PASSWORD: ${SYNC_DB_PASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      disable: true
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 64
+    mem_limit: 128m
 
   sync:
     build:
@@ -57,14 +91,25 @@ services:
     command: ["sync"]
     restart: "no"
     environment:
-      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable
+      DATABASE_URL: postgres://deadlock_sync:${SYNC_DB_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable
       PATCH_FORUM_URL: ${PATCH_FORUM_URL}
       PATCH_STEAM_NEWS_URL: ${PATCH_STEAM_NEWS_URL}
       PATCH_SYNC_MAX_PAGES: ${PATCH_SYNC_MAX_PAGES}
       PATCH_SYNC_TIMEOUT_SECONDS: ${PATCH_SYNC_TIMEOUT_SECONDS}
     depends_on:
-      db:
-        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      disable: true
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 64
+    mem_limit: 256m
 
 volumes:
   pgdata:

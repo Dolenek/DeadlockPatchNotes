@@ -4,6 +4,14 @@ import fs from "node:fs/promises";
 import syncFS from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  MAX_ASSET_BYTES,
+  fetchAllowedURL,
+  parseAllowedDownloadURL,
+  readLimitedResponse,
+  resolveContainedPath,
+  validateImageBytes,
+} from "./asset_security.mjs";
 
 const REQUEST_HEADERS = {
   "User-Agent": "deadlockpatchnotes-icon-mirror/1.0",
@@ -140,10 +148,6 @@ function extensionFromContentType(contentType) {
   return EXT_BY_CONTENT_TYPE[normalized] ?? "";
 }
 
-function toRelativeDiskPath(localPath) {
-  return localPath.replace(/^\/+/, "");
-}
-
 function baseNameFromURL(url) {
   try {
     const parsed = new URL(url);
@@ -187,27 +191,29 @@ function buildNameHint(url, auditRow) {
 }
 
 async function fetchBufferWithRetry(url, attempts = 4) {
+  if (!parseAllowedDownloadURL(url)) {
+    throw new Error(`Asset URL is not allowed: ${url}`);
+  }
   let lastError = null;
 
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 25_000);
-
     try {
-      const response = await fetch(url, {
+      const response = await fetchAllowedURL(url, {
         headers: REQUEST_HEADERS,
-        signal: controller.signal,
+        timeoutMs: 25_000,
       });
 
       if (!response.ok) {
+        await response.body?.cancel().catch(() => undefined);
         if (!RETRYABLE_STATUS.has(response.status) || attempt >= attempts) {
           throw new Error(`Asset download failed: ${url} (${response.status})`);
         }
       } else {
-        const bytes = Buffer.from(await response.arrayBuffer());
+        const bytes = await readLimitedResponse(response, MAX_ASSET_BYTES);
+        const contentType = validateImageBytes(bytes, response.headers.get("content-type"));
         return {
           bytes,
-          contentType: response.headers.get("content-type") || "",
+          contentType,
         };
       }
     } catch (error) {
@@ -215,8 +221,6 @@ async function fetchBufferWithRetry(url, attempts = 4) {
       if (attempt >= attempts) {
         break;
       }
-    } finally {
-      clearTimeout(timeout);
     }
 
     await new Promise((resolve) => setTimeout(resolve, 350 * attempt));
@@ -270,13 +274,13 @@ async function collectFilesRecursive(dirPath) {
 }
 
 async function pruneUnusedMirrorFiles(webPublicDir, usedLocalPaths) {
-  const iconsDir = path.join(webPublicDir, "assets", "mirror", "icons");
+  const iconsDir = resolveContainedPath(webPublicDir, "assets/mirror/icons", "Mirror icons directory");
   if (!syncFS.existsSync(iconsDir)) {
     return 0;
   }
 
   const usedDiskPaths = new Set(
-    [...usedLocalPaths].map((localPath) => path.join(webPublicDir, toRelativeDiskPath(localPath))),
+    [...usedLocalPaths].map((localPath) => resolveContainedPath(webPublicDir, localPath, "Manifest local path")),
   );
   const allDiskFiles = await collectFilesRecursive(iconsDir);
   let removed = 0;
@@ -302,8 +306,11 @@ async function main() {
   const auditReport = await loadJSON(options.auditPath);
   const auditRows = Array.isArray(auditReport?.urls) ? auditReport.urls : [];
 
-  const targetRows = auditRows.filter((row) => row?.kind === "remote" && row?.allowedHost === true);
-  const targetURLs = [...new Set(targetRows.map((row) => String(row?.url ?? "").trim()).filter(Boolean))];
+  const targetRows = auditRows.filter((row) => {
+    const url = String(row?.url ?? "").trim();
+    return row?.kind === "remote" && parseAllowedDownloadURL(url) !== null;
+  });
+  const targetURLs = [...new Set(targetRows.map((row) => String(row?.url ?? "").trim()))];
   const targetRowByURL = new Map(
     targetRows.map((row) => [String(row?.url ?? "").trim(), row]),
   );
@@ -314,9 +321,10 @@ async function main() {
     for (const asset of existing?.assets ?? []) {
       const url = String(asset?.url ?? "").trim();
       const localPath = String(asset?.localPath ?? "").trim();
-      if (!url || !localPath.startsWith("/")) {
+      if (!parseAllowedDownloadURL(url) || !localPath.startsWith("/assets/mirror/icons/")) {
         continue;
       }
+      resolveContainedPath(options.webPublicDir, localPath, "Manifest local path");
       existingByURL.set(url, localPath);
     }
   }
@@ -332,11 +340,11 @@ async function main() {
     const nameHint = buildNameHint(url, row);
     const existingLocalPath = existingByURL.get(url);
     if (existingLocalPath) {
-      const existingDiskPath = path.join(options.webPublicDir, toRelativeDiskPath(existingLocalPath));
+      const existingDiskPath = resolveContainedPath(options.webPublicDir, existingLocalPath, "Manifest local path");
       if (syncFS.existsSync(existingDiskPath)) {
         const desiredLocalPath = buildLocalPath(url, extensionFromURL(existingLocalPath), nameHint);
         if (desiredLocalPath !== existingLocalPath) {
-          const desiredDiskPath = path.join(options.webPublicDir, toRelativeDiskPath(desiredLocalPath));
+          const desiredDiskPath = resolveContainedPath(options.webPublicDir, desiredLocalPath, "Mirror output path");
           await fs.mkdir(path.dirname(desiredDiskPath), { recursive: true });
           await fs.copyFile(existingDiskPath, desiredDiskPath);
           resolvedByURL.set(url, desiredLocalPath);
@@ -353,7 +361,7 @@ async function main() {
     try {
       const { bytes, contentType } = await fetchBufferWithRetry(url);
       const localPath = buildLocalPath(url, contentType, nameHint);
-      const outputPath = path.join(options.webPublicDir, toRelativeDiskPath(localPath));
+      const outputPath = resolveContainedPath(options.webPublicDir, localPath, "Mirror output path");
       await fs.mkdir(path.dirname(outputPath), { recursive: true });
       await fs.writeFile(outputPath, bytes);
       resolvedByURL.set(url, localPath);
@@ -370,7 +378,7 @@ async function main() {
     if (resolvedByURL.has(url)) {
       continue;
     }
-    const diskPath = path.join(options.webPublicDir, toRelativeDiskPath(localPath));
+    const diskPath = resolveContainedPath(options.webPublicDir, localPath, "Manifest local path");
     if (syncFS.existsSync(diskPath)) {
       resolvedByURL.set(url, localPath);
     }

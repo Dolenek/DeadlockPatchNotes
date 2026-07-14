@@ -24,15 +24,15 @@ type spellAggregate struct {
 }
 
 type spellCandidate struct {
-	id              string
-	name            string
-	iconURL         string
-	iconFallbackURL string
-	heroSlug        string
-	heroName        string
-	heroIconURL     string
+	id                  string
+	name                string
+	iconURL             string
+	iconFallbackURL     string
+	heroSlug            string
+	heroName            string
+	heroIconURL         string
 	heroIconFallbackURL string
-	changes         []PatchChange
+	changes             []PatchChange
 }
 
 func buildItemList(details []PatchDetail) ItemListResponse {
@@ -112,7 +112,10 @@ func buildItemChanges(details []PatchDetail, query ItemChangesQuery) (ItemChange
 		return ItemChangesResponse{}, ErrItemNotFound
 	}
 
-	meta := ItemSummary{Slug: targetSlug}
+	meta, found := findItemSummary(details, targetSlug)
+	if !found {
+		return ItemChangesResponse{}, ErrItemNotFound
+	}
 	timeline := make([]ItemTimelineBlock, 0, 64)
 
 	for _, detail := range details {
@@ -136,19 +139,6 @@ func buildItemChanges(details []PatchDetail, query ItemChangesQuery) (ItemChange
 						continue
 					}
 
-					if meta.Name == "" {
-						meta.Name = strings.TrimSpace(entry.EntityName)
-					}
-					if meta.IconURL == "" {
-						meta.IconURL = strings.TrimSpace(entry.EntityIconURL)
-					}
-					if meta.IconFallbackURL == "" {
-						meta.IconFallbackURL = strings.TrimSpace(entry.EntityIconFallbackURL)
-					}
-					if releasedAt.After(parseRFC3339(meta.LastChangedAt)) {
-						meta.LastChangedAt = releasedAt.UTC().Format(time.RFC3339)
-					}
-
 					timeline = append(timeline, ItemTimelineBlock{
 						ID:         block.ID + "-" + targetSlug,
 						Kind:       block.Kind,
@@ -161,10 +151,6 @@ func buildItemChanges(details []PatchDetail, query ItemChangesQuery) (ItemChange
 				}
 			}
 		}
-	}
-
-	if meta.Name == "" {
-		return ItemChangesResponse{}, ErrItemNotFound
 	}
 
 	sort.SliceStable(timeline, func(i, j int) bool {
@@ -235,7 +221,10 @@ func buildSpellChanges(details []PatchDetail, query SpellChangesQuery) (SpellCha
 	}
 
 	knownItems := collectKnownItemNames(details)
-	meta := SpellSummary{Slug: targetSlug}
+	meta, found := findSpellSummary(details, targetSlug)
+	if !found {
+		return SpellChangesResponse{}, ErrSpellNotFound
+	}
 	timeline := make([]SpellTimelineBlock, 0, 64)
 
 	for _, detail := range details {
@@ -256,19 +245,6 @@ func buildSpellChanges(details []PatchDetail, query SpellChangesQuery) (SpellCha
 						if candidate.id != targetSlug {
 							continue
 						}
-						if meta.Name == "" {
-							meta.Name = candidate.name
-						}
-						if meta.IconURL == "" {
-							meta.IconURL = candidate.iconURL
-						}
-						if meta.IconFallbackURL == "" {
-							meta.IconFallbackURL = candidate.iconFallbackURL
-						}
-						if releasedAt.After(parseRFC3339(meta.LastChangedAt)) {
-							meta.LastChangedAt = releasedAt.UTC().Format(time.RFC3339)
-						}
-
 						blockEntries = append(blockEntries, SpellTimelineEntry{
 							ID:                  fmt.Sprintf("%s-%s-%d", block.ID, targetSlug, len(blockEntries)+1),
 							HeroSlug:            candidate.heroSlug,
@@ -309,10 +285,6 @@ func buildSpellChanges(details []PatchDetail, query SpellChangesQuery) (SpellCha
 				Entries:    blockEntries,
 			})
 		}
-	}
-
-	if meta.Name == "" {
-		return SpellChangesResponse{}, ErrSpellNotFound
 	}
 
 	sort.SliceStable(timeline, func(i, j int) bool {
@@ -390,15 +362,15 @@ func spellCandidatesFromHeroEntry(entry PatchEntry, knownItems map[string]bool) 
 				continue
 			}
 			candidates = append(candidates, spellCandidate{
-				id:              slugifyLookup(group.Title),
-				name:            strings.TrimSpace(group.Title),
-				iconURL:         strings.TrimSpace(group.IconURL),
-				iconFallbackURL: strings.TrimSpace(group.IconFallbackURL),
-				heroSlug:        slugifyLookup(entry.EntityName),
-				heroName:        strings.TrimSpace(entry.EntityName),
-				heroIconURL:     strings.TrimSpace(entry.EntityIconURL),
+				id:                  slugifyLookup(group.Title),
+				name:                strings.TrimSpace(group.Title),
+				iconURL:             strings.TrimSpace(group.IconURL),
+				iconFallbackURL:     strings.TrimSpace(group.IconFallbackURL),
+				heroSlug:            slugifyLookup(entry.EntityName),
+				heroName:            strings.TrimSpace(entry.EntityName),
+				heroIconURL:         strings.TrimSpace(entry.EntityIconURL),
 				heroIconFallbackURL: strings.TrimSpace(entry.EntityIconFallbackURL),
-				changes:         cloneChanges(group.Changes),
+				changes:             cloneChanges(group.Changes),
 			})
 		}
 		return candidates

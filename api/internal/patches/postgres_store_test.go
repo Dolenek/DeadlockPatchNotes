@@ -54,3 +54,16 @@ func TestPostgresStorePropagatesCanceledRefresh(t *testing.T) {
 		t.Fatalf("expected context cancellation, got %v", err)
 	}
 }
+
+func TestPostgresStoreCancelsWhileWaitingForRefresh(t *testing.T) {
+	store := NewPostgresStore(nil, time.Minute)
+	<-store.refreshPermit
+	defer func() { store.refreshPermit <- struct{}{} }()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	_, err := store.getSnapshot(ctx)
+	if !errors.Is(err, context.Canceled) {
+		t.Fatalf("expected context cancellation while waiting, got %v", err)
+	}
+}

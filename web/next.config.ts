@@ -1,8 +1,20 @@
 import type { NextConfig } from "next";
+import { WEB_SECURITY_HEADERS } from "./lib/security-headers";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  output: "standalone",
+  poweredByHeader: false,
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [...WEB_SECURITY_HEADERS],
+      },
+    ];
+  },
   images: {
+    localPatterns: [{ pathname: "/**", search: "" }],
     remotePatterns: [
       {
         protocol: "https",
@@ -29,7 +41,10 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1536, 1920],
     imageSizes: [48, 64, 74, 96, 128, 160],
     qualities: [54, 56, 58, 60, 68, 74, 75],
-    minimumCacheTTL: 86400
+    minimumCacheTTL: 86400,
+    maximumResponseBody: 8 * 1024 * 1024,
+    maximumRedirects: 2,
+    dangerouslyAllowLocalIP: false,
   }
 };
 

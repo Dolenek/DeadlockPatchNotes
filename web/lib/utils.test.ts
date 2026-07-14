@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildPatchTimelineHref,
   clampPage,
+  decodeHashFragment,
   extractTimelineSourceBlockID,
   formatCompactDate,
   formatDisplayDate,
@@ -13,6 +14,13 @@ import {
   slugifyLookup,
   timelineBlockAnchor
 } from "@/lib/utils";
+
+describe("decodeHashFragment", () => {
+  it("decodes valid fragments and ignores malformed escapes", () => {
+    expect(decodeHashFragment("#hero-Lady%20Geist")).toBe("hero-Lady Geist");
+    expect(decodeHashFragment("#%")).toBe("");
+  });
+});
 
 describe("clampPage", () => {
   it("falls back to page 1 for invalid input", () => {

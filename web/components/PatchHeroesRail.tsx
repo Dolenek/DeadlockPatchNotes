@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { FallbackImage } from "@/components/FallbackImage";
+import { decodeHashFragment } from "@/lib/utils";
 
 export type PatchHeroesRailHeroLink = {
   id: string;
@@ -51,7 +52,7 @@ export function PatchHeroesRail({ blocks }: PatchHeroesRailProps) {
     }
 
     const syncFromHash = () => {
-      const targetID = decodeURIComponent(window.location.hash.replace(/^#/, ""));
+      const targetID = decodeHashFragment(window.location.hash);
       if (targetID === "") {
         return;
       }

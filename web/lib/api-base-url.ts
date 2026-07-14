@@ -14,6 +14,10 @@ export function resolveAPIBaseURL(rawValue: string | undefined) {
 
   try {
     const parsed = new URL(candidate);
+    const usesHTTP = parsed.protocol === "http:" || parsed.protocol === "https:";
+    if (!usesHTTP || parsed.hostname === "" || parsed.username !== "" || parsed.password !== "") {
+      throw new Error("unsupported API URL");
+    }
     const path = normalizeBasePath(parsed.pathname);
     return `${parsed.origin}${path}`;
   } catch {

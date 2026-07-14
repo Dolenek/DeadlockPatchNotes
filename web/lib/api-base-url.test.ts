@@ -18,5 +18,7 @@ describe("resolveAPIBaseURL", () => {
 
   it("rejects invalid non-empty values", () => {
     expect(() => resolveAPIBaseURL("not a URL")).toThrow("Invalid API_BASE_URL");
+    expect(() => resolveAPIBaseURL("ftp://example.com")).toThrow("Invalid API_BASE_URL");
+    expect(() => resolveAPIBaseURL("https://user:secret@example.com")).toThrow("Invalid API_BASE_URL");
   });
 });

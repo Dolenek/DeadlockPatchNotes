@@ -82,7 +82,7 @@ Více detailů je v [runtime overview](./docs/runtime-overview.md), [API contrac
 
 ```bash
 cp .env.example .env
-docker-compose up -d --build db api web
+docker-compose up -d --build db migrate api web
 docker-compose run --rm sync
 ```
 
@@ -91,7 +91,10 @@ docker-compose run --rm sync
 ```bash
 cd api
 go mod tidy
-DATABASE_URL='postgres://deadlock:deadlock@localhost:5432/deadlock_patchnotes?sslmode=disable' go run ./cmd/server
+API_DB_PASSWORD='replace-with-a-distinct-api-password' \
+SYNC_DB_PASSWORD='replace-with-a-distinct-sync-password' \
+DATABASE_URL='postgres://deadlock:deadlock@localhost:5432/deadlock_patchnotes?sslmode=disable' go run ./cmd/migrate
+DATABASE_URL='postgres://deadlock_api:replace-with-a-distinct-api-password@localhost:5432/deadlock_patchnotes?sslmode=disable' go run ./cmd/server
 ```
 
 ### Web
@@ -106,7 +109,7 @@ npm run dev
 
 ```bash
 cd api
-DATABASE_URL='postgres://deadlock:deadlock@localhost:5432/deadlock_patchnotes?sslmode=disable' go run ./cmd/sync
+DATABASE_URL='postgres://deadlock_sync:replace-with-a-distinct-sync-password@localhost:5432/deadlock_patchnotes?sslmode=disable' go run ./cmd/sync
 ```
 
 ## Dokumentace
