@@ -31,12 +31,15 @@ SEO URL resolution:
 
 Fetch caching:
 
-- All API fetches use `next: { revalidate: 30 }`.
+- All API fetches use `cache: "no-store"`, so server-rendered pages do not write ISR output into the read-only web container.
+- The Go API remains the shared read-cache layer through `API_READ_CACHE_TTL`.
 
 Transport and response security:
 
 - Requests marked `X-Forwarded-Proto: http` receive a `308` redirect to the validated HTTPS `SITE_URL` origin; the request `Host` header is never used to construct the redirect.
+- Next internals and static image/font paths bypass the application redirect so the image optimizer can fetch same-origin assets; the public reverse proxy remains responsible for external HTTP-to-HTTPS enforcement on those files.
 - Global responses include CSP, HSTS, clickjacking, MIME-sniffing, referrer, opener, and permissions-policy protections.
+- Barlow, Cinzel, and JetBrains Mono are bundled by `next/font` and served from the site origin, matching the restrictive font CSP.
 
 ## Route Map
 
@@ -140,7 +143,7 @@ Detail-page behavior:
   - includes core content pages (`/`, `/patches`, `/heroes`, `/items`, `/spells`)
   - includes dynamic detail URLs from patches/heroes/items/spells APIs
   - intentionally excludes paginated `/patches?page=N` URLs
-  - revalidated using the shared API fetch cache window (`30s`)
+  - rendered dynamically without a filesystem-backed ISR entry
 
 ### Image Proxy Route
 

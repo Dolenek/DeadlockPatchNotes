@@ -81,7 +81,8 @@ Run semantics:
   - list/detail/timeline + RSS endpoints serve from the snapshot until TTL expiry
   - stale data remains available during transient refresh failures, while request cancellation propagates to PostgreSQL
   - duplicate cross-patch events are removed from aggregate entity histories but retained on patch detail pages
-  - frontend fetches API responses and renders SSR output
+  - frontend fetches API responses without a Next.js filesystem cache and renders SSR output
+  - the Go snapshot cache remains the shared cache for frontend reads, allowing the web container filesystem to stay read-only
 
 ## Persistence Model
 

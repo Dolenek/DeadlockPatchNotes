@@ -1,8 +1,9 @@
 :root {
-  --font-heading: "Cinzel", "Times New Roman", serif;
-  --font-body: "Barlow", "Segoe UI", Arial, sans-serif;
-  --font-special-heading: "Oracle", "Cinzel", "Times New Roman", serif;
-  --font-special-body: "Pulp", "Barlow", "Segoe UI", Arial, sans-serif;
+  --font-heading: var(--font-cinzel), "Times New Roman", serif;
+  --font-body: var(--font-barlow), "Segoe UI", Arial, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), "Courier New", monospace;
+  --font-special-heading: "Oracle", var(--font-cinzel), "Times New Roman", serif;
+  --font-special-body: "Pulp", var(--font-barlow), "Segoe UI", Arial, sans-serif;
   --bg-0: #090d15;
   --bg-1: #11182a;
   --bg-2: #17243d;

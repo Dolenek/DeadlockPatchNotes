@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Barlow, Cinzel, JetBrains_Mono } from "next/font/google";
 import { TopNav } from "@/components/TopNav";
 import {
   SEO_DEFAULT_DESCRIPTION,
@@ -8,6 +9,27 @@ import {
   resolveSocialImageURL,
 } from "@/lib/seo";
 import "./globals.css";
+
+const barlow = Barlow({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-barlow",
+  display: "swap",
+});
+
+const cinzel = Cinzel({
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
+  variable: "--font-cinzel",
+  display: "swap",
+});
+
+const jetBrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["500"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: SEO_METADATA_BASE_URL,
@@ -65,7 +87,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${barlow.variable} ${cinzel.variable} ${jetBrainsMono.variable}`}>
       <head>
         <link rel="preconnect" href="https://assets-bucket.deadlock-api.com" crossOrigin="" />
         <link rel="preconnect" href="https://assets.deadlock-api.com" crossOrigin="" />

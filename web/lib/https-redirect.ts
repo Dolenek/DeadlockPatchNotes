@@ -1,4 +1,9 @@
 const DEFAULT_HTTPS_SITE_URL = "https://www.deadlockpatchnotes.com";
+const STATIC_ASSET_PATH = /\.(?:avif|gif|ico|jpe?g|png|svg|ttf|webp|woff2?)$/i;
+
+export function shouldBypassHTTPSRedirect(pathname: string) {
+  return pathname === "/healthz" || pathname.startsWith("/_next/") || STATIC_ASSET_PATH.test(pathname);
+}
 
 export function firstForwardedProtocol(rawValue: string | null) {
   return rawValue?.split(",", 1)[0].trim().toLowerCase() ?? "";

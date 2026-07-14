@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { buildHTTPSRedirectURL, shouldRedirectToHTTPS } from "@/lib/https-redirect";
+import {
+  buildHTTPSRedirectURL,
+  shouldBypassHTTPSRedirect,
+  shouldRedirectToHTTPS,
+} from "@/lib/https-redirect";
 
 export function proxy(request: NextRequest) {
-  if (!shouldRedirectToHTTPS(process.env.NODE_ENV, request.headers.get("x-forwarded-proto"))) {
+  if (
+    shouldBypassHTTPSRedirect(request.nextUrl.pathname) ||
+    !shouldRedirectToHTTPS(process.env.NODE_ENV, request.headers.get("x-forwarded-proto"))
+  ) {
     return NextResponse.next();
   }
 
@@ -15,5 +22,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!healthz$).*)"],
+  matcher: ["/:path*"],
 };

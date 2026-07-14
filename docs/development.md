@@ -80,7 +80,10 @@ cd web
 npm run lint
 npm run test
 npm run build
+npm run test:runtime
 ```
+
+`test:runtime` stages the standalone build like the production image and verifies HTTPS routing, Next image optimization, same-origin fonts, and dynamic response caching.
 
 Backend:
 

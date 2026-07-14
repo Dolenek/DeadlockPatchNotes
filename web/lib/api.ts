@@ -1,3 +1,4 @@
+import { unstable_rethrow } from "next/navigation";
 import {
   HeroChangesResponse,
   HeroListResponse,
@@ -10,6 +11,7 @@ import {
 } from "@/lib/types";
 import { resolveMirroredAssetURL } from "@/lib/asset-mirror";
 import { resolveAPIBaseURL } from "@/lib/api-base-url";
+import { API_REQUEST_OPTIONS } from "@/lib/api-request";
 
 const API_BASE_URL = resolveAPIBaseURL(process.env.API_BASE_URL);
 
@@ -26,10 +28,9 @@ async function apiFetch<T>(path: string): Promise<T> {
   const target = `${API_BASE_URL}${path}`;
   let response: Response;
   try {
-    response = await fetch(target, {
-      next: { revalidate: 30 }
-    });
+    response = await fetch(target, API_REQUEST_OPTIONS);
   } catch (error) {
+    unstable_rethrow(error);
     const message = error instanceof Error ? error.message : String(error);
     throw new APIError(0, `API fetch failed for ${target}: ${message}`);
   }

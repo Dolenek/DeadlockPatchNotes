@@ -308,7 +308,7 @@
   position: absolute;
   right: 0;
   bottom: 0;
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--font-mono);
   z-index: 1;
   background: #161410d9;
   border-top: 1px solid #8b7a5a55;

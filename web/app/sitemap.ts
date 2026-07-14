@@ -1,9 +1,8 @@
 import type { MetadataRoute } from "next";
+import { connection } from "next/server";
 import { getHeroes, getItems, getPatches, getSpells } from "@/lib/api";
 import type { HeroSummary, ItemSummary, PatchSummary, SpellSummary } from "@/lib/types";
 import { buildAbsoluteURL, toISODate } from "@/lib/seo";
-
-export const revalidate = 1800;
 
 const PATCH_PAGE_LIMIT = 50;
 
@@ -78,6 +77,7 @@ function createEntityEntries(
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  await connection();
   const entries = createCoreRoutes();
 
   try {

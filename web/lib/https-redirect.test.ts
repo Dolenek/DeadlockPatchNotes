@@ -1,5 +1,30 @@
 import { describe, expect, it } from "vitest";
-import { buildHTTPSRedirectURL, firstForwardedProtocol, shouldRedirectToHTTPS } from "@/lib/https-redirect";
+import {
+  buildHTTPSRedirectURL,
+  firstForwardedProtocol,
+  shouldBypassHTTPSRedirect,
+  shouldRedirectToHTTPS,
+} from "@/lib/https-redirect";
+
+describe("shouldBypassHTTPSRedirect", () => {
+  it.each([
+    "/healthz",
+    "/_next/image",
+    "/_next/static/chunks/app.js",
+    "/header_heroes.png",
+    "/assets/mirror/hero.JPG",
+    "/fonts/VALVEOracle-Medium.woff2",
+  ])("allows internal and static asset requests at %s", (pathname) => {
+    expect(shouldBypassHTTPSRedirect(pathname)).toBe(true);
+  });
+
+  it.each(["/", "/patches", "/heroes/abrams", "/image-proxy"])(
+    "keeps document and route-handler requests protected at %s",
+    (pathname) => {
+      expect(shouldBypassHTTPSRedirect(pathname)).toBe(false);
+    },
+  );
+});
 
 describe("firstForwardedProtocol", () => {
   it("normalizes the first proxy value", () => {
