@@ -1,8 +1,9 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { cache, type CSSProperties } from "react";
+import { cache } from "react";
 import { FallbackImage } from "@/components/FallbackImage";
+import { HeroBackdrop } from "@/components/HeroBackdrop";
+import { IntentLink as Link } from "@/components/IntentLink";
 import { JsonLd } from "@/components/JsonLd";
 import { APIError, getSpellChanges } from "@/lib/api";
 import { getHeroMediaBySlug } from "@/lib/hero-media";
@@ -97,11 +98,6 @@ export default async function SpellDetailPage({ params }: SpellDetailPageProps) 
     const dominantHeroSlug = resolveDominantHeroSlug(payload);
 
     const heroMedia = dominantHeroSlug ? getHeroMediaBySlug(dominantHeroSlug) : null;
-    const spellPageStyle = heroMedia?.backgroundImageUrl
-      ? ({
-          "--spell-background-image": `url(${heroMedia.backgroundImageUrl})`,
-        } as CSSProperties)
-      : undefined;
     const canonicalURL = buildAbsoluteURL(`/spells/${payload.spell.slug}`);
     const schema = {
       "@context": "https://schema.org",
@@ -118,7 +114,8 @@ export default async function SpellDetailPage({ params }: SpellDetailPageProps) 
     };
 
     return (
-      <main className="hero-detail-page spell-detail-page" style={spellPageStyle}>
+      <main className="hero-detail-page spell-detail-page">
+        <HeroBackdrop src={heroMedia?.backgroundImageUrl} />
         <JsonLd data={schema} />
 
         <section className="hero-detail-hero spell-detail-hero">
@@ -128,10 +125,10 @@ export default async function SpellDetailPage({ params }: SpellDetailPageProps) 
               fallbackSrc={payload.spell.iconFallbackUrl}
               alt={payload.spell.name}
               className="hero-detail-image"
-              loading="eager"
-              fetchPriority="high"
+              loading="lazy"
               width={168}
               height={168}
+              sizes="168px"
             />
             <div className="hero-detail-copy">
               <p className="eyebrow">Spell Timeline</p>
@@ -176,6 +173,9 @@ export default async function SpellDetailPage({ params }: SpellDetailPageProps) 
                         fallbackSrc={entry.heroIconFallbackUrl}
                         alt={entry.heroName ?? payload.spell.name}
                         className="hero-skill-image"
+                        width={37}
+                        height={37}
+                        sizes="37px"
                       />
                       <h3>
                         {heroSlug ? (

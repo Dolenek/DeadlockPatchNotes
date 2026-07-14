@@ -1,8 +1,8 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import { DecorativeImageLayers } from "@/components/DecorativeImageLayers";
 import { JsonLd } from "@/components/JsonLd";
 import { FallbackImage } from "@/components/FallbackImage";
+import { IntentLink as Link } from "@/components/IntentLink";
 import { APIError, getHeroes } from "@/lib/api";
 import { HeroListResponse } from "@/lib/types";
 import { formatCompactDate } from "@/lib/utils";
@@ -70,7 +70,7 @@ export default async function HeroesPage() {
               src: "/header_heroes_page.jpg",
               className: "heroes-masthead-media__layer heroes-masthead-media__layer--heroes",
               quality: 56,
-              priority: true,
+              preload: true,
             },
           ]}
         />
@@ -83,7 +83,7 @@ export default async function HeroesPage() {
 
       <section className="shell heroes-list-section heroes-list-section--heroes">
         <div className="heroes-grid">
-          {payload.heroes.map((hero, index) => (
+          {payload.heroes.map((hero) => (
             <article key={hero.slug} className="hero-card">
               <Link href={`/heroes/${hero.slug}`} className="hero-card-link">
                 <FallbackImage
@@ -91,10 +91,11 @@ export default async function HeroesPage() {
                   fallbackSrc={hero.iconFallbackUrl}
                   alt={hero.name}
                   className="hero-card-image"
-                  loading={index < 6 ? "eager" : "lazy"}
-                  fetchPriority={index < 3 ? "high" : "auto"}
+                  loading="lazy"
+                  fetchPriority="auto"
                   width={96}
                   height={96}
+                  sizes="96px"
                 />
                 <div className="hero-card-copy">
                   <h2>{hero.name}</h2>

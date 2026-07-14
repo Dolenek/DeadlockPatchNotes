@@ -1,10 +1,13 @@
 import Image from "next/image";
+import { resolveDecorativeImageLoading } from "@/lib/image-loading";
 
 type DecorativeImageLayer = {
   src: string;
   className?: string;
   quality?: number;
-  priority?: boolean;
+  preload?: boolean;
+  loading?: "eager" | "lazy";
+  fetchPriority?: "high" | "low" | "auto";
   sizes?: string;
 };
 
@@ -23,17 +26,24 @@ export function DecorativeImageLayers({ className, layers }: DecorativeImageLaye
   return (
     <div className={containerClassName} aria-hidden>
       {layers.map((layer, index) => (
-        <Image
-          key={`${layer.src}-${index}`}
-          src={layer.src}
-          alt=""
-          fill
-          quality={layer.quality ?? 60}
-          priority={layer.priority ?? false}
-          sizes={layer.sizes ?? "100vw"}
-          className={layer.className ? `decorative-image-layer ${layer.className}` : "decorative-image-layer"}
-        />
+        <ImageLayer key={`${layer.src}-${index}`} layer={layer} />
       ))}
     </div>
+  );
+}
+
+function ImageLayer({ layer }: { layer: DecorativeImageLayer }) {
+  const loadingOptions = resolveDecorativeImageLoading(layer);
+
+  return (
+    <Image
+      src={layer.src}
+      alt=""
+      fill
+      quality={layer.quality ?? 60}
+      {...loadingOptions}
+      sizes={layer.sizes ?? "100vw"}
+      className={layer.className ? `decorative-image-layer ${layer.className}` : "decorative-image-layer"}
+    />
   );
 }

@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { FallbackImage } from "@/components/FallbackImage";
+import { IntentLink as Link } from "@/components/IntentLink";
 import { PatchEntry, PatchEntryGroup, PatchSection } from "@/lib/types";
 import { entryAnchor, normalizeLookupKey, sectionAnchor, slugifyLookup } from "@/lib/utils";
 
@@ -60,6 +60,9 @@ function EntryHeader({ entry, kind, portraitLayout }: EntryHeaderProps) {
         fallbackSrc={entry.entityIconFallbackUrl}
         alt={entry.entityName}
         className={portraitLayout ? "entry-portrait" : "entry-icon"}
+        width={portraitLayout ? 120 : 48}
+        height={portraitLayout ? 120 : 48}
+        sizes={portraitLayout ? "120px" : "48px"}
       />
       <div className="entry-heading-copy">
         <h3>
@@ -100,6 +103,9 @@ function EntryGroups({ groups, kind }: { groups: PatchEntryGroup[]; kind: PatchS
                 fallbackSrc={group.iconFallbackUrl}
                 alt={group.title}
                 className="group-icon"
+                width={53}
+                height={53}
+                sizes="53px"
               />
               <h4>
                 {href ? (

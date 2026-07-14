@@ -59,7 +59,9 @@ h6 {
 
 .site-root {
   --texture-base-image: url("/bg_texture_dark.jpg");
+  --texture-base-image: image-set(url("/bg_texture_dark.avif") type("image/avif"), url("/bg_texture_dark.jpg") type("image/jpeg"));
   --texture-dark-image: url("/bg_texture_darkest.jpg");
+  --texture-dark-image: image-set(url("/bg_texture_darkest.avif") type("image/avif"), url("/bg_texture_darkest.jpg") type("image/jpeg"));
   --texture-base-width: 100vw;
   --texture-base-height: calc(var(--texture-base-width) * 1.2011111111);
   position: relative;

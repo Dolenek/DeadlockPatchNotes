@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { Barlow, Cinzel, JetBrains_Mono } from "next/font/google";
+import { Cinzel, JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
+import { IntentPrefetchManager } from "@/components/IntentPrefetchManager";
 import { TopNav } from "@/components/TopNav";
 import {
   SEO_DEFAULT_DESCRIPTION,
@@ -10,9 +12,10 @@ import {
 } from "@/lib/seo";
 import "./globals.css";
 
-const barlow = Barlow({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+const barlow = localFont({
+  src: "./fonts/BarlowGX.woff2",
+  weight: "100 900",
+  style: "normal",
   variable: "--font-barlow",
   display: "swap",
 });
@@ -29,6 +32,7 @@ const jetBrainsMono = JetBrains_Mono({
   weight: ["500"],
   variable: "--font-jetbrains-mono",
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -88,15 +92,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${barlow.variable} ${cinzel.variable} ${jetBrainsMono.variable}`}>
-      <head>
-        <link rel="preconnect" href="https://assets-bucket.deadlock-api.com" crossOrigin="" />
-        <link rel="preconnect" href="https://assets.deadlock-api.com" crossOrigin="" />
-        <link rel="preconnect" href="https://clan.akamai.steamstatic.com" crossOrigin="" />
-        <link rel="dns-prefetch" href="//assets-bucket.deadlock-api.com" />
-        <link rel="dns-prefetch" href="//assets.deadlock-api.com" />
-        <link rel="dns-prefetch" href="//clan.akamai.steamstatic.com" />
-      </head>
       <body>
+        <IntentPrefetchManager />
         <div className="site-root">
           <div className="site-background" aria-hidden>
             <div className="site-background__layer site-background__layer--base" />

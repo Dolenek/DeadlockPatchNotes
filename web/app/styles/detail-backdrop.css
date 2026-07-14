@@ -1,0 +1,72 @@
+.hero-detail-page {
+  position: relative;
+  isolation: isolate;
+}
+
+.hero-detail-page--hero,
+.spell-detail-page {
+  --top-nav-overlap: 64px;
+  margin-top: calc(-1 * var(--top-nav-overlap));
+}
+
+.hero-detail-page--hero {
+  background: linear-gradient(180deg, #1d2229, #181c22);
+}
+
+.spell-detail-page {
+  background: linear-gradient(180deg, #121a2b, #0c1424 40%, #0a1120 100%);
+}
+
+.hero-detail-page > :not(.hero-detail-backdrop) {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-detail-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-detail-backdrop__image {
+  object-fit: cover;
+}
+
+.hero-detail-backdrop__veil {
+  position: absolute;
+  inset: 0;
+  background: #1f2227b5;
+}
+
+.spell-detail-page .hero-detail-backdrop__veil {
+  background: #1f2227b2;
+}
+
+.hero-detail-hero--hero-page,
+.spell-detail-hero {
+  background: transparent;
+}
+
+.spell-detail-hero {
+  border-bottom-color: #d4dde933;
+}
+
+.spell-detail-page .hero-detail-copy {
+  text-shadow: 0 2px 14px #000000b3;
+}
+
+.spell-detail-page .hero-timeline-block {
+  border-color: #d4dde946;
+  background: #08101b88;
+  backdrop-filter: blur(2px);
+}
+
+.spell-detail-page .hero-timeline-header {
+  border-bottom-color: #d4dde926;
+}
+
+.spell-detail-page .hero-skill-group {
+  border-top-color: #d4dde91a;
+}

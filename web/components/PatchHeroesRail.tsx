@@ -167,6 +167,9 @@ export function PatchHeroesRail({ blocks }: PatchHeroesRailProps) {
                     fallbackSrc={hero.iconFallbackUrl}
                     alt={hero.label}
                     className="heroes-rail-avatar"
+                    width={64}
+                    height={64}
+                    sizes="64px"
                   />
                 </a>
               </li>

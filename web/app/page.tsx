@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import Image from "next/image";
 import { DecorativeImageLayers } from "@/components/DecorativeImageLayers";
+import { IntentLink as Link } from "@/components/IntentLink";
 import { JsonLd } from "@/components/JsonLd";
 import { APIError, getPatches } from "@/lib/api";
 import { PatchListResponse } from "@/lib/types";
@@ -133,13 +133,12 @@ export default async function HomePage() {
               src: "/lanes.jpg",
               className: "patch-list-masthead-media__layer patch-list-masthead-media__layer--lanes",
               quality: 58,
-              priority: true,
+              preload: true,
             },
             {
               src: "/patrons_header.png",
               className: "patch-list-masthead-media__layer patch-list-masthead-media__layer--patrons",
               quality: 56,
-              priority: true,
             },
           ]}
         />
@@ -165,7 +164,6 @@ export default async function HomePage() {
                       sizes={HUB_IMAGE_SIZES}
                       quality={68}
                       className="home-hub-card-image"
-                      priority
                     />
                   </div>
                   <div className="home-hub-last-content">

@@ -1,8 +1,9 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { cache, type CSSProperties } from "react";
+import { cache } from "react";
 import { FallbackImage } from "@/components/FallbackImage";
+import { HeroBackdrop } from "@/components/HeroBackdrop";
+import { IntentLink as Link } from "@/components/IntentLink";
 import { JsonLd } from "@/components/JsonLd";
 import { APIError, getHeroChanges } from "@/lib/api";
 import { getHeroMediaBySlug } from "@/lib/hero-media";
@@ -68,11 +69,6 @@ export default async function HeroDetailPage({ params }: HeroDetailPageProps) {
   try {
     const payload = await getHeroTimeline(slug);
     const heroMedia = getHeroMediaBySlug(payload.hero.slug);
-    const heroPageStyle = heroMedia?.backgroundImageUrl
-      ? ({
-          "--hero-background-image": `url(${heroMedia.backgroundImageUrl})`,
-        } as CSSProperties)
-      : undefined;
     const canonicalURL = buildAbsoluteURL(`/heroes/${payload.hero.slug}`);
     const schema = {
       "@context": "https://schema.org",
@@ -89,7 +85,8 @@ export default async function HeroDetailPage({ params }: HeroDetailPageProps) {
     };
 
     return (
-      <main className="hero-detail-page hero-detail-page--hero" style={heroPageStyle}>
+      <main className="hero-detail-page hero-detail-page--hero">
+        <HeroBackdrop src={heroMedia?.backgroundImageUrl} />
         <JsonLd data={schema} />
 
         <section className="hero-detail-hero hero-detail-hero--hero-page">
@@ -99,15 +96,15 @@ export default async function HeroDetailPage({ params }: HeroDetailPageProps) {
               fallbackSrc={payload.hero.iconFallbackUrl}
               alt={payload.hero.name}
               className="hero-detail-image"
-              loading="eager"
-              fetchPriority="high"
+              loading="lazy"
               width={168}
               height={168}
+              sizes="168px"
             />
             <div className="hero-detail-copy hero-detail-copy--hero-page">
               {heroMedia?.nameImageUrl ? (
                 <>
-                  <img src={heroMedia.nameImageUrl} alt={payload.hero.name} className="hero-detail-name-image" />
+                  <img src={heroMedia.nameImageUrl} alt={payload.hero.name} className="hero-detail-name-image" loading="lazy" />
                   <h1 className="visually-hidden">{payload.hero.name}</h1>
                 </>
               ) : (
@@ -167,6 +164,9 @@ export default async function HeroDetailPage({ params }: HeroDetailPageProps) {
                         fallbackSrc={skill.iconFallbackUrl}
                         alt={skill.title}
                         className="hero-skill-image"
+                        width={37}
+                        height={37}
+                        sizes="37px"
                       />
                       <h3>
                         {shouldLinkSkill ? (

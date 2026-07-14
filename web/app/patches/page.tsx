@@ -88,7 +88,7 @@ export default async function PatchesPage({ searchParams }: PatchesPageProps) {
               src: "/Oldgods_header.png",
               className: "patch-list-masthead-media__layer patch-list-masthead-media__layer--oldgods",
               quality: 56,
-              priority: true,
+              preload: true,
             },
           ]}
         />
@@ -100,8 +100,8 @@ export default async function PatchesPage({ searchParams }: PatchesPageProps) {
 
       <section className="shell patch-list-section">
         <div className="patch-grid">
-          {patchList.patches.map((patch, index) => (
-            <PatchCard key={patch.id} patch={patch} index={index} />
+          {patchList.patches.map((patch) => (
+            <PatchCard key={patch.id} patch={patch} />
           ))}
         </div>
 

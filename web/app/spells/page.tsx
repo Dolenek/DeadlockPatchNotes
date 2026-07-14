@@ -1,7 +1,7 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/JsonLd";
 import { FallbackImage } from "@/components/FallbackImage";
+import { IntentLink as Link } from "@/components/IntentLink";
 import { APIError, getSpells } from "@/lib/api";
 import { SpellListResponse } from "@/lib/types";
 import { formatCompactDate } from "@/lib/utils";
@@ -71,7 +71,7 @@ export default async function SpellsPage() {
 
       <section className="shell heroes-list-section heroes-list-section--spells">
         <div className="heroes-grid">
-          {payload.spells.map((spell, index) => (
+          {payload.spells.map((spell) => (
             <article key={spell.slug} className="hero-card">
               <Link href={`/spells/${spell.slug}`} className="hero-card-link">
                 <FallbackImage
@@ -79,10 +79,11 @@ export default async function SpellsPage() {
                   fallbackSrc={spell.iconFallbackUrl}
                   alt={spell.name}
                   className="hero-card-image"
-                  loading={index < 6 ? "eager" : "lazy"}
-                  fetchPriority={index < 3 ? "high" : "auto"}
+                  loading="lazy"
+                  fetchPriority="auto"
                   width={96}
                   height={96}
+                  sizes="96px"
                 />
                 <div className="hero-card-copy">
                   <h2>{spell.name}</h2>

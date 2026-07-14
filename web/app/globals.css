@@ -3,6 +3,7 @@
 @import "./styles/patch-list.css";
 @import "./styles/patch-detail.css";
 @import "./styles/heroes.css";
+@import "./styles/detail-backdrop.css";
 @import "./styles/responsive.css";
 
 @font-face {

@@ -6,6 +6,7 @@
 - Rendering: route pages are server components.
 - Client components currently in tree:
   - `FallbackImage`
+  - `IntentPrefetchManager`
   - `TableOfContents`
   - `PatchHeroesRail`
 - Data source: API via `web/lib/api.ts`.
@@ -39,7 +40,7 @@ Transport and response security:
 - Requests marked `X-Forwarded-Proto: http` receive a `308` redirect to the validated HTTPS `SITE_URL` origin; the request `Host` header is never used to construct the redirect.
 - Next internals and static image/font paths bypass the application redirect so the image optimizer can fetch same-origin assets; the public reverse proxy remains responsible for external HTTP-to-HTTPS enforcement on those files.
 - Global responses include CSP, HSTS, clickjacking, MIME-sniffing, referrer, opener, and permissions-policy protections.
-- Barlow, Cinzel, and JetBrains Mono are bundled by `next/font` and served from the site origin, matching the restrictive font CSP.
+- Barlow uses one local variable font; Cinzel and JetBrains Mono are bundled by `next/font` and served from the site origin. JetBrains Mono is not globally preloaded.
 
 ## Route Map
 
@@ -124,14 +125,13 @@ Detail-page behavior:
 - `TopNav` is rendered globally in `app/layout.tsx` for all routes.
 - global metadata defaults are defined in `app/layout.tsx` (`metadataBase`, title template, robots, OpenGraph, Twitter).
 - Global texture stack is rendered behind all routes in layout:
-  - base: `/bg_texture.jpg`
-  - mid layer: `/bg_texture_dark.jpg`
-  - deep layer: `/bg_texture_darkest.jpg`
-  - seams use `scratch_mask_*` overlays between layer transitions
+  - mid layer prefers `/bg_texture_dark.avif` with the JPEG as fallback
+  - deep layer prefers `/bg_texture_darkest.avif` with the JPEG as fallback
 - Top nav includes:
   - brand link points to `/`
   - internal links: patches, heroes, spells, items
   - docs/links: changelog forum, PatchNotes API (`/api/scalar`), assets API docs, Steam store page
+- Internal links disable viewport prefetching. One delegated manager prefetches a same-origin route once on pointer hover or keyboard focus and releases its dedupe entry when Next invalidates the prefetch.
 
 ### SEO Utility Routes
 
@@ -159,6 +159,7 @@ Detail-page behavior:
 - Starts with primary `src`.
 - On load error, swaps once to `fallbackSrc` when available.
 - Returns `null` when both image sources are absent.
+- Uses the Next image optimizer with required intrinsic dimensions, responsive `sizes`, and a default quality of `50`.
 
 ### `PatchSectionRenderer`
 

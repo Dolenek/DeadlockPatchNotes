@@ -36,9 +36,9 @@ for (const stream of [server.stdout, server.stderr]) {
   });
 }
 
-async function request(pathname, forwardedProtocol = "https") {
+async function request(pathname, forwardedProtocol = "https", extraHeaders = {}) {
   return fetch(`${origin}${pathname}`, {
-    headers: { "x-forwarded-proto": forwardedProtocol },
+    headers: { "x-forwarded-proto": forwardedProtocol, ...extraHeaders },
     redirect: "manual",
     signal: AbortSignal.timeout(10_000),
   });
@@ -72,10 +72,25 @@ async function verifyRedirectAndImages() {
   assert.equal(staticImage.status, 200);
   assert.equal(staticImage.headers.get("content-type"), "image/png");
 
-  const optimizedImage = await request("/_next/image?url=%2Fheader_heroes.png&w=640&q=74");
-  assert.equal(optimizedImage.status, 200);
-  assert.match(optimizedImage.headers.get("content-type") ?? "", /^image\/(?:avif|png|webp)$/);
-  assert.ok((await optimizedImage.arrayBuffer()).byteLength > 0);
+  const optimizedImagePath = "/_next/image?url=%2Fheader_heroes.png&w=640&q=45";
+  const avifImage = await request(optimizedImagePath, "https", { accept: "image/avif,image/webp,*/*" });
+  assert.equal(avifImage.status, 200);
+  assert.equal(avifImage.headers.get("content-type"), "image/avif");
+  assert.ok((await avifImage.arrayBuffer()).byteLength > 0);
+
+  const webpImage = await request(optimizedImagePath, "https", { accept: "image/webp,*/*" });
+  assert.equal(webpImage.status, 200);
+  assert.equal(webpImage.headers.get("content-type"), "image/webp");
+  assert.ok((await webpImage.arrayBuffer()).byteLength > 0);
+
+  const mirroredAsset = await request("/assets/mirror/icons/vortex-web-dcca6282ca9c.png");
+  assert.equal(mirroredAsset.status, 200);
+  assert.match(mirroredAsset.headers.get("cache-control") ?? "", /max-age=31536000/);
+  assert.match(mirroredAsset.headers.get("cache-control") ?? "", /immutable/);
+
+  const mirrorManifest = await request("/assets/mirror/manifest.json");
+  assert.equal(mirrorManifest.status, 200);
+  assert.doesNotMatch(mirrorManifest.headers.get("cache-control") ?? "", /immutable/);
 }
 
 async function loadGeneratedStylesheets(html) {
@@ -106,6 +121,33 @@ async function verifySelfHostedFonts(html) {
   assert.equal(fontResponse.headers.get("content-type"), "font/woff2");
 }
 
+function imagePreloadsFromHTML(html) {
+  return [...html.matchAll(/<link(?=[^>]*rel="preload")(?=[^>]*as="image")[^>]*>/g)].map(
+    (match) => match[0],
+  );
+}
+
+function verifySingleCriticalImage(html, expectedSource) {
+  const imagePreloads = imagePreloadsFromHTML(html);
+  assert.equal(imagePreloads.length, 1, `Expected one critical image preload, received ${imagePreloads.length}`);
+  assert.match(imagePreloads[0], expectedSource);
+  assert.doesNotMatch(imagePreloads[0], /lil_troopers|patrons_header/);
+}
+
+async function verifyDetailImagePreload() {
+  const heroesPage = await request("/heroes");
+  assert.equal(heroesPage.status, 200);
+  const heroesHTML = await heroesPage.text();
+  assert.doesNotMatch(imagePreloadsFromHTML(heroesHTML).join("\n"), /lil_troopers/);
+
+  const heroHref = heroesHTML.match(/href="(\/heroes\/[^"#?]+)"/)?.[1];
+  assert.ok(heroHref, "Expected a hero detail link in the hero index");
+
+  const heroDetail = await request(heroHref);
+  assert.equal(heroDetail.status, 200);
+  verifySingleCriticalImage(await heroDetail.text(), /(?:&amp;|&)q=45/);
+}
+
 async function verifyFontsAndDynamicRendering() {
   const home = await request("/");
   assert.equal(home.status, 200);
@@ -117,7 +159,10 @@ async function verifyFontsAndDynamicRendering() {
   assert.doesNotMatch(sitemap.headers.get("cache-control") ?? "", /s-maxage/);
 
   const html = await home.text();
+  verifySingleCriticalImage(html, /%2Flanes\.jpg/);
+  assert.match(html, /data-prefetch="intent"/);
   await verifySelfHostedFonts(html);
+  await verifyDetailImagePreload();
 }
 
 try {

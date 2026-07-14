@@ -1,11 +1,11 @@
-import Link from "next/link";
+import { IntentLink as Link } from "@/components/IntentLink";
 
 export function TopNav() {
   return (
     <header className="top-nav">
       <div className="top-nav-inner shell">
         <Link href="/" className="brand-wordmark">
-          <img src="/deadlock_logo_white.svg" alt="Deadlock" className="brand-logo" />
+          <img src="/deadlock_logo_white.svg" alt="Deadlock" className="brand-logo" loading="lazy" />
         </Link>
         <nav className="main-links" aria-label="Main navigation">
           <Link href="/patches">Patch Notes</Link>

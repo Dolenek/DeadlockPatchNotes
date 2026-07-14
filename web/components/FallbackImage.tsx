@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import { resolveFallbackImageSource } from "@/lib/fallback-image";
 
 type FallbackImageProps = {
   src?: string;
@@ -10,8 +12,10 @@ type FallbackImageProps = {
   loading?: "lazy" | "eager";
   decoding?: "async" | "auto" | "sync";
   fetchPriority?: "high" | "low" | "auto";
-  width?: number;
-  height?: number;
+  width: number;
+  height: number;
+  sizes?: string;
+  quality?: number;
 };
 
 export function FallbackImage({
@@ -22,8 +26,7 @@ export function FallbackImage({
   loading = "lazy",
   decoding = "async",
   fetchPriority = "auto",
-  width,
-  height,
+  width, height, sizes, quality = 50,
 }: FallbackImageProps) {
   const [currentSrc, setCurrentSrc] = useState<string | undefined>(src);
 
@@ -31,13 +34,14 @@ export function FallbackImage({
     setCurrentSrc(src);
   }, [src]);
 
-  if (!currentSrc && !fallbackSrc) {
+  const resolvedSrc = currentSrc ?? fallbackSrc;
+  if (!resolvedSrc) {
     return null;
   }
 
   return (
-    <img
-      src={currentSrc ?? fallbackSrc}
+    <Image
+      src={resolvedSrc}
       alt={alt}
       className={className}
       loading={loading}
@@ -45,10 +49,10 @@ export function FallbackImage({
       fetchPriority={fetchPriority}
       width={width}
       height={height}
+      sizes={sizes}
+      quality={quality}
       onError={() => {
-        if (fallbackSrc && currentSrc !== fallbackSrc) {
-          setCurrentSrc(fallbackSrc);
-        }
+        setCurrentSrc((failedSrc) => resolveFallbackImageSource(failedSrc, fallbackSrc));
       }}
     />
   );

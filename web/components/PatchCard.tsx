@@ -1,11 +1,10 @@
-import Link from "next/link";
 import Image from "next/image";
+import { IntentLink as Link } from "@/components/IntentLink";
 import { PatchSummary } from "@/lib/types";
 import { formatDisplayDate, formatUpdateLabel, timelineBlockAnchor } from "@/lib/utils";
 
 type PatchCardProps = {
   patch: PatchSummary;
-  index: number;
 };
 
 const STOCK_CARD_IMAGES = [
@@ -59,10 +58,9 @@ function resolveCardImageURL(rawCoverImageURL: string | undefined, slug: string)
 
 const CARD_IMAGE_SIZES = "(max-width: 720px) 100vw, (max-width: 1024px) 50vw, 33vw";
 
-export function PatchCard({ patch, index }: PatchCardProps) {
+export function PatchCard({ patch }: PatchCardProps) {
   const { src: imageUrl, fallback: isFallbackImage } = resolveCardImageURL(patch.imageUrl, patch.slug);
   const imageClassName = isFallbackImage ? "patch-card-image patch-card-image--fallback" : "patch-card-image";
-  const prioritizeImage = index < 3;
   const followUpTimeline = (patch.releaseTimeline ?? []).filter(
     (block, index) => !(index === 0 && block.releaseType === "initial")
   );
@@ -78,8 +76,7 @@ export function PatchCard({ patch, index }: PatchCardProps) {
             sizes={CARD_IMAGE_SIZES}
             quality={68}
             className={imageClassName}
-            priority={prioritizeImage}
-            loading={prioritizeImage ? undefined : "lazy"}
+            loading="lazy"
           />
           <span className="card-corner-mark" aria-hidden>
             ↗

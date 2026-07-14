@@ -218,27 +218,11 @@
   padding-bottom: 2.4rem;
 }
 
-.hero-detail-page--hero {
-  --top-nav-overlap: 64px;
-  margin-top: calc(-1 * var(--top-nav-overlap));
-  background:
-    linear-gradient(180deg, #1f2227b5, #1f2227b5),
-    var(--hero-background-image, linear-gradient(180deg, #1d2229a1, #181c228f));
-  background-position: center top, center top;
-  background-repeat: no-repeat;
-  background-size: cover, cover;
-  background-attachment: fixed, fixed;
-}
-
 .hero-detail-hero {
   border-bottom: 1px solid #ffffff1f;
   background:
     radial-gradient(900px 360px at 30% -20%, #335e9338, transparent 72%),
     linear-gradient(180deg, #0a1020, #090f1b);
-}
-
-.hero-detail-hero--hero-page {
-  background: transparent;
 }
 
 .item-detail-page {
@@ -346,41 +330,6 @@
 
 .item-timeline-change-group ul {
   margin-top: 0;
-}
-
-.spell-detail-page {
-  --top-nav-overlap: 64px;
-  margin-top: calc(-1 * var(--top-nav-overlap));
-  background:
-    linear-gradient(180deg, #1f2227b2, #1f2227b2),
-    var(--spell-background-image, linear-gradient(180deg, #121a2b, #0c1424 40%, #0a1120 100%));
-  background-position: center top, center top;
-  background-repeat: no-repeat;
-  background-size: cover, cover;
-  background-attachment: fixed, fixed;
-}
-
-.spell-detail-hero {
-  background: transparent;
-  border-bottom-color: #d4dde933;
-}
-
-.spell-detail-page .hero-detail-copy {
-  text-shadow: 0 2px 14px #000000b3;
-}
-
-.spell-detail-page .hero-timeline-block {
-  border-color: #d4dde946;
-  background: #08101b88;
-  backdrop-filter: blur(2px);
-}
-
-.spell-detail-page .hero-timeline-header {
-  border-bottom-color: #d4dde926;
-}
-
-.spell-detail-page .hero-skill-group {
-  border-top-color: #d4dde91a;
 }
 
 .hero-detail-head {

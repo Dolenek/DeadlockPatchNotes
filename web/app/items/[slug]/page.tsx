@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
@@ -6,6 +5,7 @@ import { ItemAbstractPattern } from "@/components/ItemAbstractPattern";
 import { FallbackImage } from "@/components/FallbackImage";
 import { ItemGradientFromImage } from "@/components/ItemGradientFromImage";
 import { JsonLd } from "@/components/JsonLd";
+import { IntentLink as Link } from "@/components/IntentLink";
 import { APIError, getItemChanges } from "@/lib/api";
 import { SEO_SITE_NAME, buildAbsoluteURL, resolveSocialImageURL, toISODate, truncateDescription } from "@/lib/seo";
 import { buildPatchTimelineHref, formatDisplayDate, formatUpdateLabel } from "@/lib/utils";
@@ -100,10 +100,10 @@ export default async function ItemDetailPage({ params }: ItemDetailPageProps) {
               fallbackSrc={payload.item.iconFallbackUrl}
               alt={payload.item.name}
               className="hero-detail-image item-detail-image"
-              loading="eager"
-              fetchPriority="high"
+              loading="lazy"
               width={168}
               height={168}
+              sizes="168px"
             />
             <div className="hero-detail-copy item-detail-copy">
               <p className="eyebrow">Item Timeline</p>
