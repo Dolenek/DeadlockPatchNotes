@@ -11,111 +11,119 @@
 <p align="center">
   <a href="https://www.deadlockpatchnotes.com">Live site</a>
   &middot;
-  <a href="https://www.deadlockpatchnotes.com/api/scalar">API docs</a>
+  <a href="./docs/index.md">Documentation</a>
   &middot;
-  <a href="./docs/index.md">Project docs</a>
+  <a href="https://www.deadlockpatchnotes.com/api/scalar">API</a>
   &middot;
-  <a href="./docs/architecture.md">Architecture</a>
+  <a href="./README.md">Čeština</a>
 </p>
 
-<p align="center">
+![Deadlock Patch Notes homepage](./web/public/readme-home.PNG)
+
+## About
+
+Deadlock Patch Notes turns official Deadlock update announcements into a structured archive that is easy to browse, search, and consume programmatically. The project combines automated data ingestion, a public API, and a responsive web application in a single monorepo.
+
+## Key Features
+
+- Patch history with release timelines and follow-up hotfixes.
+- Hero, item, and spell changes tracked across updates.
+- Normalized JSON data available through a public API.
+- RSS feeds for new patches, individual heroes, and time since their last change.
+- Server-rendered pages, a responsive interface, and SEO metadata.
+
+## How It Works
+
+1. A one-shot sync process reads official changelogs from the Deadlock forum and Steam Web API.
+2. The Go ingestion pipeline parses and deduplicates the content, then converts it into normalized patches and timelines.
+3. Structured payloads, release blocks, and sync run information are stored in PostgreSQL.
+4. The Go API builds a cached read model over the database and exposes JSON endpoints, OpenAPI documentation, and RSS feeds.
+5. The Next.js frontend consumes the API, server-renders the archive, and provides dedicated patch, hero, item, and spell histories.
+
+```text
+Deadlock forum + Steam Web API
+              ↓
+       Go sync pipeline
+              ↓
+          PostgreSQL
+              ↓
+       Go HTTP API + RSS
+              ↓
+       Next.js frontend
+```
+
+## Architecture
+
+| Directory | Responsibility |
+| --- | --- |
+| `api/` | Go HTTP API, ingestion and sync process, database migrations, and PostgreSQL persistence. |
+| `web/` | Next.js App Router frontend, typed API client, and archive user interface. |
+| `scripts/` | Fixture generation, asset mirroring, server automation, and maintenance checks. |
+| `docs/` | Canonical documentation for runtime behavior, API contracts, parsing, development, and operations. |
+
+The API, web app, and sync job run as separate processes. Migrations provision a read-only API role and a scoped write role for sync, so runtime services do not need database-owner privileges. See the [architecture documentation](./docs/architecture.md) for details.
+
+## Technology Stack
+
+<p>
   <img alt="Frontend: Next.js + TypeScript" src="https://img.shields.io/badge/frontend-Next.js%20%2B%20TypeScript-111827?style=flat-square&logo=nextdotjs" />
   <img alt="Backend: Go API" src="https://img.shields.io/badge/backend-Go%20API-00ADD8?style=flat-square&logo=go&logoColor=white" />
   <img alt="Database: PostgreSQL" src="https://img.shields.io/badge/database-PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white" />
   <img alt="Deployment: Docker" src="https://img.shields.io/badge/deployment-Docker-2496ED?style=flat-square&logo=docker&logoColor=white" />
 </p>
 
-![Deadlock Patch Notes homepage](./web/public/readme-home.PNG)
+- **Frontend:** Next.js 16, React 19, and TypeScript 5.8.
+- **Backend:** Go 1.25, the Chi router, and pgx.
+- **Database:** PostgreSQL 16.
+- **Testing:** Vitest, the TypeScript compiler, and standard Go tests.
+- **Operations:** Docker and Docker Compose.
 
-## What It Does
+## Running Locally
 
-Deadlock Patch Notes turns official Deadlock update posts into a structured archive that is easy to browse, search, and consume programmatically.
-
-- Browse patch history with release timelines and follow-up hotfixes.
-- Track hero, item, and spell changes across updates.
-- Read normalized JSON payloads through a public API.
-- Subscribe to patch and hero-specific RSS feeds.
-
-## Why It Is Interesting
-
-This is a full-stack monorepo built around a real data pipeline, not just a static frontend.
-
-- **Automated ingestion:** sync process crawls official changelog sources, parses patch content, normalizes sections, and persists structured payloads.
-- **Backend read model:** Go API serves cached PostgreSQL snapshots for patch details, entity timelines, OpenAPI docs, and RSS feeds.
-- **Frontend experience:** Next.js App Router UI renders patch pages, hero/item/spell history, SEO metadata, and responsive archive views.
-- **Operational workflow:** Docker Compose runs the database, API, web app, and one-shot sync process locally or on a server.
-
-## Architecture
-
-```text
-api/       Go HTTP API, ingestion sync process, PostgreSQL persistence
-web/       Next.js frontend, typed API client, archive UI
-scripts/   fixture generation, asset mirroring, maintenance checks
-docs/      runtime behavior, API contracts, parser rules, operations
-```
-
-The runtime flow is:
-
-```text
-Deadlock changelog sources
-        |
-        v
-Go sync pipeline
-        |
-        v
-PostgreSQL read model
-        |
-        v
-Go HTTP API + RSS
-        |
-        v
-Next.js frontend
-```
-
-Read more in the [runtime overview](./docs/runtime-overview.md), [API contracts](./docs/api-contracts.md), and [architecture notes](./docs/architecture.md).
-
-## Run Locally
-
-### Docker
+Docker Compose is the simplest way to start the complete project. Copy the default configuration and set custom `POSTGRES_PASSWORD`, `API_DB_PASSWORD`, and `SYNC_DB_PASSWORD` values in `.env`:
 
 ```bash
 cp .env.example .env
-docker-compose up -d --build db api web
+docker-compose up -d --build db migrate api web
 docker-compose run --rm sync
 ```
 
-### API
+The web app will be available at `http://localhost:3000`; the Compose API defaults to `http://localhost:18081`.
+
+### Manual Setup
+
+A manual setup requires Node.js 24+, npm, Go 1.25+, and PostgreSQL 16+. Apply migrations and provision the separate runtime roles first:
 
 ```bash
 cd api
-go mod tidy
-DATABASE_URL='postgres://deadlock:deadlock@localhost:5432/deadlock_patchnotes?sslmode=disable' go run ./cmd/server
+API_DB_PASSWORD='replace-with-a-distinct-api-password' \
+SYNC_DB_PASSWORD='replace-with-a-distinct-sync-password' \
+DATABASE_URL='postgres://deadlock:deadlock@localhost:5432/deadlock_patchnotes?sslmode=disable' go run ./cmd/migrate
 ```
 
-### Web
+Start the API:
+
+```bash
+cd api
+DATABASE_URL='postgres://deadlock_api:replace-with-a-distinct-api-password@localhost:5432/deadlock_patchnotes?sslmode=disable' go run ./cmd/server
+```
+
+Start the frontend in a separate terminal:
 
 ```bash
 cd web
 npm install
-npm run dev
+API_BASE_URL=http://localhost:8080 npm run dev
 ```
 
-### One Sync Pass
+Optionally, run one sync pass:
 
 ```bash
 cd api
-DATABASE_URL='postgres://deadlock:deadlock@localhost:5432/deadlock_patchnotes?sslmode=disable' go run ./cmd/sync
+DATABASE_URL='postgres://deadlock_sync:replace-with-a-distinct-sync-password@localhost:5432/deadlock_patchnotes?sslmode=disable' go run ./cmd/sync
 ```
 
-## Documentation
-
-- [Documentation index](./docs/index.md)
-- [Runtime overview](./docs/runtime-overview.md)
-- [API contracts](./docs/api-contracts.md)
-- [Development workflow](./docs/development.md)
-- [Ops and scripts](./docs/ops-and-scripts.md)
-
-## Quality Checks
+## Tests and Quality Checks
 
 Frontend:
 
@@ -124,6 +132,7 @@ cd web
 npm run lint
 npm run test
 npm run build
+npm run test:runtime
 ```
 
 Backend:
@@ -133,8 +142,17 @@ cd api
 go test ./...
 ```
 
-Source guidance report:
+Check the recommended source-file and function-size limits:
 
 ```bash
 node scripts/check_source_limits.mjs
 ```
+
+## Documentation
+
+- [Documentation index](./docs/index.md)
+- [Runtime overview](./docs/runtime-overview.md)
+- [API contracts](./docs/api-contracts.md)
+- [Development workflow](./docs/development.md)
+- [Ops and scripts](./docs/ops-and-scripts.md)
+- [Architecture](./docs/architecture.md)
