@@ -6,6 +6,8 @@ toolchain go1.25.12
 
 require github.com/go-chi/chi/v5 v5.2.4
 
+require github.com/DATA-DOG/go-sqlmock v1.5.2
+
 require (
 	github.com/jackc/pgx/v5 v5.9.2
 	golang.org/x/net v0.55.0

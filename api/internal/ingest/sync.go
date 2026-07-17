@@ -17,6 +17,13 @@ type SyncConfig struct {
 	MaxPages     int
 }
 
+type syncDependencies struct {
+	crawlChangelogThreads        func(context.Context, *http.Client, string, int) ([]ForumThreadRef, error)
+	loadAssetCatalog             func(context.Context, *http.Client) (*AssetCatalog, error)
+	syncDiscoveredThreads        func(context.Context, *sql.DB, *http.Client, *AssetCatalog, []ForumThreadRef, SyncStats) (SyncStats, []string)
+	syncLatestPatchFromSteamNews func(context.Context, *sql.DB, *http.Client, *AssetCatalog, string) (steamFallbackResult, error)
+}
+
 type SyncStats struct {
 	DiscoveredThreads int
 	ProcessedThreads  int
@@ -42,6 +49,19 @@ type timelineCandidate struct {
 }
 
 func RunPatchSync(ctx context.Context, db *sql.DB, client *http.Client, cfg SyncConfig) (SyncStats, error) {
+	return runPatchSync(ctx, db, client, cfg, defaultSyncDependencies())
+}
+
+func defaultSyncDependencies() syncDependencies {
+	return syncDependencies{
+		crawlChangelogThreads:        CrawlChangelogThreads,
+		loadAssetCatalog:             LoadAssetCatalog,
+		syncDiscoveredThreads:        syncDiscoveredThreads,
+		syncLatestPatchFromSteamNews: syncLatestPatchFromSteamNews,
+	}
+}
+
+func runPatchSync(ctx context.Context, db *sql.DB, client *http.Client, cfg SyncConfig, dependencies syncDependencies) (SyncStats, error) {
 	stats := SyncStats{}
 
 	runID, err := startSyncRun(ctx, db)
@@ -49,22 +69,22 @@ func RunPatchSync(ctx context.Context, db *sql.DB, client *http.Client, cfg Sync
 		return stats, err
 	}
 
-	refs, err := CrawlChangelogThreads(ctx, client, cfg.ForumURL, cfg.MaxPages)
+	refs, err := dependencies.crawlChangelogThreads(ctx, client, cfg.ForumURL, cfg.MaxPages)
 	if err != nil || len(refs) == 0 {
 		if err == nil {
 			err = errors.New("no patch threads discovered")
 		}
-		return runSteamNewsFallback(ctx, db, client, cfg.SteamNewsURL, runID, stats, err)
+		return runSteamNewsFallback(ctx, db, client, cfg.SteamNewsURL, runID, stats, err, dependencies)
 	}
 	stats.DiscoveredThreads = len(refs)
 
-	catalog, err := LoadAssetCatalog(ctx, client)
+	catalog, err := dependencies.loadAssetCatalog(ctx, client)
 	if err != nil {
 		err = fmt.Errorf("load asset catalog: %w", err)
 		return finalizeSyncRun(ctx, db, runID, "failed", err.Error(), stats, err)
 	}
 
-	stats, failures := syncDiscoveredThreads(ctx, db, client, catalog, refs, stats)
+	stats, failures := dependencies.syncDiscoveredThreads(ctx, db, client, catalog, refs, stats)
 	if stats.FailedThreads == 0 {
 		return finalizeSyncRun(ctx, db, runID, "success", "sync complete", stats, nil)
 	}
@@ -76,13 +96,13 @@ func RunPatchSync(ctx context.Context, db *sql.DB, client *http.Client, cfg Sync
 	return finalizeSyncRun(ctx, db, runID, status, err.Error(), stats, err)
 }
 
-func runSteamNewsFallback(ctx context.Context, db *sql.DB, client *http.Client, sourceURL string, runID int64, stats SyncStats, forumErr error) (SyncStats, error) {
-	catalog, err := LoadAssetCatalog(ctx, client)
+func runSteamNewsFallback(ctx context.Context, db *sql.DB, client *http.Client, sourceURL string, runID int64, stats SyncStats, forumErr error, dependencies syncDependencies) (SyncStats, error) {
+	catalog, err := dependencies.loadAssetCatalog(ctx, client)
 	if err != nil {
 		err = fmt.Errorf("forum discovery unavailable (%v); load asset catalog for Steam fallback: %w", forumErr, err)
 		return finalizeSyncRun(ctx, db, runID, "failed", err.Error(), stats, err)
 	}
-	result, err := syncLatestPatchFromSteamNews(ctx, db, client, catalog, sourceURL)
+	result, err := dependencies.syncLatestPatchFromSteamNews(ctx, db, client, catalog, sourceURL)
 	stats.DiscoveredThreads = result.DiscoveredNews
 	if err != nil {
 		err = fmt.Errorf("forum discovery unavailable (%v); Steam fallback: %w", forumErr, err)
