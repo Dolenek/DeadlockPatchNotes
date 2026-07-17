@@ -8,10 +8,6 @@
   background: transparent;
 }
 
-.patch-hero-overlay {
-  background: transparent;
-}
-
 .patch-hero-content {
   padding: clamp(1.8rem, 4.6vw, 3rem) 0 clamp(1rem, 2.6vw, 1.5rem);
   animation: rise-in 650ms ease both;
@@ -38,13 +34,6 @@
 
 .patch-meta a {
   color: #d6b87f;
-}
-
-.patch-intro {
-  max-width: 75ch;
-  margin: 1rem 0 0;
-  color: #cbbba0;
-  line-height: 1.58;
 }
 
 .patch-detail-content {
@@ -417,12 +406,6 @@
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.13em;
-}
-
-.entry-summary {
-  margin: 0.7rem 0 0;
-  color: #d3c2a7;
-  line-height: 1.45;
 }
 
 .entry-quote {

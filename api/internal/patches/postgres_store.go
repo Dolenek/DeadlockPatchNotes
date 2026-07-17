@@ -84,9 +84,7 @@ func (s *PostgresStore) List(ctx context.Context, page, limit int) (PatchListRes
 	}
 
 	patches := make([]PatchSummary, 0, end-start)
-	for _, patch := range snapshot.patchSummaries[start:end] {
-		patches = append(patches, patch)
-	}
+	patches = append(patches, snapshot.patchSummaries[start:end]...)
 
 	return PatchListResponse{
 		Patches: patches,

@@ -5,7 +5,6 @@ import {
   MAX_JSON_BYTES,
   fetchAllowedURL,
   readLimitedResponse,
-  resolveContainedPath,
   validateImageBytes,
 } from "../asset_security.mjs";
 
@@ -62,13 +61,6 @@ async function downloadAsset(asset, outputPath, fetcher) {
   const bytes = await fetchBuffer(asset.url, fetcher);
   await fs.writeFile(outputPath, bytes);
   process.stdout.write(`downloaded ${asset.relPath}\n`);
-}
-
-export async function downloadAssets(registry, webPublicDir, fetcher = fetch) {
-  for (const asset of registry.entries()) {
-    const outputPath = resolveContainedPath(webPublicDir, asset.relPath, "Asset output path");
-    await downloadAsset(asset, outputPath, fetcher);
-  }
 }
 
 function relativeDescendantPath(parent, candidate, label) {

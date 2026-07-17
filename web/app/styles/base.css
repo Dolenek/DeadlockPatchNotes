@@ -4,18 +4,11 @@
   --font-mono: var(--font-jetbrains-mono), "Courier New", monospace;
   --font-special-heading: "Oracle", var(--font-cinzel), "Times New Roman", serif;
   --font-special-body: "Pulp", var(--font-barlow), "Segoe UI", Arial, sans-serif;
-  --bg-0: #090d15;
-  --bg-1: #11182a;
-  --bg-2: #17243d;
-  --paper: #eceff4;
-  --ink: #13203a;
   --text-main: #dbe5f7;
   --text-soft: #9eb3d6;
   --line: #243756;
   --line-strong: #385c90;
   --accent: #d0a44b;
-  --accent-soft: #d0a44b26;
-  --accent-cold: #4eb0d6;
   --radius: 10px;
   --shadow: 0 10px 45px #02050d80;
 }
