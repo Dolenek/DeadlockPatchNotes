@@ -98,6 +98,22 @@ Source guidance check:
 node scripts/check_source_limits.mjs
 ```
 
+## Automated CI
+
+GitHub Actions runs the repository validation workflow for every pull request,
+every push to `main`, and manual `workflow_dispatch` runs. The `Backend`,
+`Frontend`, and `Scripts` jobs run in parallel on Ubuntu:
+
+- `Backend` runs all Go tests with the toolchain declared in `api/go.mod`.
+- `Frontend` installs locked npm dependencies, type-checks, runs unit tests,
+  builds the production Next.js application, and verifies its standalone runtime.
+- `Scripts` runs the deterministic asset and fixture tests. It also reports
+  source-size guidance without blocking the workflow while existing violations
+  are being reduced.
+
+The workflow does not generate network-backed fixtures, build Docker images,
+publish artifacts, deploy the application, or access production secrets.
+
 ## Docker Stack
 
 ```bash
